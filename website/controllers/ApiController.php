@@ -163,6 +163,7 @@ class ApiController extends Zend_Rest_Controller {
 	    {
 		    $arr[$i]['id'] = $entry->getO_Id();
 		    $arr[$i]['name'] = $entry->getName();
+		    $arr[$i]['image_url'] = $entry->getImage();
 		    $arr[$i]['timestamp_creation'] = $entry->getCreationDate();
 		    $arr[$i]['creation_date'] = date('Y-m-d', $entry->getCreationDate());
 		    

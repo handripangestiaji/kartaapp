@@ -40,60 +40,79 @@ class ApiController extends Zend_Rest_Controller {
 	    $array = array();
 	    $i = 0;
 	    
-	    if($this->_request->isPost())
+	    if($params!='')
 	    {
-		    if($params!='') {
-				$resto->setCondition('o_id = ?', $params);
-		  	}
-	    }
-	    else if($this->_request->isGet())
-	    {
-		    if($params!='') {
-			    $resto->setCondition('o_id = ?', $params);
-		    }
-	    }
-	    
-	    foreach($resto as $entry)
-	    {
-		    $array[$i]['id'] = $entry->getO_Id();
-		    $array[$i]['name'] = $entry->getName();
-		    $y = 0;
-		    foreach($entry->getCategory() as $category)
+		    
+		    if($this->_request->isPost())
 		    {
-			    $array[$i]['categories'][$y]['id'] = $category->getO_Id();
-			    $array[$i]['categories'][$y]['name'] = $category->getName();
-			    $y++;
+			    if($params!='') {
+					$resto->setCondition('o_id = ?', $params);
+			  	}
 		    }
-		    $array[$i]['description'] = $entry->getDescription();
-		    $array[$i]['phone_number'] = $entry->getPhoneNumber();
-		    $x = 0;
-		    foreach($entry->getOperationHour() as $hour)
+		    else if($this->_request->isGet())
 		    {
-			    $array[$i]['operation'][$x]['day'] = $hour->getOperationDay();
-			    $array[$i]['operation'][$x]['hour'] = $hour->getOperationHour();
-			    $x++;
+			    if($params!='') {
+				    $resto->setCondition('o_id = ?', $params);
+			    }
 		    }
-		    $array[$i]['website_url'] = $entry->getWebsiteUrl();
-		    $array[$i]['profile_image_url'] = $entry->getProfileImage();
-		    $array[$i]['email'] = $entry->getEmail();
-		    $array[$i]['address'] = $entry->getAddress();
-		    $array[$i]['city'] = $entry->getCity()->getName();
-		    $array[$i]['state'] = $entry->getCity()->getState()->getName();
-		    $array[$i]['zip_code'] = $entry->getZipCode();
-		    $array[$i]['longitude'] = $entry->getLongitude();
-		    $array[$i]['latitude'] = $entry->getLatitude();
-		    $array[$i]['timestamp_creation'] = $entry->getCreationDate();
-		    $array[$i]['creation_date'] = date('Y-m-d', $entry->getCreationDate());
-		    $i++;
-	    }
+		    
+		    foreach($resto as $entry)
+		    {
+			    $array[$i]['id'] = $entry->getO_Id();
+			    $array[$i]['name'] = $entry->getName();
+			    $y = 0;
+			    foreach($entry->getCategory() as $category)
+			    {
+				    $array[$i]['categories'][$y]['id'] = $category->getO_Id();
+				    $array[$i]['categories'][$y]['name'] = $category->getName();
+				    $y++;
+			    }
+			    $array[$i]['description'] = $entry->getDescription();
+			    $array[$i]['phone_number'] = $entry->getPhoneNumber();
+			    $x = 0;
+			    foreach($entry->getOperationHour() as $hour)
+			    {
+				    $array[$i]['operation'][$x]['day'] = $hour->getOperationDay();
+				    $array[$i]['operation'][$x]['hour'] = $hour->getOperationHour();
+				    $x++;
+			    }
+			    $array[$i]['website_url'] = $entry->getWebsiteUrl();
+			    $array[$i]['profile_image_url'] = $entry->getProfileImage();
+			    $array[$i]['email'] = $entry->getEmail();
+			    $array[$i]['address'] = $entry->getAddress();
+			    $array[$i]['city'] = $entry->getCity()->getName();
+			    $array[$i]['state'] = $entry->getCity()->getState()->getName();
+			    $array[$i]['zip_code'] = $entry->getZipCode();
+			    $array[$i]['longitude'] = $entry->getLongitude();
+			    $array[$i]['latitude'] = $entry->getLatitude();
+			    $array[$i]['timestamp_creation'] = $entry->getCreationDate();
+			    $array[$i]['creation_date'] = date('Y-m-d', $entry->getCreationDate());
+			    $i++;
+		    }
 	    
+	    }
+	    else {
+		    
+		    $array[0]['error'] = "Invalid ID";
+		    $array[0]['response_code'] = "403";
+		    
+	    }
 	    $json_resto = $this->_helper->json($array);
 	    $this->sendResponse($json_resto);
     }
     
     public function menulistAction()
     {
+	    $limit = 10;
+	    $page = (int) $this->_getParam('page') == '' ? 1 : $this->_getParam('page');
+	    
+	    $start = ($page * $limit) - $limit;
+	    
 	    $menu = new Object\Menu\Listing();
+	    $menu->setOffset($start);
+	    $menu->setLimit($limit);
+	    $menu->setOrderKey('o_creationDate');
+	    $menu->setOrder('desc');
 	    
 	    $arr = array();
 	    $i = 0;
@@ -201,9 +220,16 @@ class ApiController extends Zend_Rest_Controller {
     
     public function categoriesAction()
     {
+	    $limit = 10;
+	    $page = (int) $this->_getParam('page') == '' ? 1 : $this->_getParam('page');
+	    
+	    $start = ($page * $limit) - $limit;
+	    
 	    $id = $this->_getParam('id');
 	    
 	    $category = new Object\Categories\Listing();
+	    $category->setOffset($start);
+	    $category->setLimit($limit);
 	    
 	    $arr = array();
 	    $i = 0;

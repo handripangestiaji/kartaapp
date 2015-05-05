@@ -91,6 +91,55 @@ class ApiController extends Zend_Rest_Controller {
 	    $this->sendResponse($json_resto);
     }
     
+    public function menulistAction()
+    {
+	    $menu = new Object\Menu\Listing();
+	    
+	    $arr = array();
+	    $i = 0;
+	    
+	    foreach($menu as $entry)
+	    {
+		    $arr[$i]['id'] = $entry->getO_Id();
+		    $arr[$i]['name'] = $entry->getName();
+		    $arr[$i]['restaurants']['id'] = $entry->getRestaurants()->getO_Id();
+		    $arr[$i]['restaurants']['name'] = $entry->getRestaurants()->getName();
+		    $arr[$i]['restaurants']['address'] = $entry->getRestaurants()->getAddress();
+		    $arr[$i]['restaurants']['latitude'] = $entry->getRestaurants()->getLatitude();
+		    $arr[$i]['restaurants']['longitude'] = $entry->getRestaurants()->getLongitude();
+		    $arr[$i]['restaurants']['city'] = $entry->getRestaurants()->getCity()->getName();
+		    $arr[$i]['restaurants']['state'] = $entry->getRestaurants()->getCity()->getState()->getName();
+		    
+		    $x = 0;
+		    foreach($entry->getRestaurants()->getCategory() as $category)
+		    {
+			    $arr[$i]['category'][$x]['id'] = $category->getO_Id();
+			    $arr[$i]['category'][$x]['name'] = $category->getName();
+			    $x++;
+		    }
+		    
+		    $arr[$i]['price'] = $entry->getPrice();
+		    $arr[$i]['currency'] = $entry->getCurrency();
+		    $arr[$i]['image_url'] = $entry->getImage();
+		    $arr[$i]['timestamp_creation'] = $entry->getCreationDate();
+		    $arr[$i]['creation_date'] = date('Y-m-d', $entry->getCreationDate());
+		    
+		    $i++;
+	    }
+	    
+	    if($this->_request->isGet())
+	    {
+	    	$json_menu = $this->_helper->json($arr);
+	    }
+	    else {
+		    $array = array();
+		    $array[0]['error'] = "Method Not Allowed";
+		    $array[0]['response_code'] = "405";
+		    $json_menu = $this->_helper->json($array);
+	    }
+	    $this->sendResponse($json_menu);
+    }
+    
     public function menuAction()
     {
 	    $params = $this->_getParam('id');
@@ -100,38 +149,51 @@ class ApiController extends Zend_Rest_Controller {
 	    $arr = array();
 	    $i = 0;
 	    
-	    if($this->_request->isPost())
+	    if($params!='')
 	    {
-		    if($params!='') {
-		    	$menu->setCondition('o_id = ?', $params);
-		    }
-	    }
-	    else if($this->_request->isGet()){
-		    if($params!='') {
+		    if($this->_request->isPost())
+		    {
 			    $menu->setCondition('o_id = ?', $params);
 		    }
-	    }
-	    
-	    foreach($menu as $entry)
-	    {
-		    $arr[$i]['id'] = $entry->getO_Id();
-		    $arr[$i]['name'] = $entry->getName();
-		    $arr[$i]['restaurants_id'] = $entry->getRestaurants()->getO_Id();
-		    $arr[$i]['restaurants'] = $entry->getRestaurants()->getName();
-		    $arr[$i]['image_url'] = $entry->getImage();
-		    $arr[$i]['currency'] = $entry->getCurrency();
-		    $arr[$i]['price'] = $entry->getPrice();
-		    $arr[$i]['description'] = $entry->getDescription();
-		    $arr[$i]['halal'] = $entry->getHalal();
-		    
-		    foreach($entry->getIngredients() as $ing)
+		    else if($this->_request->isGet())
 		    {
-			    $arr[$i]['ingredients'][] = $ing->getIngredient();
+				$menu->setCondition('o_id = ?', $params);
 		    }
-		    $arr[$i]['timestamp_creation'] = $entry->getCreationDate();
-		    $arr[$i]['creation_date'] = date('Y-m-d', $entry->getCreationDate());
-		    $i++;
+		    
+		    foreach($menu as $entry)
+		    {
+			    $arr[$i]['id'] = $entry->getO_Id();
+			    $arr[$i]['name'] = $entry->getName();
+			    $arr[$i]['restaurants_id'] = $entry->getRestaurants()->getO_Id();
+			    $arr[$i]['restaurants'] = $entry->getRestaurants()->getName();
+			    
+			    $x = 0;
+			    foreach($entry->getRestaurants()->getCategory() as $category)
+			    {
+				    $arr[$i]['category'][$x]['id'] = $category->getO_Id();
+				    $arr[$i]['category'][$x]['name'] = $category->getName();
+				    $x++;
+			    }
+			    
+			    $arr[$i]['image_url'] = $entry->getImage();
+			    $arr[$i]['currency'] = $entry->getCurrency();
+			    $arr[$i]['price'] = $entry->getPrice();
+			    $arr[$i]['description'] = $entry->getDescription();
+			    $arr[$i]['halal'] = $entry->getHalal();
+			    
+			    foreach($entry->getIngredients() as $ing)
+			    {
+				    $arr[$i]['ingredients'][] = $ing->getIngredient();
+			    }
+			    $arr[$i]['timestamp_creation'] = $entry->getCreationDate();
+			    $arr[$i]['creation_date'] = date('Y-m-d', $entry->getCreationDate());
+			    $i++;
+		    }
 	    }
+		else {
+			$arr[0]['error'] = 'Invalid ID';
+			$arr[0]['response_code'] = '403';
+		}
 	    
 	    $json_menu = $this->_helper->json($arr);
 	    $this->sendResponse($json_menu);

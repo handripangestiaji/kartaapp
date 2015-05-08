@@ -83,8 +83,8 @@ class ApiController extends Zend_Rest_Controller {
 			    $array[$i]['city'] = $entry->getCity()->getName();
 			    $array[$i]['state'] = $entry->getCity()->getState()->getName();
 			    $array[$i]['zip_code'] = $entry->getZipCode();
-			    $array[$i]['longitude'] = $entry->getLongitude();
-			    $array[$i]['latitude'] = $entry->getLatitude();
+			    $array[$i]['location']['longitude'] = $entry->getLocation()->getLongitude();
+			    $array[$i]['location']['latitude'] = $entry->getLocation()->getLatitude();
 			    $array[$i]['timestamp_creation'] = $entry->getCreationDate();
 			    $array[$i]['creation_date'] = date('Y-m-d', $entry->getCreationDate());
 			    $i++;
@@ -124,8 +124,8 @@ class ApiController extends Zend_Rest_Controller {
 		    $arr[$i]['restaurants']['id'] = $entry->getRestaurants()->getO_Id();
 		    $arr[$i]['restaurants']['name'] = $entry->getRestaurants()->getName();
 		    $arr[$i]['restaurants']['address'] = $entry->getRestaurants()->getAddress();
-		    $arr[$i]['restaurants']['latitude'] = $entry->getRestaurants()->getLatitude();
-		    $arr[$i]['restaurants']['longitude'] = $entry->getRestaurants()->getLongitude();
+		    $arr[$i]['restaurants']['location']['latitude'] = $entry->getRestaurants()->getLocation()->getLatitude();
+		    $arr[$i]['restaurants']['location']['longitude'] = $entry->getRestaurants()->getLocation()->getLongitude();
 		    $arr[$i]['restaurants']['city'] = $entry->getRestaurants()->getCity()->getName();
 		    $arr[$i]['restaurants']['state'] = $entry->getRestaurants()->getCity()->getState()->getName();
 		    

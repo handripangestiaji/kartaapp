@@ -1,0 +1,231 @@
+<ScrollView 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+   	xmlns:tools="http://schemas.android.com/tools"
+	android:id="@+id/main_scroll_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+ 			
+	<LinearLayout
+	    android:orientation="vertical"
+	    android:background="#fff"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content" >			    	    
+    
+	    <ImageView
+			android:id="@+id/img_menu"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+			android:adjustViewBounds="true"
+		    android:scaleType="fitXY"    
+		    android:contentDescription="description image"
+	        android:src="@drawable/pizza" />
+	    
+	    <LinearLayout 
+	        android:orientation="horizontal"
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content" >
+		    
+		    <TextView 
+				android:id="@+id/menu_description"
+		   		android:textSize="16sp"
+				android:layout_width="0dip"
+		 		android:layout_weight="0.8"
+		        android:layout_height="match_parent"
+		        android:layout_margin="10dp"
+		        android:textColor="@color/textColor1"
+		        android:text="Description in here Description in here Description in here Description in here Description in here Description in here Description in here Description in here" />
+	        
+	        <LinearLayout 
+		        android:orientation="vertical"
+				android:layout_margin="10dp"
+				android:layout_width="0dip"
+		 		android:layout_weight="0.2"
+			    android:layout_height="match_parent" >
+	        
+		        <LinearLayout 
+			        android:orientation="horizontal"
+				    android:layout_gravity="center_horizontal"    
+					android:layout_width="wrap_content"
+				    android:layout_height="wrap_content" >		            
+            
+	         		<TextView 
+						android:id="@+id/menu_rating"
+				      	android:layout_width="match_parent"
+				        android:layout_height="wrap_content"
+				        android:textColor="@color/baseColor"
+				        android:text="4.0" 
+   						android:padding="2dp" />
+				    
+				    <ImageView
+						android:layout_width="20sp"
+				        android:layout_height="20sp"
+				        android:src="@drawable/star"
+						android:padding="2dp" />   	 
+						
+				</LinearLayout>				  				    
+			    
+	   		    <TextView 
+					android:id="@+id/menu_price"
+			   		android:textSize="14sp"
+			   		android:layout_marginTop="15dp"
+				    android:gravity="center_horizontal"    
+			      	android:layout_width="match_parent"
+			        android:layout_height="wrap_content"
+			        android:textColor="@color/textColor1"
+			        android:text="$15.00" />
+			    	            
+	       	</LinearLayout>
+	        
+	    </LinearLayout>
+		
+	    <LinearLayout 
+	        android:orientation="horizontal"
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content" >
+		    
+	    </LinearLayout>
+	    
+		<View
+			android:layout_width="match_parent"
+			android:layout_marginTop="15dp"
+			android:layout_marginBottom="15dp"
+			android:layout_height="1dp"
+			android:background="#aaa" />
+	    
+	    <LinearLayout 
+	        android:orientation="vertical"
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content" >
+		    
+		    <TextView 
+		   		android:textSize="20sp"
+		   		android:textStyle="bold"
+		        android:layout_margin="10dp"
+				android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:textColor="@color/textColor1"
+		        android:text="Choose a star rating" />   	    
+		        
+		    <LinearLayout 
+		        android:orientation="horizontal"
+			    android:layout_width="match_parent"
+			    android:layout_height="wrap_content" >
+
+				<RatingBar
+				    android:id="@+id/ratingBar"
+			        android:layout_margin="10dp"
+					android:progressDrawable="@drawable/rating_bar_custom"
+				    android:layout_width="wrap_content"
+				    android:layout_height="wrap_content" />
+			        		    	    
+		   	</LinearLayout>
+	   	 
+			<View
+				android:layout_width="match_parent"
+				android:layout_marginTop="35dp"
+				android:layout_marginBottom="15dp"
+				android:layout_height="1dp"
+				android:background="#aaa" />
+
+			<LinearLayout 
+		        android:orientation="vertical"
+			    android:layout_width="match_parent"
+			    android:layout_height="wrap_content" >
+		    
+			    <TextView 
+					android:id="@+id/write_rev"
+			   		android:textSize="16sp"
+					android:layout_width="match_parent"
+			 		android:layout_weight="0.8"
+			        android:layout_height="0dip"
+			        android:layout_margin="10dp"
+			        android:textColor="@color/textColor3"
+			        android:text="Write your review here. Describe what you liked and didn't like about the item. Try to be as descriptive as posible" />
+				
+				<TextView 
+					android:id="@+id/text_limit"
+			   		android:textSize="10sp"
+					android:layout_width="match_parent"
+			 		android:layout_weight="0.8"
+			        android:layout_height="0dip"
+			        android:gravity="right"
+			        android:layout_margin="10dp"
+			        android:textColor="@color/textColor3"
+			        android:text="300/300 characters" />
+		
+			</LinearLayout>	
+		    
+			<View
+				android:layout_width="match_parent"
+				android:layout_marginTop="1dp"
+				android:layout_marginBottom="15dp"
+				android:layout_height="1dp"
+				android:background="#aaa" />		 	   
+		
+	   	    <LinearLayout 
+		        android:orientation="vertical"
+			    android:layout_width="match_parent"
+			    android:layout_height="wrap_content" >
+			    
+			    <TextView 
+			   		android:textSize="20sp"
+			   		android:textStyle="bold"
+			        android:layout_marginLeft="10dp"
+					android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:textColor="@color/textColor1"
+			        android:text="Any photos to add?" /> 
+			       
+			    <TextView 
+					android:id="@+id/option"
+			   		android:textSize="10sp"
+					android:layout_width="match_parent"
+			 		android:layout_weight="0.8"
+			        android:layout_height="0dip"
+			        android:layout_marginLeft="10dp"
+			        android:textColor="@color/textColor3"
+			        android:text="(optional)" />	
+			        
+   			    <TextView 
+			   		android:textSize="16sp"
+			   		android:textStyle="bold"
+			        android:layout_margin="10dp"
+					android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:textColor="@color/buttonTextColor"
+			        android:text="TAKE PHOTO(S) WITH CAMERA" />
+   			    
+   			    <TextView 
+			   		android:textSize="16sp"
+			   		android:textStyle="bold"
+			        android:layout_margin="10dp"
+					android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:textColor="@color/buttonTextColor"
+			        android:text="CHOOSE PHOTO(S) FROM LIBRARY" /> 
+			
+			</LinearLayout>
+			
+					<View
+						android:layout_width="match_parent"
+						android:layout_marginTop="35dp"
+						android:layout_marginBottom="15dp"
+						android:layout_height="1dp"
+						android:background="#aaa" />
+	
+		</LinearLayout>
+		
+<!-- 		<ImageView -->
+<!-- 	            android:id="@+id/btn_submit" -->
+<!-- 				android:layout_margin="25dip" -->
+<!-- 	            android:layout_width="fill_parent" -->
+<!-- 	            android:layout_height="wrap_content" -->
+<!-- 				android:adjustViewBounds="true" -->
+<!-- 				android:scaleType="centerCrop" -->
+<!-- 		        android:contentDescription="@string/logo_desc" -->
+<!-- 	            android:src="@drawable/btn_submit" />		 -->
+	
+   	</LinearLayout> 
+	
+</ScrollView>	

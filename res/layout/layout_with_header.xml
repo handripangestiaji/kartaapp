@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	 xmlns:tools="http://schemas.android.com/tools"
+	 android:layout_width="match_parent"
+	 android:layout_height="match_parent" >
+	
+	 <!-- Header aligned to top -->
+	 <LinearLayout
+		android:id="@+id/header"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:orientation="horizontal"
+		android:layout_alignParentTop="true"    
+		android:background="@color/baseColor"
+		android:gravity="center_vertical" >
+		
+		<LinearLayout
+		    android:layout_width="0dip"
+		    android:layout_height="match_parent"
+		    android:layout_weight="0.1"
+			android:gravity="center_vertical"
+		    android:orientation="vertical" >
+		    
+		    <ImageView
+		        android:id="@+id/main_menu"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:scaleType="fitCenter"
+		        android:src="@drawable/btn_menu" />
+				    		            
+		   </LinearLayout>
+	     
+	   <LinearLayout
+	      	android:layout_width="0dip"
+	      	android:layout_height="match_parent"
+	      	android:layout_weight="0.7"
+			android:gravity="center_vertical"
+	     	android:orientation="vertical" >
+	       
+		    <TextView
+		        android:id="@+id/title_bar"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="5dp"
+				android:text="Best Pizza"
+				android:layout_gravity="center"
+				android:textColor="@color/textColor2"
+				android:textSize="20sp" />
+		    
+		    <TextView
+		        android:id="@+id/sub_title_bar"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginBottom="5dp"
+				android:text="Wangsington, D.C."
+				android:layout_gravity="center"
+				android:textColor="@color/textColor2" />
+	    
+	   </LinearLayout>
+	
+	   <LinearLayout
+			android:layout_width="0dip"
+			android:layout_height="match_parent"
+			android:layout_weight="0.1"
+			android:gravity="right"
+			android:orientation="vertical" >
+	       
+		    <ImageView
+		        android:id="@+id/sub_menu"
+		        android:layout_margin="5dp"
+		        android:layout_width="wrap_content"
+		        android:layout_height="match_parent"
+		        android:scaleType="fitCenter"
+		        android:src="@drawable/btn_sub_menu" />
+	               
+	   </LinearLayout>
+	   
+	</LinearLayout>
+		 
+	<!-- Content below header and above footer -->
+	<RelativeLayout
+	   android:id="@+id/container"
+	   android:layout_width="fill_parent"
+	   android:layout_height="fill_parent"
+	   android:layout_below="@id/header" >
+	     	
+	   <!-- Content will go here -->
+	
+	</RelativeLayout>
+	 
+    <com.devspark.sidenavigation.SideNavigationView
+        android:id="@+id/side_navigation_view"
+        android:layout_centerInParent="true"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />	
+  
+</RelativeLayout>

@@ -1,0 +1,255 @@
+<ScrollView 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+   	xmlns:tools="http://schemas.android.com/tools"
+	android:id="@+id/main_scroll_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+			
+	<LinearLayout
+	    android:orientation="vertical"
+	    android:background="#fff"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content" >			    	    
+    
+	    <ImageView
+			android:id="@+id/img_business"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+			android:adjustViewBounds="true"
+		    android:scaleType="fitXY"    
+		    android:contentDescription="description image"
+	        android:src="@drawable/pizza" />
+	    
+	    <LinearLayout 
+	        android:orientation="horizontal"
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content" >
+		    
+	        <LinearLayout 
+		        android:orientation="vertical"
+				android:layout_width="0dip"
+		 		android:layout_weight="0.8"
+				android:layout_margin="10dp"
+			    android:layout_height="match_parent" >
+	        
+	   		    <TextView 
+					android:id="@+id/business_address1"
+			   		android:textSize="16sp"
+					android:layout_width="match_parent"
+			        android:layout_height="wrap_content"
+			        android:layout_marginTop="10dp"
+			        android:layout_marginLeft="10dp"
+			        android:layout_marginRight="10dp"
+			        android:layout_marginBottom="0dp"
+			        android:textColor="@color/textColor1"
+			        android:text="12345 Main St" />
+	   		    
+	   		    <TextView 
+					android:id="@+id/business_address2"
+			   		android:textSize="16sp"
+					android:layout_width="match_parent"
+			        android:layout_height="wrap_content"
+			        android:layout_marginTop="0dp"
+			        android:layout_marginLeft="10dp"
+			        android:layout_marginRight="10dp"
+			        android:layout_marginBottom="0dp"
+			        android:textColor="@color/textColor1"
+			        android:text="Wangsington, D.C 12345" />
+	   		    
+	   		    <TextView 
+					android:id="@+id/btn_getdirection"
+			   		android:textSize="18sp"
+					android:layout_width="match_parent"
+			        android:layout_height="wrap_content"
+			        android:layout_marginTop="10dp"
+			        android:layout_marginLeft="10dp"
+			        android:layout_marginRight="10dp"
+			        android:layout_marginBottom="10dp"
+			        android:textColor="@color/buttonTextColor"
+			        android:text="GET DIRECTION" />
+	   		    
+	   		    <TextView 
+			   		android:textSize="16sp"
+					android:layout_width="match_parent"
+			        android:layout_height="wrap_content"
+			        android:layout_marginTop="10dp"
+			        android:layout_marginLeft="10dp"
+			        android:layout_marginRight="10dp"
+			        android:layout_marginBottom="0dp"
+			        android:textColor="@color/textColor1"
+			        android:text="Hours of operation:" />
+	   		    
+	   		    <TextView 
+					android:id="@+id/operation_hour"
+			   		android:textSize="16sp"
+					android:maxLines="4"
+					android:layout_width="match_parent"
+			        android:layout_height="wrap_content"
+			        android:layout_marginTop="0dp"
+			        android:layout_marginLeft="10dp"
+			        android:layout_marginRight="10dp"
+			        android:layout_marginBottom="0dp"
+			        android:textColor="@color/textColor1"
+			        android:text="Mon - Fri 11:30AM - 11:00PM\nSat - Sun 10:30AM - 1:00AM" />
+	   		    	   		    		   		    	   		    	   		    
+   		    </LinearLayout>
+		        
+	        <LinearLayout 
+		        android:orientation="vertical"
+				android:layout_margin="10dp"
+				android:layout_width="0dip"
+		 		android:layout_weight="0.2"
+			    android:layout_height="match_parent" >
+	        
+		        <LinearLayout 
+			        android:orientation="horizontal"
+				    android:layout_gravity="center_horizontal"    
+					android:layout_width="wrap_content"
+				    android:layout_height="wrap_content" >		            
+            
+	         		<TextView 
+						android:id="@+id/menu_rating"
+				      	android:layout_width="match_parent"
+				        android:layout_height="wrap_content"
+				        android:textColor="@color/baseColor"
+				        android:text="4.0" />
+				    
+				    <ImageView
+						android:layout_width="20sp"
+				        android:layout_height="20sp"
+				        android:src="@drawable/star"
+						android:padding="2dp" />   	 
+						
+				</LinearLayout>				  				    
+			    			    	            
+	       	</LinearLayout>
+	        
+	    </LinearLayout>
+	
+	    <View
+			android:layout_width="match_parent"
+			android:layout_marginTop="15dp"
+			android:layout_marginBottom="15dp"
+			android:layout_height="1dp"
+			android:background="#aaa" />
+	
+	    <LinearLayout 
+	        android:orientation="horizontal"
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content" >
+		    
+   		    <TextView 
+				android:id="@+id/btn_view_menu"
+		   		android:textSize="14sp"
+				android:layout_width="0dip"
+		 		android:layout_weight="0.33"
+		        android:layout_height="wrap_content"
+		        android:gravity="center"
+		        android:layout_marginTop="10dp"
+		        android:layout_marginLeft="10dp"
+		        android:layout_marginRight="10dp"
+		        android:layout_marginBottom="10dp"
+		        android:textColor="@color/buttonTextColor"
+		        android:text="VIEW MENU" />
+   
+   		    <TextView 
+				android:id="@+id/btn_order_now"
+		   		android:textSize="14sp"
+				android:layout_width="0dip"
+		 		android:layout_weight="0.33"
+		        android:layout_height="wrap_content"
+		        android:gravity="center"
+		        android:layout_marginTop="10dp"
+		        android:layout_marginLeft="10dp"
+		        android:layout_marginRight="10dp"
+		        android:layout_marginBottom="10dp"
+		        android:textColor="@color/buttonTextColor"
+		        android:text="OREDER NOW" />
+   		    		    	    
+   		    <TextView 
+				android:id="@+id/btn_share"
+		   		android:textSize="14sp"
+				android:layout_width="0dip"
+		 		android:layout_weight="0.33"
+		        android:layout_height="wrap_content"
+		        android:gravity="center"
+		        android:layout_marginTop="10dp"
+		        android:layout_marginLeft="10dp"
+		        android:layout_marginRight="10dp"
+		        android:layout_marginBottom="10dp"
+		        android:textColor="@color/buttonTextColor"
+		        android:text="SHARE" />
+   		    	    
+ 		</LinearLayout>
+	    
+		<View
+			android:layout_width="match_parent"
+			android:layout_marginTop="15dp"
+			android:layout_marginBottom="15dp"
+			android:layout_height="1dp"
+			android:background="#aaa" />
+	    
+	    <LinearLayout 
+	        android:orientation="vertical"
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content" >
+		    
+        	<TextView 
+		   		android:textSize="20sp"
+		        android:layout_margin="10dp"
+				android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:textColor="@color/textColor1"
+		        android:text="Top-Rated Menu Items" />   	    
+			        			        
+	       	<ListView
+			    android:id="@+id/list_top_rated_menu"
+			    android:layout_width="fill_parent" 
+			    android:layout_height="match_parent" >
+<!-- 			    android:layout_height="1200dp" > -->
+			</ListView> 
+						    			        		    	    
+	    </LinearLayout>
+	    
+   	    <LinearLayout 
+	        android:orientation="vertical"
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content" >
+		    
+		    <LinearLayout 
+		        android:orientation="horizontal"
+			    android:layout_width="match_parent"
+			    android:layout_height="wrap_content" >
+   	        	        
+			    <TextView 
+			   		android:textSize="20sp"
+			        android:layout_margin="10dp"
+					android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:textColor="@color/textColor1"
+			        android:text="Full Menu" />   	    
+			        
+				<EditText android:id="@+id/inputSearch"
+			        android:layout_width="match_parent"
+			        android:layout_height="wrap_content"
+			        android:gravity="right"
+			        android:layout_margin="10dp"
+			        android:hint="Search products.."
+			        android:inputType="textVisiblePassword" />
+
+			</LinearLayout>
+		        
+	       	<ListView
+			    android:id="@+id/list_full_menu"
+			    android:layout_width="fill_parent" 
+			    android:layout_height="match_parent" >
+<!-- 			    android:layout_height="1200dp" > -->
+			</ListView> 
+						    			        		    	    
+	    </LinearLayout>
+	    
+	   
+	</LinearLayout>	    
+	
+</ScrollView>	

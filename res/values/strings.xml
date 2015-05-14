@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Karta Apps</string>
+    <string name="hello_world">Hello world!</string>
+	<string name="logo_desc">Logo Karta Apps</string>
+	<string name="username_text">Email</string>
+	<string name="password_text">Password</string>
+	
+	<!--Menu title -->
+    <string name="title1">Home</string>
+    <string name="title2">Search</string>
+    <string name="title3">Add A Review</string>
+    <string name="title4">Maps</string>
+    <string name="title5">Logout</string>
+    <string name="mode">Mode</string>	
+		
+	<color name="baseColor">#43a147</color> 
+	<color name="buttonTextColor">#ef5452</color> 
+	<color name="textColor1">#000</color> 
+	<color name="textColor2">#fff</color> 
+	<color name="textColor3">#555</color> 
+	<color name="headerColor">#43a147</color> 
+	<color name="footerColor">#43a147</color> 
+	<color name="containerColor">#fff</color> 
+				
+</resources>

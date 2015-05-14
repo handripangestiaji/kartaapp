@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/containerColor"
+    android:orientation="horizontal" >
+ 
+    <ImageView
+        android:id="@+id/img_menu"
+		android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:contentDescription="description image"
+        android:src="@drawable/thumb"
+		android:padding="5dp" />
+ 
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="0.4"
+        android:orientation="vertical" >
+    
+		    <LinearLayout 
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"		        
+		        android:orientation="vertical">
+		        	    
+        	    <TextView
+			        android:id="@+id/menu_title"
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:text="Menu Name"
+			        android:textAppearance="?android:attr/textAppearanceMedium"
+			        android:padding="2dp"
+			        android:textColor="@color/textColor1" />
+        	    
+    	    </LinearLayout>
+
+		    <LinearLayout 
+		        android:layout_width="wrap_content"
+		        android:layout_height="match_parent"
+		        android:gravity="bottom"
+		        android:orientation="vertical">
+		        	    
+        	    <TextView
+			        android:id="@+id/restoran_name"
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:text="Restoran Name"
+			        android:padding="2dp"
+			        android:textColor="@color/textColor1" />
+
+ 	            <TextView
+	        		android:id="@+id/restoran_address"
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:text="Restoran Address"
+			        android:padding="2dp"
+			        android:textColor="@color/textColor1" />
+        	    	            	    
+    	    </LinearLayout>
+		    
+	</LinearLayout>
+	
+    <LinearLayout 
+        android:layout_height="match_parent"
+		android:layout_width="0dp"
+ 		android:layout_weight="0.4"
+ 		android:gravity="right"
+        android:orientation="vertical">
+    
+	    <LinearLayout 
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"		        
+	        android:orientation="horizontal">
+	        	    
+      	    <TextView
+		        android:id="@+id/menu_rating"
+		        android:layout_width="wrap_content"
+		        android:layout_height="match_parent"
+		        android:text="4.0"
+		        android:textStyle="bold"
+		        android:padding="2dp"
+		        android:textColor="@color/baseColor" />
+      	    
+		  	<ImageView
+				android:layout_width="20sp"
+		        android:layout_height="20sp"
+		        android:src="@drawable/star"
+				android:padding="2dp" />   	    
+      	    
+      	</LinearLayout>
+
+	    <LinearLayout 
+	        android:layout_width="wrap_content"
+	        android:layout_height="match_parent"
+	        android:gravity="bottom"
+	        android:orientation="vertical">
+    	    
+	   	    <TextView
+		        android:id="@+id/restorant_distance"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:textAppearance="?android:attr/textAppearanceSmall"
+		        android:text="2.1 miles away" 
+		    	android:textColor="@color/textColor1" />
+	 	    
+	   	    <TextView
+		        android:id="@+id/menu_price"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:textAppearance="?android:attr/textAppearanceMedium"
+		        android:text="$ 15.00" 
+		    	android:textColor="@color/textColor1" />
+
+  		</LinearLayout>
+ 	    	
+	</LinearLayout>
+	    
+</LinearLayout>

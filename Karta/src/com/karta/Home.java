@@ -154,7 +154,7 @@ public class Home extends Activity implements ISideNavigationCallback{
 	                break;
 
 	            case R.id.side_navigation_menu_item2:
-	                i = new Intent(Home.this, Home.class);
+	                i = new Intent(Home.this, Search.class);
 	                startActivity(i);          
 
 	                break;

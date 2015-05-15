@@ -50,8 +50,6 @@ public class LeaveReview extends Activity implements ISideNavigationCallback {
         sideNavigationView.setMenuClickCallback(this);
 		        
     	((ImageView) findViewById(R.id.main_menu)).setOnClickListener(btnClick);
-
-    	((TextView) findViewById(R.id.btn_view_business)).setOnClickListener(btnClick);
     	
 	}	
         
@@ -88,14 +86,7 @@ public class LeaveReview extends Activity implements ISideNavigationCallback {
                     	sideNavigationView.toggleMenu();
                     	
                     	break;
-                    }
-                    case R.id.btn_view_business:{                            
-                        Intent i = new Intent(LeaveReview.this, BusinessDetail.class);
-                        startActivity(i);          
-                    	
-                    	break;
-                    }
-                    
+                    }                    
                 }	                
 	        }
 	};
@@ -139,3 +130,4 @@ public class LeaveReview extends Activity implements ISideNavigationCallback {
     }
 
 }
+ 

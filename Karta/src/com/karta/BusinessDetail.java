@@ -32,6 +32,7 @@ import com.karta.listadapter.ListMenu;
 
 public class BusinessDetail extends Activity implements ISideNavigationCallback {
 
+	protected static final ArrayAdapter<?> adapter1 = null;
 	private SideNavigationView sideNavigationView;
 
     @Override
@@ -160,7 +161,7 @@ public class BusinessDetail extends Activity implements ISideNavigationCallback 
 
        	final ListAdapter adapter1=new ListMenu(this, title1, image1, rating1);
 		listFullMenu=(ListView)findViewById(R.id.list_full_menu);
-		listFullMenu.setAdapter(adapter);
+		listFullMenu.setAdapter(adapter1);
 		
 		setListViewHeightBasedOnChildren(listFullMenu);		
 		        		
@@ -184,7 +185,7 @@ public class BusinessDetail extends Activity implements ISideNavigationCallback 
             @Override
     	    public void onTextChanged(CharSequence cs, int arg1, int arg2, int arg3) {
     	        // When user changed the Text
-//            	((ArrayAdapter<?>)BusinessDetail.this.adapter).getFilter().filter(cs);   
+            	(BusinessDetail.this.adapter1).getFilter().filter(cs);   
 				 Toast.makeText(getApplicationContext(), cs, Toast.LENGTH_SHORT).show();			 
     	    }
     	     

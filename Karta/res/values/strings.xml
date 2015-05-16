@@ -6,6 +6,7 @@
 	<string name="logo_desc">Logo Karta Apps</string>
 	<string name="username_text">Email</string>
 	<string name="password_text">Password</string>
+	<string name="main_margin">10dp</string>
 	
 	<!--Menu title -->
     <string name="title1">Home</string>

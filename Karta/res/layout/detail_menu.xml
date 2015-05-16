@@ -24,7 +24,9 @@
 	    <LinearLayout 
 	        android:orientation="horizontal"
 		    android:layout_width="match_parent"
-		    android:layout_height="wrap_content" >
+		    android:layout_height="wrap_content" 
+	        android:layout_marginRight="5dp"
+		  	android:layout_marginLeft="5dp" >
 		    
 		    <TextView 
 				android:id="@+id/menu_description"
@@ -32,22 +34,23 @@
 				android:layout_width="0dip"
 		 		android:layout_weight="0.8"
 		        android:layout_height="match_parent"
-		        android:layout_margin="10dp"
+		        android:layout_marginTop="5dp"
+		        android:layout_marginBottom="5dp"
 		        android:textColor="@color/textColor1"
 		        android:text="Description in here Description in here Description in here Description in here Description in here Description in here Description in here Description in here" />
 	        
 	        <LinearLayout 
 		        android:orientation="vertical"
-				android:layout_margin="10dp"
 				android:layout_width="0dip"
 		 		android:layout_weight="0.2"
 			    android:layout_height="match_parent" >
 	        
 		        <LinearLayout 
 			        android:orientation="horizontal"
-				    android:layout_gravity="center_horizontal"    
+				    android:layout_gravity="right"    
 					android:layout_width="wrap_content"
-				    android:layout_height="wrap_content" >		            
+				    android:layout_height="wrap_content"
+				    android:layout_marginTop="5dp" >		            
             
 	         		<TextView 
 						android:id="@+id/menu_rating"
@@ -57,10 +60,10 @@
 				        android:text="4.0" />
 				    
 				    <ImageView
-						android:layout_width="20sp"
+				        android:layout_width="20sp"
 				        android:layout_height="20sp"
-				        android:src="@drawable/star"
-						android:padding="2dp" />   	 
+				        android:layout_marginLeft="2dp"
+				        android:src="@drawable/star" />
 						
 				</LinearLayout>				  				    
 			    
@@ -68,8 +71,9 @@
 					android:id="@+id/menu_price"
 			   		android:textSize="14sp"
 			   		android:layout_marginTop="15dp"
-				    android:gravity="center_horizontal"    
-			      	android:layout_width="match_parent"
+		        	android:layout_marginLeft="5dp"
+				    android:gravity="right"    
+			      	android:layout_width="fill_parent"
 			        android:layout_height="wrap_content"
 			        android:textColor="@color/textColor1"
 			        android:text="$15.00" />
@@ -148,7 +152,7 @@
 		    
 		    <TextView 
 		   		android:textSize="20sp"
-		        android:layout_margin="10dp"
+		        android:layout_margin="5dp"
 				android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
 		        android:textColor="@color/textColor1"

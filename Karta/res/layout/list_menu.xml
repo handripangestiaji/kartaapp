@@ -3,7 +3,9 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:background="@color/containerColor"
-    android:orientation="horizontal" >
+    android:orientation="horizontal" 
+    android:layout_marginLeft="5dp"
+    android:layout_marginRight="5dp">
  
     <ImageView
         android:id="@+id/img_menu"
@@ -11,7 +13,8 @@
         android:layout_height="80dp"
         android:contentDescription="description image"
         android:src="@drawable/thumb"
-		android:padding="5dp" />
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp" />
  
     <LinearLayout
         android:layout_width="0dp"
@@ -22,7 +25,8 @@
 		    <LinearLayout 
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"		        
-		        android:orientation="vertical">
+		        android:orientation="vertical"
+		            android:layout_marginLeft="5dp">
 		        	    
         	    <TextView
 			        android:id="@+id/menu_title"
@@ -46,7 +50,9 @@
 			        android:layout_width="wrap_content"
 			        android:layout_height="wrap_content"
 			        android:text="Restoran Name"
-			        android:padding="2dp"
+			        android:paddingTop="2dp"
+			        android:paddingBottom="2dp"
+			        android:layout_marginLeft="5dp"
 			        android:textColor="@color/textColor1" />
 
  	            <TextView
@@ -54,7 +60,9 @@
 			        android:layout_width="wrap_content"
 			        android:layout_height="wrap_content"
 			        android:text="Restoran Address"
-			        android:padding="2dp"
+			        android:paddingTop="2dp"
+			        android:paddingBottom="2dp"
+			        android:layout_marginLeft="5dp"
 			        android:textColor="@color/textColor1" />
         	    	            	    
     	    </LinearLayout>
@@ -86,7 +94,8 @@
 				android:layout_width="20sp"
 		        android:layout_height="20sp"
 		        android:src="@drawable/star"
-				android:padding="2dp" />   	    
+				android:paddingTop="2dp"
+				android:paddingBottom="2dp" />   	    
       	    
       	</LinearLayout>
 
@@ -102,6 +111,7 @@
 		        android:layout_height="wrap_content"
 		        android:textAppearance="?android:attr/textAppearanceSmall"
 		        android:text="2.1 miles away" 
+		        android:padding="2dp"
 		    	android:textColor="@color/textColor1" />
 	 	    
 	   	    <TextView

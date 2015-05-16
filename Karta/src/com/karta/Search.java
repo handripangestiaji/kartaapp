@@ -31,6 +31,7 @@ import android.widget.Toast;
 
 import com.devspark.sidenavigation.ISideNavigationCallback;
 import com.devspark.sidenavigation.SideNavigationView;
+import com.karta.R.color;
 import com.karta.listadapter.ListComment;
 import com.karta.listadapter.ListMenu;
 import com.karta.listadapter.ListMenuAdapter;
@@ -44,6 +45,7 @@ public class Search extends Activity implements ISideNavigationCallback {
 	ListMenuAdapter adapter;
 	EditText editsearch;
 	ArrayList<MenuModel> arraylist = new ArrayList<MenuModel>();
+    EditText inputSearch;	
 	
     @Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +59,8 @@ public class Search extends Activity implements ISideNavigationCallback {
 	    
 	    TextView Title = (TextView) findViewById(R.id.title_bar);	    
 	    TextView SubTitle = (TextView) findViewById(R.id.sub_title_bar);	 
+	    
+	    inputSearch = (EditText) findViewById(R.id.keyword_search);
 	    
 	    Title.setText("Search");
 	    SubTitle.setText("");
@@ -97,7 +101,6 @@ public class Search extends Activity implements ISideNavigationCallback {
    		list.setAdapter(adapter);
    		adapter.filter("");
                	        
-        EditText inputSearch = (EditText) findViewById(R.id.keyword_search);	
         inputSearch.addTextChangedListener(new TextWatcher() {	            
 	        @Override
 		    public void onTextChanged(CharSequence cs, int arg1, int arg2, int arg3) {
@@ -123,16 +126,28 @@ public class Search extends Activity implements ISideNavigationCallback {
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.WRAP_CONTENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT);
-            params.setMargins(7, 7, 7, 7);
-            Button btn = new Button(this);
+            params.setMargins(5, 5, 5, 5);
+            final Button btn = new Button(this);
             btn.setText(category[i]);
             btn.setTextSize(12);
             btn.setLines(1);
+            btn.setTextColor(getResources().getColor(R.color.buttonTextColor));
             btn.setBackgroundResource(R.drawable.button_custom);
+            btn.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View view) {
+                    searchCategory(String.valueOf(btn.getText()));
+                }
+            });
+            
             linLayout.addView(btn, params);
         }
         
 	}	
+    
+    public void searchCategory(String keyword){
+    	inputSearch.setText(keyword);
+		adapter.filter(keyword);   	
+    }
     
     public static void setListViewHeightBasedOnChildren(ListView listView) {
         ListAdapter listAdapter = listView.getAdapter();
@@ -197,27 +212,27 @@ public class Search extends Activity implements ISideNavigationCallback {
     @Override
     public void onSideNavigationItemClick(int itemId) {
     	Intent i;
-        switch (itemId) {
+    	switch (itemId) {
             case R.id.side_navigation_menu_item1:
-                i = new Intent(Search.this, Home.class);
+                i = new Intent(this, Home.class);
                 startActivity(i);          
 
                 break;
 
             case R.id.side_navigation_menu_item2:
-                i = new Intent(Search.this, Home.class);
+                i = new Intent(this, Search.class);
                 startActivity(i);          
 
                 break;
 
             case R.id.side_navigation_menu_item3:
-                i = new Intent(Search.this, Home.class);
+                i = new Intent(this, AddReview.class);
                 startActivity(i);          
 
                 break;
 
             case R.id.side_navigation_menu_item4:
-                i = new Intent(Search.this, Home.class);
+                i = new Intent(this, Maps.class);
                 startActivity(i);          
 
                 break;

@@ -5,15 +5,19 @@ import java.util.List;
 import java.util.Locale;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.karta.LeaveReview;
+import com.karta.MenuDetail;
 import com.karta.R;
 import com.karta.model.MenuModel;
- 
+import android.view.View.OnClickListener; 
+
 public class ListMenuAdapter extends BaseAdapter {
 	// Declare Variables
 	Context mContext;
@@ -75,23 +79,26 @@ public class ListMenuAdapter extends BaseAdapter {
 		holder.restoran_name.setText("Ledo's Pizza");
  
 		// Listen for ListView Item Click
-//		view.setOnClickListener(new OnClickListener() {
-// 
-//			@Override
-//			public void onClick(View arg0) {
-//				// Send single item click data to SingleItemView Class
-//				Intent intent = new Intent(mContext, SingleItemView.class);
-//				// Pass all data rank
-//				intent.putExtra("rank",(MenuModelList.get(position).getRank()));
-//				// Pass all data country
-//				intent.putExtra("country",(MenuModelList.get(position).getCountry()));
-//				// Pass all data population
-//				intent.putExtra("population",(MenuModelList.get(position).getPopulation()));
-//				// Pass all data flag
-//				// Start SingleItemView Class
-//				mContext.startActivity(intent);
-//			}
-//		});
+		view.setOnClickListener(new OnClickListener() {
+ 
+			@Override
+			public void onClick(View arg0) {
+				if(mContext.getClass().getSimpleName().equals("Search")){
+					Intent intent = new Intent(mContext, MenuDetail.class);
+//					intent.putExtra("rank",(MenuModelList.get(position).getRank()));
+//					intent.putExtra("country",(MenuModelList.get(position).getCountry()));
+//					intent.putExtra("population",(MenuModelList.get(position).getPopulation()));
+					mContext.startActivity(intent);					
+				}
+				else if(mContext.getClass().getSimpleName().equals("AddReview")){
+					Intent intent = new Intent(mContext, LeaveReview.class);
+//					intent.putExtra("rank",(MenuModelList.get(position).getRank()));
+//					intent.putExtra("country",(MenuModelList.get(position).getCountry()));
+//					intent.putExtra("population",(MenuModelList.get(position).getPopulation()));
+					mContext.startActivity(intent);					
+				}
+			}
+		});
  
 		return view;
 	}

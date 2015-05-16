@@ -35,6 +35,7 @@
 	</ListView> 
 	
   	<TextView 
+	    android:id="@+id/treding_category_label"
 	    android:layout_marginTop="15dip"
 	    android:textColor="@color/textColor1"
 	  	android:textSize="14sp"
@@ -46,8 +47,9 @@
  	<LinearLayout 
 	    android:id="@+id/treding_category"
 	    android:background="@color/containerColor"
-	    android:layout_width="match_parent"
-	    android:layout_height="match_parent"
+	    android:layout_margin="5dp"
+	    android:layout_width="fill_parent"
+	    android:layout_height="fill_parent"
 	    android:orientation="horizontal" >
 	    
 	</LinearLayout>

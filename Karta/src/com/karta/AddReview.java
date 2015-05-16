@@ -1,10 +1,14 @@
 package com.karta;
 
+import java.util.ArrayList;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.View.MeasureSpec;
 import android.view.ViewGroup;
@@ -13,7 +17,11 @@ import android.view.Window;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -23,12 +31,22 @@ import android.widget.Toast;
 
 import com.devspark.sidenavigation.ISideNavigationCallback;
 import com.devspark.sidenavigation.SideNavigationView;
+import com.karta.R.color;
 import com.karta.listadapter.ListComment;
+import com.karta.listadapter.ListMenu;
+import com.karta.listadapter.ListMenuAdapter;
+import com.karta.model.MenuModel;
 
-public class MenuDetail extends Activity implements ISideNavigationCallback {
+public class AddReview extends Activity implements ISideNavigationCallback {
 
 	private SideNavigationView sideNavigationView;
-
+	
+	ListView list;
+	ListMenuAdapter adapter;
+	EditText editsearch;
+	ArrayList<MenuModel> arraylist = new ArrayList<MenuModel>();
+    EditText inputSearch;	
+	
     @Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -37,13 +55,19 @@ public class MenuDetail extends Activity implements ISideNavigationCallback {
 		
 		setContentView(R.layout.layout_with_header);
 	    RelativeLayout container = (RelativeLayout) findViewById(R.id.container);
-	    getLayoutInflater().inflate(R.layout.detail_menu, container);
+	    getLayoutInflater().inflate(R.layout.search, container);
 	    
 	    TextView Title = (TextView) findViewById(R.id.title_bar);	    
 	    TextView SubTitle = (TextView) findViewById(R.id.sub_title_bar);	 
 	    
-	    Title.setText("Pizza name one");
-	    SubTitle.setText("Ledo's Pizza | 12345 Main St.");
+	    inputSearch = (EditText) findViewById(R.id.keyword_search);
+	    TextView categoryLabel = (TextView) findViewById(R.id.treding_category_label);
+	    categoryLabel.setVisibility(View.INVISIBLE);
+	    LinearLayout categoryLayout = (LinearLayout) findViewById(R.id.treding_category);
+	    categoryLayout.setVisibility(View.INVISIBLE);
+	    
+	    Title.setText("Add a review");
+	    SubTitle.setText("Search for item");
 
 	    sideNavigationView = (SideNavigationView) findViewById(R.id.side_navigation_view);
         sideNavigationView.setMenuItems(R.menu.side_navigation_menu);
@@ -51,59 +75,60 @@ public class MenuDetail extends Activity implements ISideNavigationCallback {
 		        
     	((ImageView) findViewById(R.id.main_menu)).setOnClickListener(btnClick);
 
-    	((TextView) findViewById(R.id.btn_view_business)).setOnClickListener(btnClick);
-    	((TextView) findViewById(R.id.btn_leave_review)).setOnClickListener(btnClick);
-    	
-    	ListView list;
+    	String[] title ={
+      	    	 "Pizza name one",
+      	    	 "Pizza name two",
+      	    	 "Pizza name three"
+          	};
+          	 
+        double[] rating ={
+         	    	 4.0,
+         	    	 4.5,
+         	    	 2.5
+      		};
 
-    	final String[] title ={
-	    	 "Lebron James | Mar, 14, 2015",
-	    	 "Brian Beavers | Mar, 5, 2015",
-	    	 "Kevin Williams | Feb, 12, 2015",
-	    	 "Michael Jordan | Jan, 21, 2015"
-    	};
-    	 
-    	String[] rating ={
-   	    	 "4.0",
-   	    	 "4.5",
-   	    	 "3.5",
-   	    	 "3.0"
-       	};
+        Integer[] image={
+      	    	 R.drawable.thumb,
+      	    	 R.drawable.thumb,
+      	    	 R.drawable.thumb
+      	    };
+          	
+      	for (int i = 0; i < rating.length; i++) 
+		{
+      		String[] temp = {"asd", "dasadad"};
+			MenuModel wp = new MenuModel(title[i], "description", rating[i], rating[i], rating[i], rating[i], "Pizza", "Lodon's Pizza", temp);
+			arraylist.add(wp);
+		}
+      	
+      	list = (ListView) findViewById(R.id.list_search_result);
+      	adapter = new ListMenuAdapter(this, arraylist);
+   		list.setAdapter(adapter);
+   		adapter.filter("");
+               	        
+        inputSearch.addTextChangedListener(new TextWatcher() {	            
+	        @Override
+		    public void onTextChanged(CharSequence cs, int arg1, int arg2, int arg3) {
+	        	String text = String.valueOf(cs);
+				adapter.filter(text);
+			} 
 
-    	String[] comment ={
-      	    	 "Review goes here Review goes here Review goes here Review goes here Review goes here",
-      	    	 "Review goes here Review goes here Review goes here Review goes here Review goes here Review goes here Review goes here Review goes here Review goes here",
-      	    	 "Review goes here Review goes here Review goes here Review goes here Review goes here Review goes here",
-      	    	 "Review goes here Review goes here Review goes here Review goes here"
-      	};
-
-    	Integer[] image={
-	    	 R.drawable.p2,
-	    	 R.drawable.p1,
-	    	 R.drawable.p3,
-	    	 R.drawable.p5
-    	};
-    	    	
-    	ListComment adapter=new ListComment(this, title, comment, image, rating);
-		list=(ListView)findViewById(R.id.list_comment);
-		list.setAdapter(adapter);
-		
-		setListViewHeightBasedOnChildren(list);		
-
-//		Toast.makeText(getApplicationContext(), String.valueOf(totalHeight), Toast.LENGTH_SHORT).show();			 
-		        
-	    ScrollView mainScroll = (ScrollView) findViewById(R.id.main_scroll_view);
-        mainScroll.smoothScrollTo(0, 0);
-		
-		list.setOnItemClickListener(new OnItemClickListener() {
-			 
-			 @Override
-			 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				 String Selecteditem= title[+position];
-				 Toast.makeText(getApplicationContext(), Selecteditem, Toast.LENGTH_SHORT).show();			 
-			 }
-		 });				    	
+	        @Override
+		    public void beforeTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
+		        // TODO Auto-generated method stub		         
+		    }
+		     
+		    @Override
+		    public void afterTextChanged(Editable arg0) {
+		        // TODO Auto-generated method stub                          
+		    }	
+        });
+        
 	}	
+    
+    public void searchCategory(String keyword){
+    	inputSearch.setText(keyword);
+		adapter.filter(keyword);   	
+    }
     
     public static void setListViewHeightBasedOnChildren(ListView listView) {
         ListAdapter listAdapter = listView.getAdapter();
@@ -146,7 +171,7 @@ public class MenuDetail extends Activity implements ISideNavigationCallback {
     	 
     	editor.commit(); // commit changes
     	
-        Intent i = new Intent(MenuDetail.this, Login.class);
+        Intent i = new Intent(AddReview.this, Login.class);
         startActivity(i);          
         finish();
 	} 
@@ -161,23 +186,10 @@ public class MenuDetail extends Activity implements ISideNavigationCallback {
                     	
                     	break;
                     }
-                    case R.id.btn_view_business:{                            
-                        Intent i = new Intent(MenuDetail.this, BusinessDetail.class);
-                        startActivity(i);          
-                    	
-                    	break;
-                    }
-                    case R.id.btn_leave_review:{                            
-                        Intent i = new Intent(MenuDetail.this, LeaveReview.class);
-                        startActivity(i);          
-                    	
-                    	break;
-                    }
-                    
                 }	                
 	        }
 	};
-
+	
     @Override
     public void onSideNavigationItemClick(int itemId) {
     	Intent i;
@@ -215,5 +227,5 @@ public class MenuDetail extends Activity implements ISideNavigationCallback {
         }
         finish();
     }
-
+        
 }

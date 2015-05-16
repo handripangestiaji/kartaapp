@@ -94,27 +94,27 @@ public class LeaveReview extends Activity implements ISideNavigationCallback {
     @Override
     public void onSideNavigationItemClick(int itemId) {
     	Intent i;
-        switch (itemId) {
+    	switch (itemId) {
             case R.id.side_navigation_menu_item1:
-                i = new Intent(LeaveReview.this, Home.class);
+                i = new Intent(this, Home.class);
                 startActivity(i);          
 
                 break;
 
             case R.id.side_navigation_menu_item2:
-                i = new Intent(LeaveReview.this, Home.class);
+                i = new Intent(this, Search.class);
                 startActivity(i);          
 
                 break;
 
             case R.id.side_navigation_menu_item3:
-                i = new Intent(LeaveReview.this, Home.class);
+                i = new Intent(this, AddReview.class);
                 startActivity(i);          
 
                 break;
 
             case R.id.side_navigation_menu_item4:
-                i = new Intent(LeaveReview.this, Home.class);
+                i = new Intent(this, Maps.class);
                 startActivity(i);          
 
                 break;

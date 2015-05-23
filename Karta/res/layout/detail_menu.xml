@@ -25,17 +25,17 @@
 	        android:orientation="horizontal"
 		    android:layout_width="match_parent"
 		    android:layout_height="wrap_content" 
-	        android:layout_marginRight="5dp"
-		  	android:layout_marginLeft="5dp" >
+	        android:layout_marginRight="10dp"
+		  	android:layout_marginLeft="10dp" >
 		    
 		    <TextView 
 				android:id="@+id/menu_description"
-		   		android:textSize="16sp"
+		   		android:textAppearance="?android:attr/textAppearanceSmall"
 				android:layout_width="0dip"
 		 		android:layout_weight="0.8"
 		        android:layout_height="match_parent"
-		        android:layout_marginTop="5dp"
-		        android:layout_marginBottom="5dp"
+		        android:layout_marginTop="10dp"
+		        android:layout_marginBottom="10dp"
 		        android:textColor="@color/textColor1"
 		        android:text="Description in here Description in here Description in here Description in here Description in here Description in here Description in here Description in here" />
 	        
@@ -50,7 +50,7 @@
 				    android:layout_gravity="right"    
 					android:layout_width="wrap_content"
 				    android:layout_height="wrap_content"
-				    android:layout_marginTop="5dp" >		            
+				    android:layout_marginTop="10dp" >		            
             
 	         		<TextView 
 						android:id="@+id/menu_rating"
@@ -62,7 +62,7 @@
 				    <ImageView
 				        android:layout_width="20sp"
 				        android:layout_height="20sp"
-				        android:layout_marginLeft="2dp"
+				        android:layout_marginLeft="5dp"
 				        android:src="@drawable/star" />
 						
 				</LinearLayout>				  				    
@@ -71,7 +71,7 @@
 					android:id="@+id/menu_price"
 			   		android:textSize="14sp"
 			   		android:layout_marginTop="15dp"
-		        	android:layout_marginLeft="5dp"
+		        	android:layout_marginLeft="10dp"
 				    android:gravity="right"    
 			      	android:layout_width="fill_parent"
 			        android:layout_height="wrap_content"
@@ -152,7 +152,7 @@
 		    
 		    <TextView 
 		   		android:textSize="20sp"
-		        android:layout_margin="5dp"
+		        android:layout_margin="10dp"
 				android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
 		        android:textColor="@color/textColor1"

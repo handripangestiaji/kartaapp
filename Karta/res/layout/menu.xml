@@ -5,12 +5,12 @@
     android:orientation="vertical"
     android:background="@color/containerColor" >
 	
-	<ListView
+	<com.baoyz.swipemenulistview.SwipeMenuListView
 	    android:id="@+id/list_menu"
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content" 
+	    android:scrollbars="none"	    
 	    android:layout_marginLeft="5dp"
-	    android:layout_marginRight="5dp">
-	</ListView> 
+	    android:layout_marginRight="5dp" />	 
     
 </LinearLayout>

@@ -4,18 +4,25 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.View;
-import android.view.Window;
 import android.view.View.OnClickListener;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.baoyz.swipemenulistview.SwipeMenu;
+import com.baoyz.swipemenulistview.SwipeMenuCreator;
+import com.baoyz.swipemenulistview.SwipeMenuItem;
+import com.baoyz.swipemenulistview.SwipeMenuListView;
+import com.baoyz.swipemenulistview.SwipeMenuListView.OnMenuItemClickListener;
+import com.baoyz.swipemenulistview.SwipeMenuListView.OnSwipeListener;
 import com.devspark.sidenavigation.ISideNavigationCallback;
 import com.devspark.sidenavigation.SideNavigationView;
 import com.karta.listadapter.ListMenu;
@@ -46,8 +53,6 @@ public class Menu extends Activity implements ISideNavigationCallback {
 		        
     	((ImageView) findViewById(R.id.main_menu)).setOnClickListener(btnClick);
     	
-    	ListView list;
-
     	final String[] title ={
 	    	 "Pizza name one",
 	    	 "Pizza name two",
@@ -111,8 +116,10 @@ public class Menu extends Activity implements ISideNavigationCallback {
 	    	 R.drawable.thumb    	
 	    };
     	
+    	SwipeMenuListView list;
+    	
     	ListMenu adapter=new ListMenu(this, title, image, rating);
-		list=(ListView)findViewById(R.id.list_menu);
+		list=(SwipeMenuListView)findViewById(R.id.list_menu);
 		list.setAdapter(adapter);
 		
 		list.setOnItemClickListener(new OnItemClickListener() {
@@ -125,6 +132,45 @@ public class Menu extends Activity implements ISideNavigationCallback {
 				 startActivity(i);          
 			 }
 		 });
+		
+		// step 1. create a MenuCreator
+//		SwipeMenuCreator creator = new SwipeMenuCreator() {
+//
+//			@Override
+//			public void create(SwipeMenu menu) {
+//				SwipeMenuItem openItem = new SwipeMenuItem(getApplicationContext());
+//				openItem.setBackground(new ColorDrawable(Color.rgb(0xC9, 0xC9, 0xCE)));
+//				openItem.setWidth(90);
+//				openItem.setTitle("Open");
+//				openItem.setTitleSize(18);
+//				openItem.setTitleColor(Color.WHITE);
+//				menu.addMenuItem(openItem);
+//
+//			}
+//		};
+//		// set creator
+//		list.setMenuCreator(creator);
+
+//		// step 2. listener item click event
+//		list.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+//			@Override
+//			public boolean onMenuItemClick(int position, SwipeMenu menu, int index) {
+//				String Selecteditem= title[+position];
+//				switch (index) {
+//				case 0:
+//					// open
+//                    Toast.makeText(getApplicationContext(), Selecteditem + "1", Toast.LENGTH_LONG).show();
+//					break;
+//				case 1:
+//					// delete
+////					delete(item);
+//                    Toast.makeText(getApplicationContext(), Selecteditem + "2", Toast.LENGTH_LONG).show();
+//					break;
+//				}
+//				return false;
+//			}
+//		});
+//				
     	
 	}	
     	

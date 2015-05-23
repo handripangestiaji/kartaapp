@@ -13,22 +13,26 @@
 	    android:contentDescription="description image"
         android:src="@drawable/burger" 
         />
-    	
-
+    	    
+    <View 
+	    android:layout_width="fill_parent"
+	    android:layout_height="100dp"
+        android:layout_alignBottom="@+id/img_category"
+        android:textColor="@color/textColor2"
+	    android:background="@drawable/shadow_list_category" />
+    
     <TextView 
 		android:id="@+id/category_name"
    		android:textSize="20sp"
    		android:layout_marginLeft="5dp"
  		android:layout_marginRight="5dp"
+ 		android:layout_marginBottom="5dp"
       	android:layout_width="match_parent"
         android:layout_height="fill_parent"
         android:gravity="bottom"
-        android:layout_alignLeft="@+id/img_category"
-        android:layout_alignTop="@+id/img_category"
-        android:layout_alignRight="@+id/img_category"
         android:layout_alignBottom="@+id/img_category"
         android:textColor="@color/textColor2"
         android:text="Best Slices in Town" />
-		    			    	    	    
+    		    			    	    	    
 </RelativeLayout>
 	    

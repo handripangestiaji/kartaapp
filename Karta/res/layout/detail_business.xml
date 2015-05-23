@@ -2,6 +2,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
    	xmlns:tools="http://schemas.android.com/tools"
 	android:id="@+id/main_scroll_view"
+	android:scrollbars="none"	    
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
@@ -205,7 +206,8 @@
 			        			        
 	       	<ListView
 			    android:id="@+id/list_top_rated_menu"
-			    android:layout_width="fill_parent" 
+			    android:scrollbars="none"
+	    	    android:layout_width="fill_parent" 
 			    android:layout_height="match_parent" >
 <!-- 			    android:layout_height="1200dp" > -->
 			</ListView> 
@@ -230,18 +232,11 @@
 			        android:textColor="@color/textColor1"
 			        android:text="Full Menu" />   	    
 			        
-				<EditText android:id="@+id/inputSearch"
-			        android:layout_width="match_parent"
-			        android:layout_height="wrap_content"
-			        android:gravity="right"
-			        android:layout_margin="10dp"
-			        android:hint="Search products.."
-			        android:inputType="textVisiblePassword" />
-
 			</LinearLayout>
 		        
 	       	<ListView
 			    android:id="@+id/list_full_menu"
+			    android:scrollbars="none"	    
 			    android:layout_width="fill_parent" 
 			    android:layout_height="match_parent" >
 <!-- 			    android:layout_height="1200dp" > -->

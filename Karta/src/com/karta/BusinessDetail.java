@@ -178,30 +178,7 @@ public class BusinessDetail extends Activity implements ISideNavigationCallback 
 		
 	    ScrollView mainScroll = (ScrollView) findViewById(R.id.main_scroll_view);
         mainScroll.smoothScrollTo(0, 0);
-        
-        EditText inputSearch = (EditText) findViewById(R.id.inputSearch);	
-        inputSearch.addTextChangedListener(new TextWatcher() {
-            
-            @Override
-    	    public void onTextChanged(CharSequence cs, int arg1, int arg2, int arg3) {
-    	        // When user changed the Text
-            	(BusinessDetail.this.adapter1).getFilter().filter(cs);   
-				 Toast.makeText(getApplicationContext(), cs, Toast.LENGTH_SHORT).show();			 
-    	    }
-    	     
-    	    @Override
-    	    public void beforeTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
-    	        // TODO Auto-generated method stub
-    	         
-    	    }
-    	     
-    	    @Override
-    	    public void afterTextChanged(Editable arg0) {
-    	        // TODO Auto-generated method stub                          
-    	    }
-    	});
-        
-	}	
+  	}	
     
     public static void setListViewHeightBasedOnChildren(ListView listView) {
         ListAdapter listAdapter = listView.getAdapter();

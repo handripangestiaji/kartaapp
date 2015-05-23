@@ -20,38 +20,57 @@
         android:layout_alignParentLeft="true"
         android:orientation="vertical"
         android:visibility="gone" >
-        
-<!--     	<TextView  -->
-<!--        	    android:layout_marginTop="15dip" -->
-<!--             android:textColor="#fff" -->
-<!-- 	   		android:textSize="20sp" -->
-<!--             android:layout_width="@dimen/side_navigation_width" -->
-<!--             android:layout_height="wrap_content" -->
-<!-- 			android:layout_gravity="center" -->
-<!--         	android:text="- or login with -" /> -->
-	        
+        	        
 		<RelativeLayout
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content" >
 
    			<ImageView
+				android:id="@+id/profile_bg"
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
 				android:adjustViewBounds="true"
 			    android:scaleType="fitCenter"    
 	            android:src="@drawable/bg" />		
 	            
-<!--    			<ImageView -->
-<!-- 	            android:layout_width="50dp" -->
-<!-- 	            android:layout_height="50dp" -->
-<!-- 			    android:scaleType="fitCenter"     -->
-<!-- 	            android:src="@drawable/profile_image" />		   						 -->
+   			<ImageView
+				android:id="@+id/profile_img"
+	            android:layout_width="80dp"
+	            android:layout_height="80dp"
+	            android:layout_marginLeft="20dp"
+	            android:layout_centerVertical="true"
+			    android:scaleType="fitCenter"    
+	            android:src="@drawable/profile_image" />		   						
+	               			
+  			<TextView 
+				android:id="@+id/profile_text"
+	       	    android:layout_marginBottom="10dp"
+	       	    android:layout_marginLeft="20dp"
+	            android:textColor="#fff"
+		   		android:textSize="14sp"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+				android:layout_gravity="center"
+		        android:layout_alignBottom="@+id/profile_bg"
+	        	android:text="Kareem Abdul-Jabbar" />		
+	        	
+			<ImageView
+				android:id="@+id/arrow_down"
+	            android:layout_width="wrap_content"
+	            android:layout_height="8sp"
+			    android:scaleType="fitCenter"    
+	       	    android:layout_marginBottom="14dp"
+	            android:layout_marginRight="20dp"
+	            android:layout_alignParentRight="true"
+		        android:layout_alignBottom="@+id/profile_bg"
+	            android:src="@drawable/arrow_down" />		   						
+  			
 	            
    		</RelativeLayout>
 	        
         <ListView
             android:id="@+id/side_navigation_listview"
-            android:layout_width="200dp"
+            android:layout_width="match_parent"
             android:layout_height="fill_parent"
             android:background="#fff"
             android:cacheColorHint="#00000000"

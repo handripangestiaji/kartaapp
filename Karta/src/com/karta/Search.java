@@ -74,11 +74,25 @@ public class Search extends Activity implements ISideNavigationCallback {
     	String[] title ={
       	    	 "Pizza name one",
       	    	 "Pizza name two",
-      	    	 "Pizza name three"
+      	    	 "Pizza name three",
+      	    	 "Sashimi name one",
+      	    	 "Sashimi name two",
+      	    	 "Sashimi name three",
+      	    	 "Spainish tapas",
+      	    	 "Spainish name one",
+      	    	 "Spainish name two",
+      	    	 "Spainish name three"
           	};
-          	 
+          	  
         double[] rating ={
          	    	 4.0,
+         	    	 4.5,
+         	    	 2.5,
+         	    	 4.0,
+         	    	 4.5,
+         	    	 2.5,
+         	    	 4.0,
+         	    	 4.5,
          	    	 4.5,
          	    	 2.5
       		};
@@ -86,7 +100,14 @@ public class Search extends Activity implements ISideNavigationCallback {
         Integer[] image={
       	    	 R.drawable.thumb,
       	    	 R.drawable.thumb,
-      	    	 R.drawable.thumb
+      	    	 R.drawable.thumb,
+      	    	 R.drawable.thumb1,
+      	    	 R.drawable.thumb1,
+      	    	 R.drawable.thumb1,
+      	    	 R.drawable.thumb2,
+      	    	 R.drawable.thumb2,
+      	    	 R.drawable.thumb2,
+      	    	 R.drawable.thumb2
       	    };
           	
       	for (int i = 0; i < rating.length; i++) 
@@ -119,7 +140,8 @@ public class Search extends Activity implements ISideNavigationCallback {
 		    }	
         });
         
-        String[] category ={ "Pizza", "Sashimi", "Spainshi Tapas", "Tofu", "Dim Sum", "Chili Dogs" };
+//        String[] category ={ "Pizza", "Sashimi", "Spainshi Tapas", "Tofu", "Dim Sum", "Chili Dogs" };
+        String[] category ={ "Pizza", "Sashimi", "Spainshi Tapas" };
 
     	LinearLayout linLayout = (LinearLayout)findViewById(R.id.treding_category);
         for (int i = 0; i < category.length; i++) {

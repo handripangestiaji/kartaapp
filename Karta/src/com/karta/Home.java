@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.opengl.Visibility;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -34,11 +35,13 @@ public class Home extends Activity implements ISideNavigationCallback{
 	    RelativeLayout container = (RelativeLayout) findViewById(R.id.container);
 	    getLayoutInflater().inflate(R.layout.home, container);
 	    
+	    ImageView LogoOnHeader = (ImageView) findViewById(R.id.logo_on_menu);	 
 	    TextView Title = (TextView) findViewById(R.id.title_bar);	    
 	    TextView SubTitle = (TextView) findViewById(R.id.sub_title_bar);	 
 	     
-	    Title.setText("Karta");
-	    SubTitle.setText("");
+	    LogoOnHeader.setVisibility(View.VISIBLE);
+	    Title.setVisibility(View.GONE);
+	    SubTitle.setVisibility(View.GONE);
 	    
         sideNavigationView = (SideNavigationView) findViewById(R.id.side_navigation_view);
         sideNavigationView.setMenuItems(R.menu.side_navigation_menu);

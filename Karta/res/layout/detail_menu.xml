@@ -2,9 +2,9 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
    	xmlns:tools="http://schemas.android.com/tools"
 	android:id="@+id/main_scroll_view"
-	android:scrollbars="none"	    
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:scrollbars="none"
     android:orientation="vertical" >
 			
 	<LinearLayout
@@ -36,7 +36,7 @@
 		 		android:layout_weight="0.8"
 		        android:layout_height="match_parent"
 		        android:layout_marginTop="10dp"
-		        android:layout_marginBottom="10dp"
+		        android:layout_marginBottom="5dp"
 		        android:textColor="@color/textColor1"
 		        android:text="Description in here Description in here Description in here Description in here Description in here Description in here Description in here Description in here" />
 	        
@@ -58,25 +58,27 @@
 				      	android:layout_width="match_parent"
 				        android:layout_height="wrap_content"
 				        android:textColor="@color/baseColor"
+				        android:textStyle="bold"
 				        android:text="4.0" />
 				    
 				    <ImageView
 				        android:layout_width="20sp"
 				        android:layout_height="20sp"
-				        android:layout_marginLeft="5dp"
+				        android:layout_marginLeft="2dp"
 				        android:src="@drawable/star" />
 						
 				</LinearLayout>				  				    
 			    
 	   		    <TextView 
 					android:id="@+id/menu_price"
-			   		android:textSize="14sp"
+			   		android:textAppearance="?android:attr/textAppearanceMedium"
 			   		android:layout_marginTop="15dp"
-		        	android:layout_marginLeft="10dp"
+		        	android:layout_marginLeft="5dp"
 				    android:gravity="right"    
 			      	android:layout_width="fill_parent"
 			        android:layout_height="wrap_content"
 			        android:textColor="@color/textColor1"
+			        android:textStyle="bold"
 			        android:text="$15.00" />
 			    	            
 	       	</LinearLayout>
@@ -85,7 +87,7 @@
 	
 	    <View
 			android:layout_width="match_parent"
-			android:layout_marginTop="15dp"
+			android:layout_marginTop="10dp"
 			android:layout_marginBottom="15dp"
 			android:layout_height="1dp"
 			android:background="#aaa" />
@@ -149,21 +151,27 @@
 	    <LinearLayout 
 	        android:orientation="vertical"
 		    android:layout_width="match_parent"
-		    android:layout_height="wrap_content" >
+		    android:layout_height="match_parent" >
 		    
 		    <TextView 
-		   		android:textSize="20sp"
-		        android:layout_margin="10dp"
+		   		android:textAppearance="?android:attr/textAppearanceMedium"
+		   		android:textStyle="bold"
+		        android:layout_marginLeft="10dp"
 				android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
 		        android:textColor="@color/textColor1"
-		        android:text="Reviews" />   	    
+		        android:text="Reviews"
+		        android:layout_marginBottom="10dp" />   	    
 		        
 	       	<ListView
-			    android:id="@+id/list_comment"
-			    android:scrollbars="none"
-	    	    android:layout_width="fill_parent" 
-			    android:layout_height="match_parent" >
+	       	    android:id="@+id/list_comment"
+	       	    android:layout_width="fill_parent"
+	       	    android:layout_height="match_parent"
+	       	    android:layout_marginLeft="10dp"
+	       	    android:layout_marginRight="10dp"
+	       	    android:divider="@null"
+	       	    android:dividerHeight="0dp" >
+
 <!-- 			    android:layout_height="1200dp" > -->
 			</ListView> 
 						    			        		    	    

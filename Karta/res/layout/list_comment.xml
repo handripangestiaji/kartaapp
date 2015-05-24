@@ -7,17 +7,18 @@
  
     <ImageView
         android:id="@+id/img_user"
-		android:layout_width="80dp"
-        android:layout_height="80dp"
+		android:layout_width="70dp"
+        android:layout_height="70dp"
         android:contentDescription="description image"
-        android:src="@drawable/thumb"
-		android:padding="5dp" />
+        android:src="@drawable/thumb" 
+        android:layout_marginTop="5dp"/>
 
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="0.6"
-        android:orientation="vertical" >
+        android:orientation="vertical" 
+        android:layout_marginLeft="10dp" >
 
         <TextView
             android:id="@+id/comment_name_and_date"
@@ -25,18 +26,18 @@
             android:layout_height="wrap_content"
             android:padding="2dp"
             android:text="User | Date"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@color/textColor1" />
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textStyle="bold"
+            android:textColor="@color/textColor3" />
 
         <TextView
             android:id="@+id/comment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="2dip"
-			android:maxLines="5"
-   			android:lines="5"
+            android:layout_marginBottom="10dp"
             android:text="Comement in here"
-            android:textColor="@color/textColor1" />
+            android:textColor="@color/textColor3" />
     </LinearLayout>
 	
     <LinearLayout 
@@ -51,7 +52,6 @@
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        android:text="4.0"
-	        android:textStyle="bold"
 	        android:padding="2dip"
 	        android:textColor="@color/baseColor" />
    	    

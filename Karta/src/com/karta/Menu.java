@@ -13,16 +13,12 @@ import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.baoyz.swipemenulistview.SwipeMenu;
-import com.baoyz.swipemenulistview.SwipeMenuCreator;
-import com.baoyz.swipemenulistview.SwipeMenuItem;
-import com.baoyz.swipemenulistview.SwipeMenuListView;
-import com.baoyz.swipemenulistview.SwipeMenuListView.OnMenuItemClickListener;
-import com.baoyz.swipemenulistview.SwipeMenuListView.OnSwipeListener;
+
 import com.devspark.sidenavigation.ISideNavigationCallback;
 import com.devspark.sidenavigation.SideNavigationView;
 import com.karta.listadapter.ListMenu;
@@ -116,10 +112,10 @@ public class Menu extends Activity implements ISideNavigationCallback {
 	    	 R.drawable.thumb    	
 	    };
     	
-    	SwipeMenuListView list;
+    	ListView list;
     	
     	ListMenu adapter=new ListMenu(this, title, image, rating);
-		list=(SwipeMenuListView)findViewById(R.id.list_menu);
+		list=(ListView)findViewById(R.id.list_menu);
 		list.setAdapter(adapter);
 		
 		list.setOnItemClickListener(new OnItemClickListener() {
@@ -249,5 +245,5 @@ public class Menu extends Activity implements ISideNavigationCallback {
         }
         finish();
     }
-
 }
+

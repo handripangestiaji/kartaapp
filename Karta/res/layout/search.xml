@@ -7,10 +7,8 @@
 	 
     <EditText
         android:id="@+id/keyword_search"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-		android:textSize="14sp"
+        android:layout_margin="10dp"
+		android:textAppearance="?android:attr/textAppearanceSmall"
 		android:textColor="@color/baseColor"
 		android:background="@color/containerColor"
         android:layout_width="fill_parent"
@@ -29,7 +27,6 @@
 	<ListView
 	    android:id="@+id/list_search_result"
 	    android:scrollbars="none"	    
-	    android:layout_margin="5dp"
 	    android:background="@color/containerColor"
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content" >
@@ -39,16 +36,18 @@
 	    android:id="@+id/treding_category_label"
 	    android:layout_marginTop="15dip"
 	    android:textColor="@color/textColor1"
-	  	android:textSize="14sp"
-	    android:layout_width="wrap_content"
+	  	android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
-		android:layout_gravity="center"
+		android:layout_gravity="left"
+		android:layout_marginLeft="10dp"
+		android:textAppearance="?android:attr/textAppearanceMedium"
+		android:textStyle="bold"
 	    android:text="Choose category" />
 	
  	<LinearLayout 
 	    android:id="@+id/treding_category"
 	    android:background="@color/containerColor"
-	    android:layout_margin="5dp"
+	    android:layout_margin="10dp"
 	    android:layout_width="fill_parent"
 	    android:layout_height="fill_parent"
 	    android:orientation="horizontal" >

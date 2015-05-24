@@ -33,6 +33,8 @@ public class ListMenu extends ArrayAdapter<String> {
 		 ImageView menu_image = (ImageView) rowView.findViewById(R.id.img_menu);
 		 TextView menu_rating = (TextView) rowView.findViewById(R.id.menu_rating);
 		 
+		 menu_title.setSelected(true);
+		 
 		 menu_title.setText(title[position]);
 		 menu_image.setImageResource(image[position]);
 		 menu_rating.setText(rating[position]);

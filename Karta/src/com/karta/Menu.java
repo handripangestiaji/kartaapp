@@ -7,6 +7,7 @@ import android.content.SharedPreferences.Editor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -21,6 +22,7 @@ import android.widget.Toast;
 
 import com.devspark.sidenavigation.ISideNavigationCallback;
 import com.devspark.sidenavigation.SideNavigationView;
+import com.google.android.gms.drive.query.internal.Operator;
 import com.karta.listadapter.ListMenu;
 
 public class Menu extends Activity implements ISideNavigationCallback {
@@ -127,48 +129,44 @@ public class Menu extends Activity implements ISideNavigationCallback {
 				 Intent i = new Intent(Menu.this, MenuDetail.class);
 				 startActivity(i);          
 			 }
-		 });
-		
-		// step 1. create a MenuCreator
-//		SwipeMenuCreator creator = new SwipeMenuCreator() {
-//
-//			@Override
-//			public void create(SwipeMenu menu) {
-//				SwipeMenuItem openItem = new SwipeMenuItem(getApplicationContext());
-//				openItem.setBackground(new ColorDrawable(Color.rgb(0xC9, 0xC9, 0xCE)));
-//				openItem.setWidth(90);
-//				openItem.setTitle("Open");
-//				openItem.setTitleSize(18);
-//				openItem.setTitleColor(Color.WHITE);
-//				menu.addMenuItem(openItem);
-//
-//			}
-//		};
-//		// set creator
-//		list.setMenuCreator(creator);
+		});
+				
+		SwipeMenuCreator swipeMenu = new SwipeMenuCreator() {
+			@Override
+			public void create(SwipeMenu menu) {
+				SwipeMenuItem reviewItem = new SwipeMenuItem(getApplicationContext());
+				reviewItem.setBackground(new ColorDrawable(Color.rgb(0x43, 0xA1, 0x47)));
+				reviewItem.setWidth(dp2px(80));
+				reviewItem.setIcon(R.drawable.star_review);
+				reviewItem.setTitle("Review");
+				reviewItem.setTitleSize(14);
+				reviewItem.setTitleColor(Color.WHITE);
+				menu.addMenuItem(reviewItem);
+			}
+		};
 
-//		// step 2. listener item click event
-//		list.setOnMenuItemClickListener(new OnMenuItemClickListener() {
-//			@Override
-//			public boolean onMenuItemClick(int position, SwipeMenu menu, int index) {
-//				String Selecteditem= title[+position];
-//				switch (index) {
-//				case 0:
-//					// open
-//                    Toast.makeText(getApplicationContext(), Selecteditem + "1", Toast.LENGTH_LONG).show();
-//					break;
-//				case 1:
-//					// delete
-////					delete(item);
-//                    Toast.makeText(getApplicationContext(), Selecteditem + "2", Toast.LENGTH_LONG).show();
-//					break;
-//				}
-//				return false;
-//			}
-//		});
-//				
-    	
+		list.setMenuCreator(swipeMenu);
+
+		list.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+			@Override
+			public boolean onMenuItemClick(int position, SwipeMenu menu, int index) {
+				String Selecteditem= title[+position];
+				switch (index) {
+				case 0:
+                    //Toast.makeText(getApplicationContext(), Selecteditem + "1", Toast.LENGTH_LONG).show();
+	   				Intent i = new Intent(Menu.this, LeaveReview.class);
+	   				startActivity(i);          
+					break;
+				}
+				return false;
+			}
+		});    	
 	}	
+    
+	private int dp2px(int dp) {
+		return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp,
+				getResources().getDisplayMetrics());
+	}
     	
     @Override
     public void onBackPressed() {

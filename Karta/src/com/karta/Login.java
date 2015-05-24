@@ -25,6 +25,8 @@ public class Login extends Activity {
         
     	((ImageView) findViewById(R.id.btn_signup)).setOnClickListener(btnClick);
     	((ImageView) findViewById(R.id.btn_skip)).setOnClickListener(btnClick);
+    	((ImageView) findViewById(R.id.btn_facebook)).setOnClickListener(btnClick);
+    	((ImageView) findViewById(R.id.btn_google)).setOnClickListener(btnClick);
     }
     
     public EditText _username;
@@ -70,7 +72,41 @@ public class Login extends Activity {
                         
                     	break;
                     }
+                    case R.id.btn_facebook:{                                                    
+                        ObjectAnimator animation1 = ObjectAnimator.ofFloat(((ImageView) findViewById(R.id.btn_facebook)), "alpha", 1f, 0.2f);
+                        animation1.setDuration(800);
+                        animation1.start();
+                        animation1 = ObjectAnimator.ofFloat(((ImageView) findViewById(R.id.btn_facebook)), "alpha", 0.2f, 1f);
+                        animation1.setDuration(800);
+                        animation1.setStartDelay(100);
+                        animation1.start();
+                        
+                        Toast.makeText(getApplicationContext(), "Login facebook not working properly", Toast.LENGTH_LONG).show();
+                        
+                    	break;
+                    }
+                    case R.id.btn_google:{                                                    
+                        ObjectAnimator animation1 = ObjectAnimator.ofFloat(((ImageView) findViewById(R.id.btn_google)), "alpha", 1f, 0.2f);
+                        animation1.setDuration(800);
+                        animation1.start();
+                        animation1 = ObjectAnimator.ofFloat(((ImageView) findViewById(R.id.btn_google)), "alpha", 0.2f, 1f);
+                        animation1.setDuration(800);
+                        animation1.setStartDelay(100);
+                        animation1.start();
+                        
+                        Toast.makeText(getApplicationContext(), "Login google not working properly", Toast.LENGTH_LONG).show();
+                        
+                    	break;
+                    }
                     case R.id.btn_skip:{                                                    
+                        ObjectAnimator animation1 = ObjectAnimator.ofFloat(((ImageView) findViewById(R.id.btn_signup)), "alpha", 1f, 0.2f);
+                        animation1.setDuration(800);
+                        animation1.start();
+                        animation1 = ObjectAnimator.ofFloat(((ImageView) findViewById(R.id.btn_skip)), "alpha", 0.2f, 1f);
+                        animation1.setDuration(800);
+                        animation1.setStartDelay(100);
+                        animation1.start();
+
                         SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", 0); // 0 - for private mode
                         Editor editor = pref.edit();
                         

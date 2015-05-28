@@ -132,7 +132,7 @@ class ApiKartaController extends Zend_Rest_Controller {
 			{
 				$arr[$i]['category'][$x]['id'] = $category->getO_Id();
 				$arr[$i]['category'][$x]['name'] = $category->getName();
-				$arr[$i]['category'][$x]['image'] = $_SERVER['HTTP_HOST'] . $category->image->path . $category->image->filename;;
+				$arr[$i]['category'][$x]['image'] = $_SERVER['REQUEST_SCHEME'] . '://' .  $_SERVER['HTTP_HOST'] . $category->image->path . $category->image->filename;;
 				$x++;
 			}			
 		    }
@@ -145,7 +145,7 @@ class ApiKartaController extends Zend_Rest_Controller {
 		    $arr[$i]['restaurants']['city'] = $entry->getRestaurants()->getCity()->getName();
 		    $arr[$i]['restaurants']['state'] = $entry->getRestaurants()->getCity()->getState()->getName();
 
-		    $arr[$i]['thumb_image'] = $_SERVER['HTTP_HOST'] . $entry->thumb_image->path . $entry->thumb_image->filename;
+		    $arr[$i]['thumb_image'] = $_SERVER['REQUEST_SCHEME'] . '://' .  $_SERVER['HTTP_HOST'] . $entry->thumb_image->path . $entry->thumb_image->filename;
 		    
 		    $x = 0;
 		    if(count($entry->ingredients->items) > 0)
@@ -162,7 +162,7 @@ class ApiKartaController extends Zend_Rest_Controller {
 		    {
 			foreach($entry->images->items as $image)
 			{
-				$arr[$i]['images'][$x] = $_SERVER['HTTP_HOST'] . $image->image->path . $image->image->filename;
+				$arr[$i]['images'][$x] = $_SERVER['REQUEST_SCHEME'] . '://' .  $_SERVER['HTTP_HOST'] . $image->image->path . $image->image->filename;
 				$x++;
 			}
 		    }

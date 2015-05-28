@@ -145,7 +145,7 @@ class ApiKartaController extends Zend_Rest_Controller {
 		    $arr[$i]['restaurants']['city'] = $entry->getRestaurants()->getCity()->getName();
 		    $arr[$i]['restaurants']['state'] = $entry->getRestaurants()->getCity()->getState()->getName();
 
-		    $arr[$i]['thumb_image'] = $entry->thumb_image->path . $entry->thumb_image->filename;
+		    $arr[$i]['thumb_image'] = $_SERVER['HTTP_HOST'] . $entry->thumb_image->path . $entry->thumb_image->filename;
 		    
 		    $x = 0;
 		    if(count($entry->ingredients->items) > 0)

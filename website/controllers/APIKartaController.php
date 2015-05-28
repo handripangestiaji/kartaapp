@@ -121,6 +121,7 @@ class ApiKartaController extends Zend_Rest_Controller {
 		    $arr[$i]['name'] = $entry->getName();
 		    $arr[$i]['price'] = $entry->getPrice();
 		    $arr[$i]['currency'] = $entry->getCurrency();
+		    $arr[$i]['rating'] = $entry->getRating();
 		    $arr[$i]['halal'] = $entry->getHalal();
 		    $arr[$i]['description'] = $entry->getDescription();
 

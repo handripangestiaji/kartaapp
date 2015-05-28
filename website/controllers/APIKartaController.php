@@ -131,6 +131,7 @@ class ApiKartaController extends Zend_Rest_Controller {
 			{
 				$arr[$i]['category'][$x]['id'] = $category->getO_Id();
 				$arr[$i]['category'][$x]['name'] = $category->getName();
+				$arr[$i]['category'][$x]['image'] = $category->image->path . $category->image->filename;;
 				$x++;
 			}			
 		    }

@@ -132,7 +132,7 @@ class ApiKartaController extends Zend_Rest_Controller {
 			{
 				$arr[$i]['category'][$x]['id'] = $category->getO_Id();
 				$arr[$i]['category'][$x]['name'] = $category->getName();
-				$arr[$i]['category'][$x]['image'] = $category->image->path . $category->image->filename;;
+				$arr[$i]['category'][$x]['image'] = $_SERVER['HTTP_HOST'] . $category->image->path . $category->image->filename;;
 				$x++;
 			}			
 		    }
@@ -162,7 +162,7 @@ class ApiKartaController extends Zend_Rest_Controller {
 		    {
 			foreach($entry->images->items as $image)
 			{
-				$arr[$i]['images'][$x] = $image->image->path . $image->image->filename;
+				$arr[$i]['images'][$x] = $_SERVER['HTTP_HOST'] . $image->image->path . $image->image->filename;
 				$x++;
 			}
 		    }

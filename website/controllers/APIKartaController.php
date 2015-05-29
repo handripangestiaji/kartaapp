@@ -152,7 +152,7 @@ class ApiKartaController extends Zend_Rest_Controller {
 		    {
 			foreach($entry->ingredients->items as $ingredient)
 			{
-				$arr[$i]['ingridients'][$x] = $ingredient->ingredient;
+				$arr[$i]['ingredients'][$x] = $ingredient->ingredient;
 				$x++;
 			}
 		    }

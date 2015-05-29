@@ -248,16 +248,16 @@ class ApiKartaController extends Zend_Rest_Controller {
     
     public function categoriesAction()
     {
-	    $limit = 10;
-	    $page = (int) $this->_getParam('page') == '' ? 1 : $this->_getParam('page');
+	    //$limit = 10;
+	    //$page = (int) $this->_getParam('page') == '' ? 1 : $this->_getParam('page');
 	    
-	    $start = ($page * $limit) - $limit;
+	    //$start = ($page * $limit) - $limit;
 	    
 	    $id = $this->_getParam('id');
 	    
 	    $category = new Object\Categories\Listing();
-	    $category->setOffset($start);
-	    $category->setLimit($limit);
+	    //$category->setOffset($start);
+	    //$category->setLimit($limit);
 	    
 	    $arr = array();
 	    $i = 0;

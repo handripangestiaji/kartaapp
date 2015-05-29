@@ -140,6 +140,7 @@ class ApiKartaController extends Zend_Rest_Controller {
 		    $arr[$i]['restaurants']['id'] = $entry->getRestaurants()->getO_Id();
 		    $arr[$i]['restaurants']['name'] = $entry->getRestaurants()->getName();
 		    $arr[$i]['restaurants']['address'] = $entry->getRestaurants()->getAddress();
+		    $arr[$i]['restaurants']['description'] = $entry->getRestaurants()->getDescription();
 		    $arr[$i]['restaurants']['location']['latitude'] = $entry->getRestaurants()->getLocation()->getLatitude();
 		    $arr[$i]['restaurants']['location']['longitude'] = $entry->getRestaurants()->getLocation()->getLongitude();
 		    $arr[$i]['restaurants']['city'] = $entry->getRestaurants()->getCity()->getName();

@@ -199,49 +199,78 @@ class ApiKartaController extends Zend_Rest_Controller {
 	    
 	    if($params!='')
 	    {
-		    if($this->_request->isPost())
-		    {
-			    $menu->setCondition('o_id = ?', $params);
-		    }
-		    else if($this->_request->isGet())
-		    {
+			if($this->_request->isPost())
+			{
 				$menu->setCondition('o_id = ?', $params);
-		    }
-		    
-		    foreach($menu as $entry)
-		    {
-			    $arr[$i]['id'] = $entry->getO_Id();
-			    $arr[$i]['name'] = $entry->getName();
-			    $arr[$i]['restaurants_id'] = $entry->getRestaurants()->getO_Id();
-			    $arr[$i]['restaurants'] = $entry->getRestaurants()->getName();
-			    
-			    $x = 0;
-			    foreach($entry->getRestaurants()->getCategory() as $category)
+			}
+			else if($this->_request->isGet())
+			{
+				    $menu->setCondition('o_id = ?', $params);
+			}
+			
+			foreach($menu as $entry)
+			{
+			$arr[$i]['id'] = $entry->getO_Id();
+			$arr[$i]['name'] = $entry->getName();
+			$arr[$i]['price'] = $entry->getPrice();
+			$arr[$i]['currency'] = $entry->getCurrency();
+			$arr[$i]['rating'] = $entry->getRating();
+			$arr[$i]['halal'] = $entry->getHalal();
+			$arr[$i]['description'] = $entry->getDescription();
+    
+			$x = 0;
+			if(count($entry->getCategories()) > 0)
+			{
+			    foreach($entry->getCategories() as $category)
 			    {
 				    $arr[$i]['category'][$x]['id'] = $category->getO_Id();
 				    $arr[$i]['category'][$x]['name'] = $category->getName();
+				    $arr[$i]['category'][$x]['image'] = $_SERVER['REQUEST_SCHEME'] . '://' .  $_SERVER['HTTP_HOST'] . $category->image->path . $category->image->filename;;
+				    $x++;
+			    }			
+			}
+			
+			$arr[$i]['restaurants']['id'] = $entry->getRestaurants()->getO_Id();
+			$arr[$i]['restaurants']['name'] = $entry->getRestaurants()->getName();
+			$arr[$i]['restaurants']['address'] = $entry->getRestaurants()->getAddress();
+			$arr[$i]['restaurants']['description'] = $entry->getRestaurants()->getDescription();
+			$arr[$i]['restaurants']['location']['latitude'] = $entry->getRestaurants()->getLocation()->getLatitude();
+			$arr[$i]['restaurants']['location']['longitude'] = $entry->getRestaurants()->getLocation()->getLongitude();
+			$arr[$i]['restaurants']['city'] = $entry->getRestaurants()->getCity()->getName();
+			$arr[$i]['restaurants']['state'] = $entry->getRestaurants()->getCity()->getState()->getName();
+    
+			$arr[$i]['thumb_image'] = $_SERVER['REQUEST_SCHEME'] . '://' .  $_SERVER['HTTP_HOST'] . $entry->thumb_image->path . $entry->thumb_image->filename;
+			
+			$x = 0;
+			if(count($entry->ingredients->items) > 0)
+			{
+			    foreach($entry->ingredients->items as $ingredient)
+			    {
+				    $arr[$i]['ingredients'][$x] = $ingredient->ingredient;
 				    $x++;
 			    }
-			    
-			    $arr[$i]['image_url'] = $entry->getImage();
-			    $arr[$i]['currency'] = $entry->getCurrency();
-			    $arr[$i]['price'] = $entry->getPrice();
-			    $arr[$i]['description'] = $entry->getDescription();
-			    $arr[$i]['halal'] = $entry->getHalal();
-			    
-			    foreach($entry->getIngredients() as $ing)
+			}
+			
+			$x = 0;
+			if(count($entry->images->items) > 0)
+			{
+			    foreach($entry->images->items as $image)
 			    {
-				    $arr[$i]['ingredients'][] = $ing->getIngredient();
+				    $arr[$i]['images'][$x] = $_SERVER['REQUEST_SCHEME'] . '://' .  $_SERVER['HTTP_HOST'] . $image->image->path . $image->image->filename;
+				    $x++;
 			    }
-			    $arr[$i]['timestamp_creation'] = $entry->getCreationDate();
-			    $arr[$i]['creation_date'] = date('Y-m-d', $entry->getCreationDate());
-			    $i++;
+			}
+    
+			$arr[$i]['timestamp_creation'] = $entry->getCreationDate();
+			$arr[$i]['creation_date'] = date('Y-m-d', $entry->getCreationDate());
+
+			$i++;
 		    }
 	    }
-		else {
+     	    else {
 			$arr[0]['error'] = 'Invalid ID';
 			$arr[0]['response_code'] = '403';
-		}
+	    }
 	    
 	    $json_menu = $this->_helper->json($arr);
 	    $this->sendResponse($json_menu);

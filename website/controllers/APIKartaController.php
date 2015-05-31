@@ -60,15 +60,29 @@ class ApiKartaController extends Zend_Rest_Controller {
 		    {
 			    $array[$i]['id'] = $entry->getO_Id();
 			    $array[$i]['name'] = $entry->getName();
+
 			    $y = 0;
 			    foreach($entry->getCategory() as $category)
 			    {
 				    $array[$i]['categories'][$y]['id'] = $category->getO_Id();
 				    $array[$i]['categories'][$y]['name'] = $category->getName();
+				    $array[$i]['categories'][$y]['image'] = $_SERVER['REQUEST_SCHEME'] . '://' .  $_SERVER['HTTP_HOST'] . $category->image->path . $category->image->filename;;
 				    $y++;
 			    }
+
+			    $x = 0;
+			    if(count($entry->imageCollection->items) > 0)
+			    {
+				foreach($entry->images->items as $image)
+				{
+					$array[$i]['imageCollection'][$x] = $_SERVER['REQUEST_SCHEME'] . '://' .  $_SERVER['HTTP_HOST'] . $image->image->path . $image->image->filename;
+					$x++;
+				}
+			     }
+
 			    $array[$i]['description'] = $entry->getDescription();
 			    $array[$i]['phone_number'] = $entry->getPhoneNumber();
+			
 			    $x = 0;
 			    foreach($entry->getOperationHour() as $hour)
 			    {
@@ -76,6 +90,8 @@ class ApiKartaController extends Zend_Rest_Controller {
 				    $array[$i]['operation'][$x]['hour'] = $hour->getOperationHour();
 				    $x++;
 			    }
+			
+		            $array[$i]['profile_image'] = $_SERVER['REQUEST_SCHEME'] . '://' .  $_SERVER['HTTP_HOST'] . $entry->profileImage->path . $entry->profileImage->filename;
 			    $array[$i]['website_url'] = $entry->getWebsiteUrl();
 			    $array[$i]['profile_image_url'] = $entry->getProfileImage();
 			    $array[$i]['email'] = $entry->getEmail();
@@ -106,7 +122,7 @@ class ApiKartaController extends Zend_Rest_Controller {
 	    $params = $this->_getParam('category');
 	
 	    $menu = new Object\Menu\Listing();
-	    $menu->setOrderKey('o_creationDate');
+	    $menu->setOrderKey('name');
 	    $menu->setOrder('desc');
 
 	    if($params != "")
@@ -286,6 +302,9 @@ class ApiKartaController extends Zend_Rest_Controller {
 	    $id = $this->_getParam('id');
 	    
 	    $category = new Object\Categories\Listing();
+	    $category->setOrderKey('name');
+	    $category->setOrder('desc');
+
 	    //$category->setOffset($start);
 	    //$category->setLimit($limit);
 	    

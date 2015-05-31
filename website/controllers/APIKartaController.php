@@ -75,7 +75,7 @@ class ApiKartaController extends Zend_Rest_Controller {
 			    {
 				foreach($entry->images->items as $image)
 				{
-					$array[$i]['imageCollection'][$x] = $_SERVER['REQUEST_SCHEME'] . '://' .  $_SERVER['HTTP_HOST'] . $image->image->path . $image->image->filename;
+					$array[$i]['image_collection'][$x] = $_SERVER['REQUEST_SCHEME'] . '://' .  $_SERVER['HTTP_HOST'] . $image->image->path . $image->image->filename;
 					$x++;
 				}
 			     }
@@ -93,7 +93,6 @@ class ApiKartaController extends Zend_Rest_Controller {
 			
 		            $array[$i]['profile_image'] = $_SERVER['REQUEST_SCHEME'] . '://' .  $_SERVER['HTTP_HOST'] . $entry->profileImage->path . $entry->profileImage->filename;
 			    $array[$i]['website_url'] = $entry->getWebsiteUrl();
-			    $array[$i]['profile_image_url'] = $entry->getProfileImage();
 			    $array[$i]['email'] = $entry->getEmail();
 			    $array[$i]['address'] = $entry->getAddress();
 			    $array[$i]['city'] = $entry->getCity()->getName();

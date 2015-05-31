@@ -73,7 +73,7 @@ class ApiKartaController extends Zend_Rest_Controller {
 			    $x = 0;
 			    if(count($entry->imageCollection->items) > 0)
 			    {
-				foreach($entry->images->items as $image)
+				foreach($entry->imageCollection->items as $image)
 				{
 					$array[$i]['image_collection'][$x] = $_SERVER['REQUEST_SCHEME'] . '://' .  $_SERVER['HTTP_HOST'] . $image->image->path . $image->image->filename;
 					$x++;

@@ -96,7 +96,7 @@ class ApiKartaController extends Zend_Rest_Controller {
 				$j++;				
 			    }
 			    
-			    $total_menu = j;
+			    $total_menu = $j;
 			    $rating_restaurant = $average_rating / $total_menu;
 			    
 			    // query top rated menu

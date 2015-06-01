@@ -90,7 +90,7 @@ class ApiKartaController extends Zend_Rest_Controller {
 					    $x++;
 				    }
 				}
-				
+								
 				$average_rating += $m->getRating();
 					    				
 				$j++;				
@@ -163,7 +163,7 @@ class ApiKartaController extends Zend_Rest_Controller {
 			    $array[$i]['zip_code'] = $entry->getZipCode();
 			    $array[$i]['location']['longitude'] = $entry->getLocation()->getLongitude();
 			    $array[$i]['location']['latitude'] = $entry->getLocation()->getLatitude();
-			    $array[$i]['rating'] = $rating_restaurant;
+			    $array[$i]['rating'] = round($rating_restaurant);
 			    $array[$i]['timestamp_creation'] = $entry->getCreationDate();
 			    $array[$i]['creation_date'] = date('Y-m-d', $entry->getCreationDate());			    
 				

@@ -105,38 +105,70 @@ class ApiKartaController extends Zend_Rest_Controller {
 			    
 			    
 			    $menu = new Object\Menu\Listing();
-			    $menu->setOrderKey('name');
-			    $menu->setOrder('desc');	    
 			    $menu->setCondition("restaurants__id = ". $params);
+			    $menu->setOrderKey('name');
+			    $menu->setOrder('DESC');	    
 				
 			    $j = 0;			
 			    foreach($menu as $m)
 			    {
-				$array[$i]['menu'][$j]['id'] = $m->getO_Id();
-				$array[$i]['menu'][$j]['name'] = $m->getName();
-				$array[$i]['menu'][$j]['price'] = $m->getPrice();
-				$array[$i]['menu'][$j]['currency'] = $m->getCurrency();
-				$array[$i]['menu'][$j]['rating'] = $m->getRating();
-				$array[$i]['menu'][$j]['halal'] = $m->getHalal();
-				$array[$i]['menu'][$j]['description'] = $m->getDescription();
+				$array[$i]['full_menu'][$j]['id'] = $m->getO_Id();
+				$array[$i]['full_menu'][$j]['name'] = $m->getName();
+				$array[$i]['full_menu'][$j]['price'] = $m->getPrice();
+				$array[$i]['full_menu'][$j]['currency'] = $m->getCurrency();
+				$array[$i]['full_menu'][$j]['rating'] = $m->getRating();
+				$array[$i]['full_menu'][$j]['halal'] = $m->getHalal();
+				$array[$i]['full_menu'][$j]['description'] = $m->getDescription();
 	    
-				$array[$i]['menu'][$j]['thumb_image'] = $_SERVER['REQUEST_SCHEME'] . '://' .  $_SERVER['HTTP_HOST'] . $m->thumb_image->path . $m->thumb_image->filename;
+				$array[$i]['full_menu'][$j]['thumb_image'] = $_SERVER['REQUEST_SCHEME'] . '://' .  $_SERVER['HTTP_HOST'] . $m->thumb_image->path . $m->thumb_image->filename;
 				
 				$x = 0;
 				if(count($m->ingredients->items) > 0)
 				{
 				    foreach($m->ingredients->items as $ingredient)
 				    {
-					    $array[$i]['menu'][$j]['ingredients'][$x] = $ingredient->ingredient;
+					    $array[$i]['full_menu'][$j]['ingredients'][$x] = $ingredient->ingredient;
 					    $x++;
 				    }
 				}
-					    
-				$arr[$i]['timestamp_creation'] = $m->getCreationDate();
-				$arr[$i]['creation_date'] = date('Y-m-d', $m->getCreationDate());
+					    				
+				$j++;				
+			    }
+			    
+			    $menu = new Object\Menu\Listing();
+			    $menu->setCondition("restaurants__id = ". $params);
+			    $menu->setOrderKey('rating');
+			    $menu->setOrder('ASC');
+			    $menu->setLimit(5);
+				
+			    $j = 0;			
+			    foreach($menu as $m)
+			    {
+				$array[$i]['recomended_menu'][$j]['id'] = $m->getO_Id();
+				$array[$i]['recomended_menu'][$j]['name'] = $m->getName();
+				$array[$i]['recomended_menu'][$j]['price'] = $m->getPrice();
+				$array[$i]['recomended_menu'][$j]['currency'] = $m->getCurrency();
+				$array[$i]['recomended_menu'][$j]['rating'] = $m->getRating();
+				$array[$i]['recomended_menu'][$j]['halal'] = $m->getHalal();
+				$array[$i]['recomended_menu'][$j]['description'] = $m->getDescription();
+	    
+				$array[$i]['recomended_menu'][$j]['thumb_image'] = $_SERVER['REQUEST_SCHEME'] . '://' .  $_SERVER['HTTP_HOST'] . $m->thumb_image->path . $m->thumb_image->filename;
+				
+				$x = 0;
+				if(count($m->ingredients->items) > 0)
+				{
+				    foreach($m->ingredients->items as $ingredient)
+				    {
+					    $array[$i]['recomended_menu'][$j]['ingredients'][$x] = $ingredient->ingredient;
+					    $x++;
+				    }
+				}
 				
 				$j++;				
 			    }
+			    
+			    print_r($array);
+			    die();
 			    
 			    $i++;
 		    }		

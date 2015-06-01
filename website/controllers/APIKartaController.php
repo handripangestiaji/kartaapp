@@ -167,10 +167,7 @@ class ApiKartaController extends Zend_Rest_Controller {
 				
 				$j++;				
 			    }
-			    
-			    print_r($array);
-			    die();
-			    
+
 			    $i++;
 		    }		
 	    }

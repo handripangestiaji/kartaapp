@@ -186,7 +186,7 @@ class ApiKartaController extends Zend_Rest_Controller {
 	
 	    $menu = new Object\Menu\Listing();
 	    $menu->setOrderKey('name');
-	    $menu->setOrder('desc');
+	    $menu->setOrder('ASC');	    
 
 	    if($params != "")
 		$menu->setCondition("categories like '%" . $params . "%'");
@@ -365,8 +365,8 @@ class ApiKartaController extends Zend_Rest_Controller {
 	    $id = $this->_getParam('id');
 	    
 	    $category = new Object\Categories\Listing();
-	    $category->setOrderKey('name');
-	    $category->setOrder('desc');
+	    $menu->setOrderKey('name');
+	    $menu->setOrder('ASC');	    
 
 	    //$category->setOffset($start);
 	    //$category->setLimit($limit);

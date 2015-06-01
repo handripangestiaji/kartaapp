@@ -95,8 +95,7 @@ public class AddReview extends Activity implements ISideNavigationCallback {
           	
       	for (int i = 0; i < rating.length; i++) 
 		{
-      		String[] temp = {"asd", "dasadad"};
-			MenuModel wp = new MenuModel(title[i], "description", rating[i], rating[i], rating[i], rating[i], "Pizza", "Lodon's Pizza", temp);
+			MenuModel wp = new MenuModel();
 			arraylist.add(wp);
 		}
       	
@@ -207,7 +206,7 @@ public class AddReview extends Activity implements ISideNavigationCallback {
                 break;
 
             case R.id.side_navigation_menu_item3:
-                i = new Intent(this, AddReview.class);
+                i = new Intent(this, Maps.class);
                 startActivity(i);          
 
                 break;

@@ -13,14 +13,31 @@
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content" >			    	    
     
-	    <ImageView
-			android:id="@+id/img_business"
-		    android:layout_width="wrap_content"
-		    android:layout_height="wrap_content"
-			android:adjustViewBounds="true"
-		    android:scaleType="fitXY"    
-		    android:contentDescription="description image"
-	        android:src="@drawable/pizza" />
+		<RelativeLayout
+		    android:id="@+id/slider_frame"
+		    android:layout_width="match_parent"
+		    android:layout_height="100dp">
+	    	
+	    	<android.support.v4.view.ViewPager 
+			    android:id="@+id/pager"
+				android:layout_width="wrap_content"
+				android:layout_height="fill_parent" />
+		    
+<!-- 		    <View  -->
+<!-- 			    android:layout_width="fill_parent" -->
+<!-- 			    android:layout_height="60dp" -->
+<!-- 		        android:layout_alignBottom="@+id/pager" -->
+<!-- 		        android:textColor="@color/textColor2" -->
+<!-- 			    android:background="@drawable/shadow_list_category" /> -->
+		    			    	
+    		<com.viewpagerindicator.CirclePageIndicator
+		        android:id="@+id/indicator"
+		        android:padding="10dip"
+		        android:layout_alignBottom="@+id/pager"
+		        android:layout_height="wrap_content"
+		        android:layout_width="fill_parent" />
+		    	
+	    </RelativeLayout> 
 	    
 	    <LinearLayout 
 	        android:orientation="horizontal"
@@ -35,7 +52,7 @@
 			    android:layout_height="match_parent" >
 	        
 	   		    <TextView 
-					android:id="@+id/business_address1"
+					android:id="@+id/business_address"
 			   		android:textSize="16sp"
 					android:layout_width="match_parent"
 			        android:layout_height="wrap_content"
@@ -47,7 +64,7 @@
 			        android:text="12345 Main St" />
 	   		    
 	   		    <TextView 
-					android:id="@+id/business_address2"
+					android:id="@+id/business_city"
 			   		android:textSize="16sp"
 					android:layout_width="match_parent"
 			        android:layout_height="wrap_content"
@@ -110,7 +127,7 @@
 				    android:layout_height="wrap_content" >		            
             
 	         		<TextView 
-						android:id="@+id/menu_rating"
+						android:id="@+id/bussiness_rating"
 				      	android:layout_width="match_parent"
 				        android:layout_height="wrap_content"
 				        android:textColor="@color/baseColor"
@@ -166,7 +183,7 @@
 		        android:layout_marginRight="10dp"
 		        android:layout_marginBottom="10dp"
 		        android:textColor="@color/buttonTextColor"
-		        android:text="OREDER NOW" />
+		        android:text="ORDER NOW" />
    		    		    	    
    		    <TextView 
 				android:id="@+id/btn_share"
@@ -202,15 +219,13 @@
 				android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
 		        android:textColor="@color/textColor1"
-		        android:text="Top-Rated Menu Items" />   	    
+		        android:text="Top-Rated Menu" />   	    
 			        			        
-	       	<ListView
+	       	<com.baoyz.swipemenulistview.SwipeMenuListView
 			    android:id="@+id/list_top_rated_menu"
 			    android:scrollbars="none"
 	    	    android:layout_width="fill_parent" 
-			    android:layout_height="match_parent" >
-<!-- 			    android:layout_height="1200dp" > -->
-			</ListView> 
+			    android:layout_height="wrap_content" />
 						    			        		    	    
 	    </LinearLayout>
 	    
@@ -234,13 +249,11 @@
 			        
 			</LinearLayout>
 		        
-	       	<ListView
+	       	<com.baoyz.swipemenulistview.SwipeMenuListView
 			    android:id="@+id/list_full_menu"
 			    android:scrollbars="none"	    
 			    android:layout_width="fill_parent" 
-			    android:layout_height="match_parent" >
-<!-- 			    android:layout_height="1200dp" > -->
-			</ListView> 
+			    android:layout_height="wrap_content" />
 						    			        		    	    
 	    </LinearLayout>
 	    

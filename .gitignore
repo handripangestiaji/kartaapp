@@ -18,3 +18,11 @@ appcompat_v7/bin/
 appcompat_v7/bin/*
 appcompat_v7/gen/
 appcompat_v7/gen/*
+ImageLoader/bin/
+ImageLoader/bin/*
+ImageLoader/gen/
+ImageLoader/gen/*
+IndicatorPager/bin/
+IndicatorPager/bin/*
+IndicatorPager/gen/
+IndicatorPager/gen/*

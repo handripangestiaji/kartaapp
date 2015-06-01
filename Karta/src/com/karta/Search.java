@@ -2,13 +2,21 @@ package com.karta;
 
 import java.util.ArrayList;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.View.MeasureSpec;
 import android.view.ViewGroup;
@@ -29,27 +37,41 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.baoyz.swipemenulistview.SwipeMenu;
+import com.baoyz.swipemenulistview.SwipeMenuCreator;
+import com.baoyz.swipemenulistview.SwipeMenuItem;
+import com.baoyz.swipemenulistview.SwipeMenuListView;
+import com.baoyz.swipemenulistview.SwipeMenuListView.OnMenuItemClickListener;
 import com.devspark.sidenavigation.ISideNavigationCallback;
 import com.devspark.sidenavigation.SideNavigationView;
 import com.karta.R.color;
 import com.karta.listadapter.ListComment;
 import com.karta.listadapter.ListMenu;
 import com.karta.listadapter.ListMenuAdapter;
+import com.karta.model.CategoryModel;
 import com.karta.model.MenuModel;
+import com.karta.model.RestaurantModel;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 
 public class Search extends Activity implements ISideNavigationCallback {
 
 	private SideNavigationView sideNavigationView;
 	
-	ListView list;
-	ListMenuAdapter adapter;
+    Context mContext;
+    SwipeMenuListView list;	
+    ListMenu adapter;
+	private ArrayList<MenuModel> arraylist = new ArrayList<MenuModel>();
+
 	EditText editsearch;
-	ArrayList<MenuModel> arraylist = new ArrayList<MenuModel>();
     EditText inputSearch;	
 	
     @Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+		mContext = this;
 
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		
@@ -71,102 +93,192 @@ public class Search extends Activity implements ISideNavigationCallback {
 		        
     	((ImageView) findViewById(R.id.main_menu)).setOnClickListener(btnClick);
 
-    	String[] title ={
-      	    	 "Pizza name one",
-      	    	 "Pizza name two",
-      	    	 "Pizza name three",
-      	    	 "Sashimi name one",
-      	    	 "Sashimi name two",
-      	    	 "Sashimi name three",
-      	    	 "Spainish tapas",
-      	    	 "Spainish name one",
-      	    	 "Spainish name two",
-      	    	 "Spainish name three"
-          	};
-          	  
-        double[] rating ={
-         	    	 4.0,
-         	    	 4.5,
-         	    	 2.5,
-         	    	 4.0,
-         	    	 4.5,
-         	    	 2.5,
-         	    	 4.0,
-         	    	 4.5,
-         	    	 4.5,
-         	    	 2.5
-      		};
+		RequestParams params = new RequestParams();
+		AsyncHttpClient client = new AsyncHttpClient();
+        client.get("http://karta.dreamcube.co.id/v1/a-p-i-karta/menulist.json" , params ,new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(String response) {
+                try {                		
+                        JSONArray obj = new JSONArray(response);
+                        
+                      	for (int i = 0; i < obj.length(); i++) 
+                		{
+                          	JSONObject Menu = new JSONObject(obj.getString(i));
+                      		
+                          	// set category
+                            JSONArray listCategory = new JSONArray(Menu.getString("category"));
+                          	CategoryModel category[] = new CategoryModel[listCategory.length()];
+                          	for(int j=0 ; j<listCategory.length() ; j++)
+                          	{
+                              	JSONObject responeCategory = new JSONObject(listCategory.getString(j));
+                          		
+                          		CategoryModel tempCategory = new CategoryModel(); 
+                       			tempCategory.setId(responeCategory.getInt("id"));
+                    			tempCategory.setName(responeCategory.getString("name"));
+                       			tempCategory.setImage(responeCategory.getString("image"));
+                       			
+                       			category[j] = tempCategory;
+                          	}
+                          	
+                          	// set restaurant
+                          	JSONObject responeRestaurant = new JSONObject(Menu.getString("restaurants"));
+                          	RestaurantModel restaurant = new RestaurantModel();
+                          	restaurant.setId(responeRestaurant.getInt("id"));
+                          	restaurant.setName(responeRestaurant.getString("name"));
+                          	restaurant.setDescription(responeRestaurant.getString("description"));
+                          	restaurant.setAddress(responeRestaurant.getString("address"));
+                          	restaurant.setLatitude(responeRestaurant.getJSONObject("location").getDouble("latitude"));
+                          	restaurant.setLongitude(responeRestaurant.getJSONObject("location").getDouble("longitude"));
 
-        Integer[] image={
-      	    	 R.drawable.thumb,
-      	    	 R.drawable.thumb,
-      	    	 R.drawable.thumb,
-      	    	 R.drawable.thumb1,
-      	    	 R.drawable.thumb1,
-      	    	 R.drawable.thumb1,
-      	    	 R.drawable.thumb2,
-      	    	 R.drawable.thumb2,
-      	    	 R.drawable.thumb2,
-      	    	 R.drawable.thumb2
-      	    };
-          	
-      	for (int i = 0; i < rating.length; i++) 
-		{
-      		String[] temp = {"asd", "dasadad"};
-			MenuModel wp = new MenuModel(title[i], "description", rating[i], rating[i], rating[i], rating[i], "Pizza", "Lodon's Pizza", temp);
-			arraylist.add(wp);
-		}
-      	
-      	list = (ListView) findViewById(R.id.list_search_result);
-      	adapter = new ListMenuAdapter(this, arraylist);
-   		list.setAdapter(adapter);
-   		adapter.filter("");
-               	        
-        inputSearch.addTextChangedListener(new TextWatcher() {	            
-	        @Override
-		    public void onTextChanged(CharSequence cs, int arg1, int arg2, int arg3) {
-	        	String text = String.valueOf(cs);
-				adapter.filter(text);
-			} 
+                          	// set ingredients
+                            JSONArray listIngredients = new JSONArray(Menu.getString("ingredients"));
+                          	String[] ingredients = new String[listIngredients.length()];
+                          	for(int j=0 ; j<listIngredients.length() ; j++)
+                          	{                       			
+                       			ingredients[j] = listIngredients.getString(j);                       			
+                          	}
+                          	
+                          	MenuModel tempMenu = new MenuModel();
+                   			tempMenu.setId(Menu.getInt("id"));
+                			tempMenu.setName(Menu.getString("name"));
+                   			tempMenu.setCurrency(Menu.getString("currency"));
+                   			tempMenu.setPrice(Menu.getDouble("price"));
+                   			tempMenu.setRating(Menu.getDouble("rating"));
+                   			tempMenu.setThumb_image(Menu.getString("thumb_image"));
+                   			tempMenu.setDescription(Menu.getString("description"));
+                   			tempMenu.setHalal(Menu.getBoolean("halal"));
+                   			
+                   			tempMenu.setCategory(category);
+                   			tempMenu.setRestaurant(restaurant);                   			
+                   			tempMenu.setIngredients(ingredients);
 
-	        @Override
-		    public void beforeTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
-		        // TODO Auto-generated method stub		         
-		    }
-		     
-		    @Override
-		    public void afterTextChanged(Editable arg0) {
-		        // TODO Auto-generated method stub                          
-		    }	
-        });
-        
-//        String[] category ={ "Pizza", "Sashimi", "Spainshi Tapas", "Tofu", "Dim Sum", "Chili Dogs" };
-        String[] category ={ "Pizza", "Sashimi", "Spainshi Tapas" };
+                   			//tempMenu.setImages();
+                   			
+                   			arraylist.add(tempMenu);                   			
+                		}
+                      	
+                    	adapter=new ListMenu(mContext, arraylist);
+                		list = (SwipeMenuListView)findViewById(R.id.list_search_result);
+                		list.setAdapter(adapter);                		
+                   		adapter.filter("");
+                		
+                		list.setOnItemClickListener(new OnItemClickListener() {
+                			@Override
+                			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+	                			Intent intent = new Intent(mContext, MenuDetail.class);
+	        					intent.putExtra("IdMenu", arraylist.get(position).getId());
+	        					intent.putExtra("MenuName", arraylist.get(position).getName());
+	        					intent.putExtra("RestaurantName", arraylist.get(position).getRestaurant().getName());
+	        					intent.putExtra("RestaurantAddress", arraylist.get(position).getRestaurant().getAddress());
+	                			startActivity(intent);          
+                			}
+            			});
 
-    	LinearLayout linLayout = (LinearLayout)findViewById(R.id.treding_category);
-        for (int i = 0; i < category.length; i++) {
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.WRAP_CONTENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT);
-            params.setMargins(5, 5, 5, 5);
-            final Button btn = new Button(this);
-            btn.setText(category[i]);
-            btn.setTextSize(12);
-            btn.setLines(1);
-            btn.setTextColor(getResources().getColor(R.color.buttonTextColor));
-            btn.setBackgroundResource(R.drawable.button_custom);
-            btn.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View view) {
-                    searchCategory(String.valueOf(btn.getText()));
+            			SwipeMenuCreator swipeMenu = new SwipeMenuCreator() {
+                			@Override
+                			public void create(SwipeMenu A) {
+	                			SwipeMenuItem reviewItem = new SwipeMenuItem(mContext);
+	                			reviewItem.setBackground(new ColorDrawable(Color.rgb(0x43, 0xA1, 0x47)));
+	                			reviewItem.setWidth(dp2px(80));
+	                			reviewItem.setIcon(R.drawable.star_review);
+	                			reviewItem.setTitle("Review");
+	                			reviewItem.setTitleSize(14);
+	                			reviewItem.setTitleColor(Color.WHITE);
+	                			A.addMenuItem(reviewItem);
+                			}
+            			};
+
+            			list.setMenuCreator(swipeMenu);
+
+            			list.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+	            			@Override
+	            			public boolean onMenuItemClick(int position, SwipeMenu A, int index) {
+		            			switch (index) {
+		            			case 0:
+    			                   //Toast.makeText(getApplicationContext(), Selecteditem + "1", Toast.LENGTH_LONG).show();
+		            			  Intent intent = new Intent(mContext, LeaveReview.class);
+		            			  intent.putExtra("IdMenu", arraylist.get(position).getId());
+		            			  intent.putExtra("MenuName", arraylist.get(position).getName());
+		            			  intent.putExtra("RestaurantName", arraylist.get(position).getRestaurant().getName());
+		            			  intent.putExtra("RestaurantAddress", arraylist.get(position).getRestaurant().getAddress());
+		            			  startActivity(intent);          
+		            			  break;
+		            			}
+		            			return false;
+	            			}
+            			});                     		
+            			
+            	    	inputSearch.addTextChangedListener(new TextWatcher() {	            
+            		        @Override
+            			    public void onTextChanged(CharSequence cs, int arg1, int arg2, int arg3) {
+            		        	String text = String.valueOf(cs);
+            					adapter.filter(text);
+            				} 
+
+            		        @Override
+            			    public void beforeTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
+            			        // TODO Auto-generated method stub		         
+            			    }
+            			     
+            			    @Override
+            			    public void afterTextChanged(Editable arg0) {
+            			        // TODO Auto-generated method stub                          
+            			    }	
+            	        });
+            	        
+            	        String[] category ={ "Pizza", "Sashimi", "Spainshi Tapas" };
+
+            	    	LinearLayout linLayout = (LinearLayout)findViewById(R.id.treding_category);
+            	        for (int i = 0; i < category.length; i++) {
+            	            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+            	                    LinearLayout.LayoutParams.WRAP_CONTENT,
+            	                    LinearLayout.LayoutParams.WRAP_CONTENT);
+            	            params.setMargins(5, 5, 5, 5);
+            	            final Button btn = new Button(mContext);
+            	            btn.setText(category[i]);
+            	            btn.setTextSize(12);
+            	            btn.setLines(1);
+            	            btn.setTextColor(getResources().getColor(R.color.buttonTextColor));
+            	            btn.setBackgroundResource(R.drawable.button_custom);
+            	            btn.setOnClickListener(new View.OnClickListener() {
+            	                public void onClick(View view) {
+            	                    searchCategory(String.valueOf(btn.getText()));
+            	                }
+            	            });
+            	            
+            	            linLayout.addView(btn, params);
+            	        }
+
+                } 
+                catch (JSONException e) {
+                    // TODO Auto-generated catch block
+                    Toast.makeText(getApplicationContext(), "Error Occured [Server's JSON response might be invalid]!", Toast.LENGTH_LONG).show();
+                    e.printStackTrace();
+
                 }
-            });
-            
-            linLayout.addView(btn, params);
-        }
-        
+            }
+            // When the response returned by REST has Http response code other than '200'
+            @Override
+            public void onFailure(int statusCode, Throwable error, String content) {
+                if(statusCode == 404){
+                    Toast.makeText(getApplicationContext(), "Requested resource not found", Toast.LENGTH_LONG).show();
+                } 
+                else if(statusCode == 500){
+                    Toast.makeText(getApplicationContext(), "Something went wrong at server end", Toast.LENGTH_LONG).show();
+                } 
+                else{
+                    Toast.makeText(getApplicationContext(), "Unexpected Error occcured! [Most common Error: Device might not be connected to Internet or remote server is not up and running]", Toast.LENGTH_LONG).show();
+                }
+            }
+        });		      	               	        
 	}	
     
-    public void searchCategory(String keyword){
+	private int dp2px(int dp) {
+		return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp,
+				getResources().getDisplayMetrics());
+	}        
+
+	public void searchCategory(String keyword){
     	inputSearch.setText(keyword);
 		adapter.filter(keyword);   	
     }
@@ -248,7 +360,7 @@ public class Search extends Activity implements ISideNavigationCallback {
                 break;
 
             case R.id.side_navigation_menu_item3:
-                i = new Intent(this, AddReview.class);
+                i = new Intent(this, Maps.class);
                 startActivity(i);          
 
                 break;

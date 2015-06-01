@@ -13,15 +13,32 @@
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content" >			    	    
     
-	    <ImageView
-			android:id="@+id/img_category"
-		    android:layout_width="wrap_content"
-		    android:layout_height="wrap_content"
-			android:adjustViewBounds="true"
-		    android:scaleType="fitXY"    
-		    android:contentDescription="description image"
-	        android:src="@drawable/pizza" />
-	    
+		<RelativeLayout
+		    android:id="@+id/slider_frame"
+		    android:layout_width="match_parent"
+		    android:layout_height="100dp">
+	    	
+	    	<android.support.v4.view.ViewPager 
+			    android:id="@+id/pager"
+				android:layout_width="wrap_content"
+				android:layout_height="fill_parent" />
+		    
+<!-- 		    <View  -->
+<!-- 			    android:layout_width="fill_parent" -->
+<!-- 			    android:layout_height="60dp" -->
+<!-- 		        android:layout_alignBottom="@+id/pager" -->
+<!-- 		        android:textColor="@color/textColor2" -->
+<!-- 			    android:background="@drawable/shadow_list_category" /> -->
+		    			    	
+    		<com.viewpagerindicator.CirclePageIndicator
+		        android:id="@+id/indicator"
+		        android:padding="10dip"
+		        android:layout_alignBottom="@+id/pager"
+		        android:layout_height="wrap_content"
+		        android:layout_width="fill_parent" />
+		    	
+	    </RelativeLayout> 
+	    	    
 	    <LinearLayout 
 	        android:orientation="horizontal"
 		    android:layout_width="match_parent"
@@ -29,17 +46,50 @@
 	        android:layout_marginRight="10dp"
 		  	android:layout_marginLeft="10dp" >
 		    
-		    <TextView 
-				android:id="@+id/menu_description"
-		   		android:textAppearance="?android:attr/textAppearanceSmall"
+	        <LinearLayout 
+		        android:orientation="vertical"
 				android:layout_width="0dip"
 		 		android:layout_weight="0.8"
-		        android:layout_height="match_parent"
-		        android:layout_marginTop="10dp"
-		        android:layout_marginBottom="5dp"
-		        android:textColor="@color/textColor1"
-		        android:text="Description in here Description in here Description in here Description in here Description in here Description in here Description in here Description in here" />
-	        
+		        android:layout_height="match_parent" >
+	    
+	            <TextView 
+					android:textAppearance="?android:attr/textAppearanceSmall"
+			   		android:textStyle="bold"
+			   		android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+			        android:layout_marginTop="10dp"
+			        android:textColor="@color/textColor1"
+			        android:text="Ingredients:" />
+	            
+        		<TextView 
+					android:id="@+id/menu_ingredients"
+			   		android:textAppearance="?android:attr/textAppearanceSmall"
+			   		android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+			        android:layout_marginBottom="5dp"
+			        android:textColor="@color/textColor1"
+			        android:text="Ingredients in here" />
+	            
+	            <TextView 
+					android:textAppearance="?android:attr/textAppearanceSmall"
+			   		android:textStyle="bold"
+			   		android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+			        android:layout_marginTop="10dp"
+			        android:textColor="@color/textColor1"
+			        android:text="Descriptions:" />
+        		
+	            <TextView 
+					android:id="@+id/menu_description"
+			   		android:textAppearance="?android:attr/textAppearanceSmall"
+			   		android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+			        android:layout_marginBottom="5dp"
+			        android:textColor="@color/textColor1"
+			        android:text="Description in here Description in here Description in here Description in here Description in here Description in here Description in here Description in here" />
+	            
+            </LinearLayout>
+		        
 	        <LinearLayout 
 		        android:orientation="vertical"
 				android:layout_width="0dip"

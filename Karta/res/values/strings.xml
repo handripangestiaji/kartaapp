@@ -2,7 +2,6 @@
 <resources>
 
     <string name="app_name">Karta Apps</string>
-    <string name="hello_world">Hello world!</string>
 	<string name="logo_desc">Logo Karta Apps</string>
 	<string name="username_text">Email</string>
 	<string name="password_text">Password</string>
@@ -11,8 +10,8 @@
 	<!--Menu title -->
     <string name="title1">Home</string>
     <string name="title2">Search</string>
-    <string name="title3">Add A Review</string>
-    <string name="title4">Maps</string>
+    <string name="title3">Maps</string>
+    <string name="title4">Setting</string>
     <string name="title5">Logout</string>
     <string name="mode">Mode</string>	
 		

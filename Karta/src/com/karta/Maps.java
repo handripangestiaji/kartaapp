@@ -182,7 +182,7 @@ public class Maps extends Activity implements OnMapReadyCallback,ISideNavigation
                 break;
 
             case R.id.side_navigation_menu_item3:
-                i = new Intent(this, AddReview.class);
+                i = new Intent(this, Maps.class);
                 startActivity(i);          
 
                 break;

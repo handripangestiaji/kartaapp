@@ -24,13 +24,12 @@
 		android:layout_height="1dp"
 		android:background="#aaa" />
    	    
-	<ListView
+	<com.baoyz.swipemenulistview.SwipeMenuListView
 	    android:id="@+id/list_search_result"
 	    android:scrollbars="none"	    
 	    android:background="@color/containerColor"
 	    android:layout_width="fill_parent"
-	    android:layout_height="wrap_content" >
-	</ListView> 
+	    android:layout_height="wrap_content" />
 	
   	<TextView 
 	    android:id="@+id/treding_category_label"

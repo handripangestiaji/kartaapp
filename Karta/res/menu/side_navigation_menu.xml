@@ -12,11 +12,11 @@
         android:title="@string/title2"/>
     <item
         android:id="@+id/side_navigation_menu_item3"
-        android:icon="@drawable/icon_review_menu"
+        android:icon="@drawable/icon_maps_menu"
         android:title="@string/title3"/>
     <item
         android:id="@+id/side_navigation_menu_item4"
-        android:icon="@drawable/icon_maps_menu"
+        android:icon="@drawable/icon_review_menu"
         android:title="@string/title4"/>
     <item
         android:id="@+id/side_navigation_menu_item5"

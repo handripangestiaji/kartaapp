@@ -1,22 +1,33 @@
 package com.karta.listadapter;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.karta.LeaveReview;
 import com.karta.MenuDetail;
 import com.karta.R;
+import com.karta.model.CategoryModel;
 import com.karta.model.MenuModel;
-import android.view.View.OnClickListener; 
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
+import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
+import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
 public class ListMenuAdapter extends BaseAdapter {
 	// Declare Variables
@@ -24,13 +35,26 @@ public class ListMenuAdapter extends BaseAdapter {
 	LayoutInflater inflater;
 	private List<MenuModel> MenuModelList = null;
 	private ArrayList<MenuModel> arraylist;
+	protected ImageLoader imageLoader;
  
+	private DisplayImageOptions options;
+	private ImageLoadingListener animateFirstListener = new AnimateFirstDisplayListener();
+
 	public ListMenuAdapter(Context context, List<MenuModel> MenuModelList) {
 		mContext = context;
 		this.MenuModelList = MenuModelList;
 		inflater = LayoutInflater.from(mContext);
 		this.arraylist = new ArrayList<MenuModel>();
 		this.arraylist.addAll(MenuModelList);
+
+		options = new DisplayImageOptions.Builder()
+		.showImageOnLoading(R.drawable.little_loading_image)
+		.showImageForEmptyUri(R.drawable.little_no_image)
+		.showImageOnFail(R.drawable.little_cant_load_image)
+		.cacheInMemory(true)
+		.cacheOnDisk(true)
+		.considerExifParams(true)
+		.displayer(new RoundedBitmapDisplayer(0)).build();
 	}
  
 	public class ViewHolder {
@@ -40,6 +64,8 @@ public class ListMenuAdapter extends BaseAdapter {
 		TextView rating;
 		TextView distance;
 		TextView restoran_name;
+		TextView restoran_address;
+		ImageView thumb_image;
 	}
  
 	@Override
@@ -67,40 +93,62 @@ public class ListMenuAdapter extends BaseAdapter {
 			holder.rating = (TextView) view.findViewById(R.id.menu_rating);
 			holder.distance = (TextView) view.findViewById(R.id.restorant_distance);
 			holder.restoran_name = (TextView) view.findViewById(R.id.restoran_name);
+			holder.restoran_address = (TextView) view.findViewById(R.id.restoran_address);
+			holder.thumb_image = (ImageView) view.findViewById(R.id.img_menu);
 			view.setTag(holder);
 		} else {
 			holder = (ViewHolder) view.getTag();
 		}
+
 		// Set the results into TextViews
 		holder.name.setText(MenuModelList.get(position).getName());
-		holder.price.setText(String.valueOf(MenuModelList.get(position).getPrice()));
+		holder.price.setText(MenuModelList.get(position).getCurrency() + String.valueOf(MenuModelList.get(position).getPrice()));
 		holder.rating.setText(String.valueOf(MenuModelList.get(position).getRating()));
-		holder.distance.setText("2.1");
-		holder.restoran_name.setText("Ledo's Pizza");
+		holder.distance.setText("2.1 Miles");
+		holder.restoran_name.setText(MenuModelList.get(position).getRestaurant().getName());
+		holder.restoran_address.setText(MenuModelList.get(position).getRestaurant().getAddress());
+		
+		if(view != null)
+			ImageLoader.getInstance().displayImage(MenuModelList.get(position).getThumb_image(), holder.thumb_image, options, animateFirstListener);
  
-		// Listen for ListView Item Click
-		view.setOnClickListener(new OnClickListener() {
- 
+		view.setOnClickListener(new OnClickListener() { 
 			@Override
 			public void onClick(View arg0) {
-				if(mContext.getClass().getSimpleName().equals("Search")){
-					Intent intent = new Intent(mContext, MenuDetail.class);
-//					intent.putExtra("rank",(MenuModelList.get(position).getRank()));
-//					intent.putExtra("country",(MenuModelList.get(position).getCountry()));
-//					intent.putExtra("population",(MenuModelList.get(position).getPopulation()));
+				if(mContext.getClass().getSimpleName().equals("AddReview")){
+					Intent intent = new Intent(mContext, LeaveReview.class);
+//					intent.putExtra("IdCategory", CategoryModelList.get(position).getId());
+//					intent.putExtra("CategoryName", CategoryModelList.get(position).getName());
 					mContext.startActivity(intent);					
 				}
-				else if(mContext.getClass().getSimpleName().equals("AddReview")){
-					Intent intent = new Intent(mContext, LeaveReview.class);
-//					intent.putExtra("rank",(MenuModelList.get(position).getRank()));
-//					intent.putExtra("country",(MenuModelList.get(position).getCountry()));
-//					intent.putExtra("population",(MenuModelList.get(position).getPopulation()));
+				else {
+					Intent intent = new Intent(mContext, MenuDetail.class);
+					intent.putExtra("IdMenu", MenuModelList.get(position).getId());
+					intent.putExtra("MenuName", MenuModelList.get(position).getName());
+					intent.putExtra("RestaurantName", MenuModelList.get(position).getRestaurant().getName());
+					intent.putExtra("RestaurantAddress", MenuModelList.get(position).getRestaurant().getAddress());
 					mContext.startActivity(intent);					
 				}
 			}
 		});
- 
+		 
 		return view;
+	}
+	
+	private static class AnimateFirstDisplayListener extends SimpleImageLoadingListener {
+
+		static final List<String> displayedImages = Collections.synchronizedList(new LinkedList<String>());
+
+		@Override
+		public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+			if (loadedImage != null) {
+				ImageView imageView = (ImageView) view;
+				boolean firstDisplay = !displayedImages.contains(imageUri);
+				if (firstDisplay) {
+					FadeInBitmapDisplayer.animate(imageView, 500);
+					displayedImages.add(imageUri);
+				}
+			}
+		}
 	}
  
 	// Filter Class
@@ -112,20 +160,43 @@ public class ListMenuAdapter extends BaseAdapter {
 		} 
 		else 
 		{
-			for (MenuModel wp : arraylist) 
-			{
-				if (wp.getDescription().toLowerCase(Locale.getDefault()).contains(charText)) 
+			for (MenuModel menu : arraylist) 
+			{				
+				Boolean finished = false;
+				if (menu.getName().toLowerCase(Locale.getDefault()).contains(charText)) 
 				{
-					MenuModelList.add(wp);
+					MenuModelList.add(menu);
+					finished = true;
 				}
-				else if (wp.getName().toLowerCase(Locale.getDefault()).contains(charText)) 
+				else if (menu.getRestaurant().getAddress().toLowerCase(Locale.getDefault()).contains(charText)) 
 				{
-					MenuModelList.add(wp);
+					MenuModelList.add(menu);
+					finished = true;
 				}
-				else if (wp.getCategory().toLowerCase(Locale.getDefault()).contains(charText)) 
+				
+				if(!finished)
 				{
-					MenuModelList.add(wp);
+					for(String ingredient : menu.getIngredients())
+					{
+						if (ingredient.toLowerCase(Locale.getDefault()).contains(charText)) 
+						{
+							MenuModelList.add(menu);
+							finished = true;
+						}					
+					}
 				}
+				
+				if(!finished)
+				{
+					for(CategoryModel category : menu.getCategory())
+					{
+						if (category.getName().toLowerCase(Locale.getDefault()).contains(charText)) 
+						{
+							MenuModelList.add(menu);
+							finished = true;
+						}					
+					}
+				}				
 			}
 		}
 		notifyDataSetChanged();

@@ -61,54 +61,13 @@ class ApiKartaController extends Zend_Rest_Controller {
 			    $array[$i]['id'] = $entry->getO_Id();
 			    $array[$i]['name'] = $entry->getName();
 
-			    $y = 0;
-			    foreach($entry->getCategory() as $category)
-			    {
-				    $array[$i]['categories'][$y]['id'] = $category->getO_Id();
-				    $array[$i]['categories'][$y]['name'] = $category->getName();
-				    $array[$i]['categories'][$y]['image'] = $_SERVER['REQUEST_SCHEME'] . '://' .  $_SERVER['HTTP_HOST'] . $category->image->path . $category->image->filename;;
-				    $y++;
-			    }
-
-			    $x = 0;
-			    if(count($entry->imageCollection->items) > 0)
-			    {
-				foreach($entry->imageCollection->items as $image)
-				{
-					$array[$i]['image_collection'][$x] = $_SERVER['REQUEST_SCHEME'] . '://' .  $_SERVER['HTTP_HOST'] . $image->image->path . $image->image->filename;
-					$x++;
-				}
-			     }
-
-			    $array[$i]['description'] = $entry->getDescription();
-			    $array[$i]['phone_number'] = $entry->getPhoneNumber();
-			
-			    $x = 0;
-			    foreach($entry->getOperationHour() as $hour)
-			    {
-				    $array[$i]['operation'][$x]['day'] = $hour->getOperationDay();
-				    $array[$i]['operation'][$x]['hour'] = $hour->getOperationHour();
-				    $x++;
-			    }
-			
-		            $array[$i]['profile_image'] = $_SERVER['REQUEST_SCHEME'] . '://' .  $_SERVER['HTTP_HOST'] . $entry->profileImage->path . $entry->profileImage->filename;
-			    $array[$i]['website_url'] = $entry->getWebsiteUrl();
-			    $array[$i]['email'] = $entry->getEmail();
-			    $array[$i]['address'] = $entry->getAddress();
-			    $array[$i]['city'] = $entry->getCity()->getName();
-			    $array[$i]['state'] = $entry->getCity()->getState()->getName();
-			    $array[$i]['zip_code'] = $entry->getZipCode();
-			    $array[$i]['location']['longitude'] = $entry->getLocation()->getLongitude();
-			    $array[$i]['location']['latitude'] = $entry->getLocation()->getLatitude();
-			    $array[$i]['timestamp_creation'] = $entry->getCreationDate();
-			    $array[$i]['creation_date'] = date('Y-m-d', $entry->getCreationDate());
-			    
-			    
+			    // query full menu
 			    $menu = new Object\Menu\Listing();
 			    $menu->setCondition("restaurants__id = ". $params);
 			    $menu->setOrderKey('name');
 			    $menu->setOrder('ASC');	    
-				
+
+			    $average_rating = 0;
 			    $j = 0;			
 			    foreach($menu as $m)
 			    {
@@ -131,11 +90,17 @@ class ApiKartaController extends Zend_Rest_Controller {
 					    $x++;
 				    }
 				}
+				
+				$average_rating += $m->getRating();
 					    				
 				$j++;				
 			    }
 			    
-			    $limit = (j> 15) ? ceil(0.2 * j) : 3;
+			    $total_menu = j;
+			    $rating_restaurant = $average_rating / $total_menu;
+			    
+			    // query top rated menu
+			    $limit = (j> 15) ? ceil(0.2 * $total_menu) : 3;
 			    $menu = new Object\Menu\Listing();
 			    $menu->setCondition("restaurants__id = ". $params);
 			    $menu->setOrderKey('rating');
@@ -168,6 +133,40 @@ class ApiKartaController extends Zend_Rest_Controller {
 				$j++;				
 			    }
 
+			    $x = 0;
+			    if(count($entry->imageCollection->items) > 0)
+			    {
+				foreach($entry->imageCollection->items as $image)
+				{
+					$array[$i]['image_collection'][$x] = $_SERVER['REQUEST_SCHEME'] . '://' .  $_SERVER['HTTP_HOST'] . $image->image->path . $image->image->filename;
+					$x++;
+				}
+			     }
+
+			    $array[$i]['description'] = $entry->getDescription();
+			    $array[$i]['phone_number'] = $entry->getPhoneNumber();
+			
+			    $x = 0;
+			    foreach($entry->getOperationHour() as $hour)
+			    {
+				    $array[$i]['operation'][$x]['day'] = $hour->getOperationDay();
+				    $array[$i]['operation'][$x]['hour'] = $hour->getOperationHour();
+				    $x++;
+			    }
+			
+		            $array[$i]['profile_image'] = $_SERVER['REQUEST_SCHEME'] . '://' .  $_SERVER['HTTP_HOST'] . $entry->profileImage->path . $entry->profileImage->filename;
+			    $array[$i]['website_url'] = $entry->getWebsiteUrl();
+			    $array[$i]['email'] = $entry->getEmail();
+			    $array[$i]['address'] = $entry->getAddress();
+			    $array[$i]['city'] = $entry->getCity()->getName();
+			    $array[$i]['state'] = $entry->getCity()->getState()->getName();
+			    $array[$i]['zip_code'] = $entry->getZipCode();
+			    $array[$i]['location']['longitude'] = $entry->getLocation()->getLongitude();
+			    $array[$i]['location']['latitude'] = $entry->getLocation()->getLatitude();
+			    $array[$i]['rating'] = $rating_restaurant;
+			    $array[$i]['timestamp_creation'] = $entry->getCreationDate();
+			    $array[$i]['creation_date'] = date('Y-m-d', $entry->getCreationDate());			    
+				
 			    $i++;
 		    }		
 	    }

@@ -107,7 +107,7 @@ class ApiKartaController extends Zend_Rest_Controller {
 			    $menu = new Object\Menu\Listing();
 			    $menu->setCondition("restaurants__id = ". $params);
 			    $menu->setOrderKey('name');
-			    $menu->setOrder('DESC');	    
+			    $menu->setOrder('ASC');	    
 				
 			    $j = 0;			
 			    foreach($menu as $m)
@@ -139,7 +139,7 @@ class ApiKartaController extends Zend_Rest_Controller {
 			    $menu->setCondition("restaurants__id = ". $params);
 			    $menu->setOrderKey('rating');
 			    $menu->setOrder('ASC');
-			    $menu->setLimit(5);
+			    $menu->setLimit(ceil(0.2 * j));
 				
 			    $j = 0;			
 			    foreach($menu as $m)

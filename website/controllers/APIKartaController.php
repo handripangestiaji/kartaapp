@@ -40,7 +40,7 @@ class ApiKartaController extends Zend_Rest_Controller {
 	    $array = array();
 	    $i = 0;
 	    
-	    if($params!='')
+	    try
 	    {
 		    
 		    if($this->_request->isPost())
@@ -170,12 +170,13 @@ class ApiKartaController extends Zend_Rest_Controller {
 			    $i++;
 		    }		
 	    }
-	    else {
-		    
-		    $array[0]['error'] = "Invalid ID";
-		    $array[0]['response_code'] = "403";
+	    catch(Exception $ex)
+	    {		    
+		    $array[0]['error'] = "Server Error";
+		    $array[0]['response_code'] = "500";
 		    
 	    }
+	    	    
 	    $json_resto = $this->_helper->json($array);
 	    $this->sendResponse($json_resto);
     }

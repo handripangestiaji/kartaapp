@@ -331,7 +331,7 @@ class ApiController extends Zend_Rest_Controller {
 			$array['website_url'] = ($entry->getWebsiteUrl() != null) ? $entry->getWebsiteUrl() : 'No information';
 			$array['email'] = ($entry->getEmail() != null) ? $entry->getEmail() : 'No information';
 			$array['zip_code'] = $entry->getZipCode();
-			$array['address'] = ($entry->getAddress() != null) ?  ($entry->getAddress() != null) : '';
+			$array['address'] = ($entry->getAddress() != null) ?  $entry->getAddress() : '';
 
 			$array['city'] = ($entry->getCity()->getName() != null) ? $entry->getCity()->getName() : '';
 			$array['state'] = ($entry->getCity()->getState()->getName() != null) ? $entry->getCity()->getState()->getName() : '';

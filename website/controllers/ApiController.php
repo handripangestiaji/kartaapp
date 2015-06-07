@@ -305,10 +305,10 @@ class ApiController extends Zend_Rest_Controller {
 			}
 			else
 			{
-				$array['image_collection'][$x] = null;
+				$array['image_collection'] = null;
 			}
 		    
-			$array['image_collection'] = 'No information';
+			$array['operation'] = 'No information';
 			if(count($entry->getOperationHour()->items) > 0)
 			{
 				foreach($entry->getOperationHour() as $hour)

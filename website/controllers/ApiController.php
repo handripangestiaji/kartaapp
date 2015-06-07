@@ -60,23 +60,32 @@ class ApiController extends Zend_Rest_Controller {
 	public function menuAction()
 	{
 		$params = $this->_getParam('id');
-		
+		$category = $this->_getParam('category');
+			
 		$menu = new Object\Menu\Listing();
 		
 		$array = array();
 		$i = 0;
-				
+		
+		$where = '';
+		
+		if($category != "")
+			$where = "categories like '%" . $category . "%' ";
+
 		if($params != '')
 		{
 			if($this->_request->isPost())
 			{
-				$menu->setCondition('o_id = ?', $params);
+				$where .= (($where != "") ? " AND " : "") .  "o_id = " . $params;
 			}
 			else if($this->_request->isGet())
 			{
-				$menu->setCondition('o_id = ?', $params);
+				$where .= (($where != "") ? " AND " : "") .  "o_id = " . $params;
 			}
 		}
+		
+		if($where != '')
+			$menu->setCondition($where);
 		
 		foreach($menu as $entry)
 		{

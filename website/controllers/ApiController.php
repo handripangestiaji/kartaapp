@@ -311,6 +311,7 @@ class ApiController extends Zend_Rest_Controller {
 			$array['operation'] = 'No information';
 			if(count($entry->getOperationHour()->items) > 0)
 			{
+				$array['operation'] = '';
 				foreach($entry->getOperationHour() as $hour)
 				{
 					$array['operation'] .= $hour->getOperationDay() . ' ' .  $hour->getOperationHour() . '\n';

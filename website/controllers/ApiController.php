@@ -97,7 +97,7 @@ class ApiController extends Zend_Rest_Controller {
 			$arr['id'] = $entry->getO_Id();
 			$arr['name'] = $entry->getName();
 			$arr['price'] = $entry->getPrice();
-			$arr['currency'] = $entry->getCurrency();
+			$arr['currency'] = $entry->getCurrency()->symbol;
 			$arr['rating'] = $entry->getRating();
 			$arr['halal'] = $entry->getHalal();
 			$arr['description'] = ($entry->getDescription() == null) ? $entry->getDescription() : '';
@@ -232,7 +232,7 @@ class ApiController extends Zend_Rest_Controller {
 					$array['full_menu'][$j]['id'] = $m->getO_Id();
 					$array['full_menu'][$j]['name'] = $m->getName();
 					$array['full_menu'][$j]['price'] = $m->getPrice();
-					$array['full_menu'][$j]['currency'] = $m->getCurrency();
+					$array['full_menu'][$j]['currency'] = $m->getCurrency()->symbol;
 					$array['full_menu'][$j]['rating'] = $m->getRating();
 					$array['full_menu'][$j]['halal'] = $m->getHalal();
 		    
@@ -274,7 +274,7 @@ class ApiController extends Zend_Rest_Controller {
 				$array['recomended_menu'][$j]['id'] = $m->getO_Id();
 				$array['recomended_menu'][$j]['name'] = $m->getName();
 				$array['recomended_menu'][$j]['price'] = $m->getPrice();
-				$array['recomended_menu'][$j]['currency'] = $m->getCurrency();
+				$array['recomended_menu'][$j]['currency'] = $m->getCurrency()->symbol;
 				$array['recomended_menu'][$j]['rating'] = $m->getRating();
 				$array['recomended_menu'][$j]['halal'] = $m->getHalal();
 	    

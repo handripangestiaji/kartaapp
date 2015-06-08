@@ -17,14 +17,15 @@ class ApiController extends Zend_Rest_Controller {
                 ->initContext('json');
 	}
 	
-	public function dietCategoriesAction()
+	public function categoriesAction()
 	{
 		
 		$id = $this->_getParam('id');
 		
-		$category = new Object\DietCategories\Listing();
+		$category = new Object\Categories\Listing();
 		$category->setOrderKey('name');
-		$category->setOrder('ASC');	    
+		$category->setOrder('ASC');
+//		$category->setCondition("categoriesType = 'Restaurant'");
     		
 		$array = array();
 		$i = 0;

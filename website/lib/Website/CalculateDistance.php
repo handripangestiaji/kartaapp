@@ -21,7 +21,7 @@ class Website_CalculateDistance {
         else if($unit == 'nmi')
             $distance_string = $distance . " nmi away";
         else 
-            $distance_string = $distance . " KM away";
+            $distance_string = $distance . " Km away";
 
         return $distance_string;
     }

@@ -383,8 +383,8 @@ class ApiController extends Zend_Rest_Controller {
 				}
 				else
 				{
-					$arr['distance_value'] = $distance_restaurant;
-					$arr['distance_string'] = Website_CalculateDistance::formating($distance_restaurant, $unit_distance);
+					$array['distance_value'] = $distance_restaurant;
+					$array['distance_string'] = Website_CalculateDistance::formating($distance_restaurant, $unit_distance);
 				}
 			}
 			 

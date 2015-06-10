@@ -66,9 +66,9 @@ class ApiController extends Zend_Rest_Controller {
 		$longitude = $this->_getParam('longitude');
 		$unit_distance = $this->_getParam('unit_distance');
 		
-		$latitude = -6.552484;
-		$longitude = 106.771291;
-		$unit_distance = 'mi';
+		//$latitude = -6.552484;
+		//$longitude = 106.771291;
+		//$unit_distance = 'mi';
 		
 		$menu = new Object\Menu\Listing();
 		

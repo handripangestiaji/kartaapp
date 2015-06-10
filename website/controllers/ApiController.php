@@ -65,6 +65,7 @@ class ApiController extends Zend_Rest_Controller {
 		$latitude = $this->_getParam('latitude');
 		$longitude = $this->_getParam('longitude');
 		$unit_distance = $this->_getParam('unit_distance');
+		$radius_distance = $this->_getParam('radius_distance');
 		
 		//$latitude = -6.552484;
 		//$longitude = 106.771291;
@@ -184,7 +185,7 @@ class ApiController extends Zend_Rest_Controller {
 			if(isset($latitude) && isset($longitude))
 			{
 				$distance_restaurant = Website_CalculateDistance::calculation($latitude, $longitude, $arr['restaurants']['location']['latitude'], $arr['restaurants']['location']['longitude'], $unit_distance);
-				if($distance_restaurant > 70)
+				if($distance_restaurant > $radius_distance)
 				{
 					$valid = 0;
 				}
@@ -210,6 +211,7 @@ class ApiController extends Zend_Rest_Controller {
 		$latitude = $this->_getParam('latitude');
 		$longitude = $this->_getParam('longitude');
 		$unit_distance = $this->_getParam('unit_distance');
+		$radius_distance = $this->_getParam('radius_distance');
 		
 		$resto = new Object\Restaurants\Listing();
 		
@@ -377,7 +379,7 @@ class ApiController extends Zend_Rest_Controller {
 			if(isset($latitude) && isset($longitude))
 			{
 				$distance_restaurant = Website_CalculateDistance::calculation($latitude, $longitude, $array['location']['latitude'], $array['location']['longitude'], $unit_distance);
-				if($distance_restaurant > 70)
+				if($distance_restaurant > $radius_distance)
 				{
 					$valid = 0;
 				}

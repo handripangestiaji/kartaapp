@@ -16,7 +16,7 @@ class ApiController extends Zend_Rest_Controller {
                 ->addActionContext('delete','json')
                 ->initContext('json');
 	}
-	
+		
 	public function categoriesAction()
 	{
 		
@@ -62,7 +62,14 @@ class ApiController extends Zend_Rest_Controller {
 	{
 		$params = $this->_getParam('id');
 		$category = $this->_getParam('category');
-			
+		$latitude = $this->_getParam('latitude');
+		$longitude = $this->_getParam('longitude');
+		$unit_distance = $this->_getParam('unit_distance');
+		
+		$latitude = -6.552484;
+		$longitude = 106.771291;
+		$unit_distance = 'mi';
+		
 		$menu = new Object\Menu\Listing();
 		
 		$array = array();
@@ -173,6 +180,19 @@ class ApiController extends Zend_Rest_Controller {
 
 			$arr['timestamp_creation'] = $entry->getCreationDate();
 			$arr['creation_date'] = date('Y-m-d', $entry->getCreationDate());
+			
+			if(isset($latitude) && isset($longitude))
+			{
+				$distance_restaurant = Website_CalculateDistance::calculation($latitude, $longitude, $arr['restaurants']['location']['latitude'], $arr['restaurants']['location']['longitude'], $unit_distance);
+				if($distance_restaurant > 70)
+				{
+					$valid = 0;
+				}
+				else
+				{
+					$arr['restaurants']['distance'] = Website_CalculateDistance::formating($distance_restaurant, $unit_distance);
+				}
+			}
 			
 			if($valid)
 				array_push($array, $arr);

@@ -17,11 +17,11 @@ class Website_CalculateDistance {
     
     public function formating($distance, $unit = 'km') { 
         if($unit == 'mi')
-            $distance_string = $distance . " Miles";
+            $distance_string = $distance . " Miles away";
         else if($unit == 'nmi')
-            $distance_string = $distance . " nmi";
+            $distance_string = $distance . " nmi away";
         else 
-            $distance_string = $distance . " KM";
+            $distance_string = $distance . " KM away";
 
         return $distance_string;
     }

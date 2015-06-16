@@ -129,9 +129,9 @@ class ApiController extends Zend_Rest_Controller {
 			
 			// get sub categories
 			$x = 0;
-			if(count($entry->subCategories()) > 0)
+			if(count($entry->subCategories) > 0)
 			{
-				foreach($entry->subCategories() as $sub_category)
+				foreach($entry->subCategories as $sub_category)
 				{
 					$arr['sub_category'][$x]['id'] = $sub_category->getO_Id();
 					$arr['sub_category'][$x]['name'] = $sub_category->getName();

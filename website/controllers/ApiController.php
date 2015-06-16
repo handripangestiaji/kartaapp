@@ -110,7 +110,7 @@ class ApiController extends Zend_Rest_Controller {
 			$arr['halal'] = $entry->getHalal();
 			$arr['description'] = ($entry->getDescription() != null) ? $entry->getDescription() : 'No Description';
 
-			// get diet categories
+			// get categories
 			$x = 0;
 			if(count($entry->getCategories()) > 0)
 			{
@@ -125,6 +125,18 @@ class ApiController extends Zend_Rest_Controller {
 			else
 			{
 				$valid = 0;
+			}
+			
+			// get sub categories
+			$x = 0;
+			if(count($entry->subCategories()) > 0)
+			{
+				foreach($entry->subCategories() as $sub_category)
+				{
+					$arr['sub_category'][$x]['id'] = $sub_category->getO_Id();
+					$arr['sub_category'][$x]['name'] = $sub_category->getName();
+					$x++;
+				}			
 			}
 											    
 			// get restaurant relation data

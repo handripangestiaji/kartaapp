@@ -107,7 +107,7 @@ class ApiController extends Zend_Rest_Controller {
 			$arr['price'] = $entry->getPrice();
 			$arr['currency'] = $entry->getCurrency()->symbol;
 			$arr['rating'] = $entry->getRating();
-			$arr['halal'] = $entry->getHalal();
+			$arr['halal'] = ($entry->getHalal() != null) ? $entry->getHalal() : false;
 			$arr['description'] = ($entry->getDescription() != null) ? $entry->getDescription() : 'No Description';
 
 			// get categories

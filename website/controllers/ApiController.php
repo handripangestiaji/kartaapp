@@ -349,14 +349,14 @@ class ApiController extends Zend_Rest_Controller {
 		    
 			$array['operation_day'] = array();
 			$array['operation_hour'] = array();
-			$i = 1;
+			$x = 0;
 			if(count($entry->getOperationHour()->items) > 0)
 			{
 				foreach($entry->getOperationHour() as $hour)
 				{
-					$array['operation_day'][$i] = $hour->getOperationDay();
-					$array['operation_hour'][$i] = $hour->getOperationHour();
-					$i++;
+					$array['operation_day'][$x] = $hour->getOperationDay();
+					$array['operation_hour'][$x] = $hour->getOperationHour();
+					$x++;
 				}
 			}
 			

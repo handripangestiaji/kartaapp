@@ -347,13 +347,16 @@ class ApiController extends Zend_Rest_Controller {
 				$array['image_collection'] = null;
 			}
 		    
-			$array['operation'] = 'No information';
+			$array['operation_day'] = array();
+			$array['operation_hour'] = array();
+			$i = 1;
 			if(count($entry->getOperationHour()->items) > 0)
 			{
-				$array['operation'] = '';
 				foreach($entry->getOperationHour() as $hour)
 				{
-					$array['operation'] .= $hour->getOperationDay() . ' ' .  $hour->getOperationHour() . '\n';
+					$array['operation_day'][$i] = $hour->getOperationDay();
+					$array['operation_hour'][$i] = $hour->getOperationHour();
+					$i++;
 				}
 			}
 			

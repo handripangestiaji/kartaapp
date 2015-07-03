@@ -18,8 +18,7 @@ class ApiController extends Zend_Rest_Controller {
 	}
 		
 	public function categoriesAction()
-	{
-		
+	{		
 		$id = $this->_getParam('id');
 		
 		$category = new Object\Categories\Listing();
@@ -54,6 +53,70 @@ class ApiController extends Zend_Rest_Controller {
 			array_push($array, $arr);
 		}
 		
+		$json_cat = $this->_helper->json($array);
+		$this->sendResponse($arr);
+	}
+	
+	public function categoriesForHomeAction()
+	{
+		$latitude = $this->_getParam('latitude');
+		$longitude = $this->_getParam('longitude');
+		$unit_distance = $this->_getParam('unit_distance');
+		$radius_distance = $this->_getParam('radius_distance');
+		$limit = $this->_getParam('limit');
+		
+		$resto = new Object\Restaurants\Listing();
+		
+		$categories = array();
+		$i = 0;
+		$x = 0;
+							
+		foreach($resto as $entry)
+		{
+			$i++;
+			$array = array();
+			
+			// query full menu
+			$menu = new Object\Menu\Listing();	
+			$menu->setCondition("restaurants__id = ". $entry->getO_Id());
+			$menu->setOrderKey('name');
+			$menu->setOrder('ASC');
+			
+			if($entry->getLocation()->getLongitude() != null && $entry->getLocation()->getLatitude() != null)
+			{
+				$longitude_resto = $entry->getLocation()->getLongitude();
+				$latitude_resto = $entry->getLocation()->getLatitude();				
+			}
+						
+			if(isset($latitude) && isset($longitude))
+			{
+				$distance_restaurant = Website_CalculateDistance::calculation($latitude, $longitude, $latitude_resto, $longitude_resto, $unit_distance);
+				if($distance_restaurant <= $radius_distance)
+				{
+					if($menu->count() > 0)
+					{
+						foreach($menu as $m)
+						{
+							// get categories
+							if(count($m->getCategories()) > 0)
+							{
+								foreach($m->getCategories() as $category)
+								{
+									if(in_array($category, $categories)){
+										array_push($categories, $category);										
+									}
+								}			
+							}
+						}						
+					}
+				}
+			}					    						 				
+		}
+		
+		$arrays = array();
+		
+		Website_Utils::sortArrayBy('viewCounter', $categories);
+
 		$json_cat = $this->_helper->json($array);
 		$this->sendResponse($arr);
 	}

@@ -115,8 +115,18 @@ class ApiController extends Zend_Rest_Controller {
 		
 		$arrays = array();
 		
-		Website_Utils::sortArrayBy('viewCounter', $categories);
-
+		// manual sort categories
+		for($i=0 ; $i<(count($categories)-1) ; $i++){
+			for($j=1 ; $j<count($categories) ; $j++){
+				if($categories[$i] < $categories[$j] )
+				{
+					$temp = $categories[$i];
+					$categories[$j] = $categories[$i];
+					$categories[$i] = $temp;
+				}
+			}			
+		}
+		
 		$json_cat = $this->_helper->json($array);
 		$this->sendResponse($arr);
 	}

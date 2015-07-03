@@ -125,8 +125,8 @@ class ApiController extends Zend_Rest_Controller {
 		
 		$array = array();
 		foreach($trending_categories as $category)
-		{
-			array_push($array, $category);
+		{			
+			array_push($array, array('id' => $category->o_id, 'name' => $category->name, 'image_url' => $category->image));
 		}
 
 		$json_cat = $this->_helper->json($array);

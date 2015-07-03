@@ -68,20 +68,12 @@ class ApiController extends Zend_Rest_Controller {
 		$resto = new Object\Restaurants\Listing();
 		
 		$categories = array();
-		$i = 0;
-		$x = 0;
+		$categories_name = array();
 							
 		foreach($resto as $entry)
 		{
-			$i++;
 			$array = array();
-			
-			// query full menu
-			$menu = new Object\Menu\Listing();	
-			$menu->setCondition("restaurants__id = ". $entry->getO_Id());
-			$menu->setOrderKey('name');
-			$menu->setOrder('ASC');
-			
+						
 			if($entry->getLocation()->getLongitude() != null && $entry->getLocation()->getLatitude() != null)
 			{
 				$longitude_resto = $entry->getLocation()->getLongitude();
@@ -93,6 +85,12 @@ class ApiController extends Zend_Rest_Controller {
 				$distance_restaurant = Website_CalculateDistance::calculation($latitude, $longitude, $latitude_resto, $longitude_resto, $unit_distance);
 				if($distance_restaurant <= $radius_distance)
 				{
+					// query full menu
+					$menu = new Object\Menu\Listing();	
+					$menu->setCondition("restaurants__id = ". $entry->getO_Id());
+					$menu->setOrderKey('name');
+					$menu->setOrder('ASC');
+
 					if($menu->count() > 0)
 					{
 						foreach($menu as $m)
@@ -102,8 +100,9 @@ class ApiController extends Zend_Rest_Controller {
 							{
 								foreach($m->getCategories() as $category)
 								{
-									if(in_array($category, $categories)){
+									if(!in_array($category->name, $categories_name) && $category->categoriesType == "Restaurant"){
 										array_push($categories, $category);										
+										array_push($categories_name, $category->name);										
 									}
 								}			
 							}
@@ -113,20 +112,23 @@ class ApiController extends Zend_Rest_Controller {
 			}					    						 				
 		}
 		
-		$arrays = array();
-		
-		// manual sort categories
-		for($i=0 ; $i<(count($categories)-1) ; $i++){
-			for($j=1 ; $j<count($categories) ; $j++){
-				if($categories[$i] < $categories[$j] )
-				{
-					$temp = $categories[$i];
-					$categories[$j] = $categories[$i];
-					$categories[$i] = $temp;
-				}
-			}			
+		$trending_categories = new Object\Categories\Listing();
+		$where = '';
+		foreach($categories as $category)
+		{
+			$where .= (($where == "") ? " " : " OR ") . "o_id = " . $category->o_id; 
 		}
+		$trending_categories->setCondition($where);
+		$trending_categories->setOrderKey('viewCounter');
+		$trending_categories->setOrder('DESC');
+		$trending_categories->setLimit($limit);
 		
+		$array = array();
+		foreach($trending_categories as $category)
+		{
+			array_push($array, $category);
+		}
+
 		$json_cat = $this->_helper->json($array);
 		$this->sendResponse($arr);
 	}

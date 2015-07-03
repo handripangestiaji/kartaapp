@@ -133,6 +133,20 @@ class ApiController extends Zend_Rest_Controller {
 		$this->sendResponse($arr);
 	}
 	
+	public function setCounterCategoriesAction()
+	{
+		$params = $_GET['list_id_category'];
+		$array_id = explode("@", $params);
+		
+		foreach($array_id as $id)
+		{
+			$myObject = Object_Categories::getById($id);
+			$myObject->setViewCounter(($myObject->getViewCounter() == null) ? 1 : ($myObject->getViewCounter() + 1));
+			$myObject->save();			
+		}									
+	}
+	
+	
 	public function menuAction()
 	{
 		$params = $this->_getParam('id');
@@ -141,11 +155,7 @@ class ApiController extends Zend_Rest_Controller {
 		$longitude = $this->_getParam('longitude');
 		$unit_distance = $this->_getParam('unit_distance');
 		$radius_distance = $this->_getParam('radius_distance');
-		
-		//$latitude = -6.552484;
-		//$longitude = 106.771291;
-		//$unit_distance = 'mi';
-		
+				
 		$menu = new Object\Menu\Listing();
 		
 		$array = array();
@@ -186,11 +196,14 @@ class ApiController extends Zend_Rest_Controller {
 			$arr['description'] = ($entry->getDescription() != null) ? $entry->getDescription() : 'No Description';
 
 			// get categories
+			$arr['list_category'] = '';
 			$x = 0;
 			if(count($entry->getCategories()) > 0)
 			{
 				foreach($entry->getCategories() as $category)
 				{
+					$arr['list_category'] .= $arr['list_category'] == '' ? $category->getO_Id() : '@'. $category->getO_Id(); 
+					
 					$arr['category'][$x]['id'] = $category->getO_Id();
 					$arr['category'][$x]['name'] = $category->getName();
 					$arr['category'][$x]['image'] = $_SERVER['REQUEST_SCHEME'] . '://' .  $_SERVER['HTTP_HOST'] . $category->image->path . $category->image->filename;;
@@ -329,6 +342,7 @@ class ApiController extends Zend_Rest_Controller {
 			$array['o_key'] = $entry->o_key;
 			$array['id'] = $entry->getO_Id();
 			$array['name'] = $entry->getName();
+			$array['list_category'] = array();
 
 			// query full menu
 			$menu = new Object\Menu\Listing();	
@@ -357,6 +371,18 @@ class ApiController extends Zend_Rest_Controller {
 					{
 						$array['full_menu'][$j]['thumb_image'] = null;						
 					}
+					
+					if(count($m->getCategories()) > 0)
+					{
+						foreach($m->getCategories() as $category)
+						{
+							if(!in_array($category->o_id, $array['list_category']))
+							{
+								array_push($array['list_category'], $category->o_id);
+							}
+						}			
+					}
+
 					
 					$average_rating += $m->getRating();
 					
@@ -455,6 +481,7 @@ class ApiController extends Zend_Rest_Controller {
 			$array['state'] = ($entry->getCity()->getState()->getName() != null) ? $entry->getCity()->getState()->getName() : '';
 
 			$array['rating'] = round($rating_restaurant, 1);
+			$array['list_id_category'] = implode("@", $array['list_category']);
 			
 			if($entry->getLocation()->getLongitude() != null && $entry->getLocation()->getLatitude() != null)
 			{

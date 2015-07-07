@@ -197,6 +197,7 @@ class ApiController extends Zend_Rest_Controller {
 
 			// get categories
 			$arr['list_category'] = '';
+			$arr['category'] = null;
 			$x = 0;
 			if(count($entry->getCategories()) > 0)
 			{
@@ -216,6 +217,7 @@ class ApiController extends Zend_Rest_Controller {
 			}
 			
 			// get sub categories
+			$arr['sub_category'] = null;
 			$x = 0;
 			if(count($entry->subCategories) > 0)
 			{

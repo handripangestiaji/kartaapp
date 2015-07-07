@@ -364,6 +364,7 @@ class ApiController extends Zend_Rest_Controller {
 					$array['full_menu'][$j]['currency'] = $m->getCurrency()->symbol;
 					$array['full_menu'][$j]['rating'] = $m->getRating();
 					$array['full_menu'][$j]['halal'] = ($m->getHalal() != null) ? $m->getHalal() : false;
+					$array['full_menu'][$j]['description'] = ($m->getDescription() != null) ? $m->getDescription() : "No description";
 		    
 					if($m->thumb_image != null)
 					{
@@ -418,6 +419,7 @@ class ApiController extends Zend_Rest_Controller {
 				$array['recomended_menu'][$j]['currency'] = $m->getCurrency()->symbol;
 				$array['recomended_menu'][$j]['rating'] = $m->getRating();
 				$array['recomended_menu'][$j]['halal'] = ($m->getHalal() != null) ? $m->getHalal() : false;
+				$array['recomended_menu'][$j]['description'] = ($m->getDescription() != null) ? $m->getDescription() : "No description";
 	    
 				if($m->thumb_image != null)
 				{

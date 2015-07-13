@@ -345,6 +345,8 @@ class ApiController extends Zend_Rest_Controller {
 			$array['id'] = $entry->getO_Id();
 			$array['name'] = $entry->getName();
 			$array['list_category'] = array();
+			$array['list_sub_category'] = array();
+			$array['all_menu'] = array();
 
 			// query full menu
 			$menu = new Object\Menu\Listing();	
@@ -358,21 +360,21 @@ class ApiController extends Zend_Rest_Controller {
 				$j = 0;			
 				foreach($menu as $m)
 				{
-					$array['full_menu'][$j]['id'] = $m->getO_Id();
-					$array['full_menu'][$j]['name'] = $m->getName();
-					$array['full_menu'][$j]['price'] = sprintf('%0.2f', $m->getPrice());
-					$array['full_menu'][$j]['currency'] = $m->getCurrency()->symbol;
-					$array['full_menu'][$j]['rating'] = $m->getRating();
-					$array['full_menu'][$j]['halal'] = ($m->getHalal() != null) ? $m->getHalal() : false;
-					$array['full_menu'][$j]['description'] = ($m->getDescription() != null) ? $m->getDescription() : "No description";
+					$full_menu[$j]['id'] = $m->getO_Id();
+					$full_menu[$j]['name'] = $m->getName();
+					$full_menu[$j]['price'] = sprintf('%0.2f', $m->getPrice());
+					$full_menu[$j]['currency'] = $m->getCurrency()->symbol;
+					$full_menu[$j]['rating'] = $m->getRating();
+					$full_menu[$j]['halal'] = ($m->getHalal() != null) ? $m->getHalal() : false;
+					$full_menu[$j]['description'] = ($m->getDescription() != null) ? $m->getDescription() : "No description";
 		    
 					if($m->thumb_image != null)
 					{
-						$array['full_menu'][$j]['thumb_image'] = $_SERVER['REQUEST_SCHEME'] . '://' .  $_SERVER['HTTP_HOST'] . $m->thumb_image->path . $m->thumb_image->filename;						
+						$full_menu[$j]['thumb_image'] = $_SERVER['REQUEST_SCHEME'] . '://' .  $_SERVER['HTTP_HOST'] . $m->thumb_image->path . $m->thumb_image->filename;						
 					}
 					else
 					{
-						$array['full_menu'][$j]['thumb_image'] = null;						
+						$full_menu[$j]['thumb_image'] = null;						
 					}
 					
 					if(count($m->getCategories()) > 0)
@@ -386,6 +388,16 @@ class ApiController extends Zend_Rest_Controller {
 						}			
 					}
 
+					if(count($m->getSubCategories()) > 0)
+					{
+						foreach($m->getSubCategories() as $subCategory)
+						{
+							if(!in_array(array($subCategory->name, $subCategory->o_id), $array['list_sub_category']))
+							{
+								array_push($array['list_sub_category'], array($subCategory->name, $subCategory->o_id));
+							}
+						}			
+					}
 					
 					$average_rating += $m->getRating();
 					
@@ -393,7 +405,9 @@ class ApiController extends Zend_Rest_Controller {
 				}
 				
 				$total_menu = $j;
-				$rating_restaurant = $average_rating / $total_menu;			    
+				$rating_restaurant = $average_rating / $total_menu;
+				
+				array_push($array['all_menu'], array("Full Menu", $full_menu));
 			}
 			else
 			{
@@ -410,34 +424,76 @@ class ApiController extends Zend_Rest_Controller {
 			    
 			if($menu->count() > 0)
 			{
-			    $j = 0;			
-			    foreach($menu as $m)
-			    {
-				$array['recomended_menu'][$j]['id'] = $m->getO_Id();
-				$array['recomended_menu'][$j]['name'] = $m->getName();
-				$array['recomended_menu'][$j]['price'] = sprintf('%0.2f', $m->getPrice());
-				$array['recomended_menu'][$j]['currency'] = $m->getCurrency()->symbol;
-				$array['recomended_menu'][$j]['rating'] = $m->getRating();
-				$array['recomended_menu'][$j]['halal'] = ($m->getHalal() != null) ? $m->getHalal() : false;
-				$array['recomended_menu'][$j]['description'] = ($m->getDescription() != null) ? $m->getDescription() : "No description";
-	    
-				if($m->thumb_image != null)
+				$j = 0;			
+				foreach($menu as $m)
 				{
-					$array['recomended_menu'][$j]['thumb_image'] = $_SERVER['REQUEST_SCHEME'] . '://' .  $_SERVER['HTTP_HOST'] . $m->thumb_image->path . $m->thumb_image->filename;						
+					$recomended_menu[$j]['id'] = $m->getO_Id();
+					$recomended_menu[$j]['name'] = $m->getName();
+					$recomended_menu[$j]['price'] = sprintf('%0.2f', $m->getPrice());
+					$recomended_menu[$j]['currency'] = $m->getCurrency()->symbol;
+					$recomended_menu[$j]['rating'] = $m->getRating();
+					$recomended_menu[$j]['halal'] = ($m->getHalal() != null) ? $m->getHalal() : false;
+					$recomended_menu[$j]['description'] = ($m->getDescription() != null) ? $m->getDescription() : "No description";
+		    
+					if($m->thumb_image != null)
+					{
+						$recomended_menu[$j]['thumb_image'] = $_SERVER['REQUEST_SCHEME'] . '://' .  $_SERVER['HTTP_HOST'] . $m->thumb_image->path . $m->thumb_image->filename;						
+					}
+					else
+					{
+						$recomended_menu[$j]['thumb_image'] = null;						
+					}
+									
+					$j++;				
 				}
-				else
-				{
-					$array['recomended_menu'][$j]['thumb_image'] = null;						
-				}
-								
-				$j++;				
-			    }
+			    
+				array_push($array['all_menu'], array("Top Rated Menu", $array['recomended_menu']));
 			}
 			else
 			{
 				$valid = 0;
 			}
-
+			
+			// query menu from sub categories
+			if(isset($array['list_sub_category']))
+			{
+				foreach($array['list_sub_category'] as $sub_category)
+				{					
+					$menu = new Object\Menu\Listing();	
+					$menu->setCondition("restaurants__id = ". $entry->getO_Id() . " AND subCategories like '%object|". $sub_category[1] ."%'");
+					$menu->setOrderKey('name');
+					$menu->setOrder('ASC');
+					
+					$sub_categories_menu =  array();
+					if($menu->count() > 0)
+					{
+						$j = 0;			
+						foreach($menu as $m)
+						{
+							$sub_categories_menu[$j]['id'] = $m->getO_Id();
+							$sub_categories_menu[$j]['name'] = $m->getName();
+							$sub_categories_menu[$j]['price'] = sprintf('%0.2f', $m->getPrice());
+							$sub_categories_menu[$j]['currency'] = $m->getCurrency()->symbol;
+							$sub_categories_menu[$j]['rating'] = $m->getRating();
+							$sub_categories_menu[$j]['halal'] = ($m->getHalal() != null) ? $m->getHalal() : false;
+							$sub_categories_menu[$j]['description'] = ($m->getDescription() != null) ? $m->getDescription() : "No description";
+				    
+							if($m->thumb_image != null)
+							{
+								$sub_categories_menu[$j]['thumb_image'] = $_SERVER['REQUEST_SCHEME'] . '://' .  $_SERVER['HTTP_HOST'] . $m->thumb_image->path . $m->thumb_image->filename;						
+							}
+							else
+							{
+								$sub_categories_menu[$j]['thumb_image'] = null;						
+							}
+							$j++;				
+						}
+						
+						array_push($array['all_menu'], array($sub_category[0], $sub_categories_menu));
+					}		
+				}
+			}
+			
 			$x = 0;
 			if(count($entry->imageCollection->items) > 0)
 			{
@@ -514,8 +570,8 @@ class ApiController extends Zend_Rest_Controller {
 			if($valid)
 				array_push($arrays, $array);
 				
-		}		
-			
+		}
+					
 		$json_resto = $this->_helper->json($arrays);
 		$this->sendResponse($json_resto);
 	}	

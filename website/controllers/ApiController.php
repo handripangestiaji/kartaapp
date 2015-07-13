@@ -415,7 +415,7 @@ class ApiController extends Zend_Rest_Controller {
 			}
 			
 			// query top rated menu
-			$limit = (j> 15) ? ceil(0.2 * $total_menu) : 3;
+			$limit = ($total_menu > 15) ? ceil(0.2 * $total_menu) : 3;
 			$menu = new Object\Menu\Listing();
 			$menu->setCondition("restaurants__id = ". $entry->getO_Id());
 			$menu->setOrderKey('rating');
@@ -447,7 +447,7 @@ class ApiController extends Zend_Rest_Controller {
 					$j++;				
 				}
 			    
-				array_push($array['all_menu'], array("Top Rated Menu", $array['recomended_menu']));
+				array_push($array['all_menu'], array("Top Rated Menu", $recomended_menu));
 			}
 			else
 			{

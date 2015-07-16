@@ -405,9 +405,7 @@ class ApiController extends Zend_Rest_Controller {
 				}
 				
 				$total_menu = $j;
-				$rating_restaurant = $average_rating / $total_menu;
-				
-				array_push($array['all_menu'], array("Full Menu", $full_menu));
+				$rating_restaurant = $average_rating / $total_menu;				
 			}
 			else
 			{
@@ -445,13 +443,17 @@ class ApiController extends Zend_Rest_Controller {
 					}
 									
 					$j++;				
-				}
-			    
-				array_push($array['all_menu'], array("Top Rated Menu", $recomended_menu));
+				}			    
 			}
 			else
 			{
 				$valid = 0;
+			}
+			
+			if($valid)
+			{
+				array_push($array['all_menu'], array("Top Rated Menu", $recomended_menu));
+				array_push($array['all_menu'], array("Full Menu", $full_menu));				
 			}
 			
 			// query menu from sub categories

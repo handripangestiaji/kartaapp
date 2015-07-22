@@ -336,23 +336,7 @@ class ApiController extends Zend_Rest_Controller {
 				}
 			}
 		}
-		
-		foreach($resto as $entry)
-		{
-			if(isset($latitude) && isset($longitude))
-			{
-				$distance_restaurant = Website_CalculateDistance::calculation($latitude, $longitude, $entry->getLocation()->getLatitude(), $entry->getLocation()->getLongitude(), $unit_distance);
-
-				$myObject = Object_Restaurants::getById($entry->o_id);
-				$myObject->setDistance($distance_restaurant);
-				$myObject->save();							
-			}
-		}
-		
-		$resto->setOrderKey('distance');
-		$resto->setOrder('DESC');
-		$resto->setLimit($limit);
-		
+				
 		foreach($resto as $entry)
 		{
 			$valid = 1;
@@ -574,6 +558,117 @@ class ApiController extends Zend_Rest_Controller {
 			
 			if(isset($latitude) && isset($longitude))
 			{
+				$distance_restaurant = Website_CalculateDistance::calculation($latitude, $longitude, $array['location']['latitude'], $array['location']['longitude'], $unit_distance);
+				if($distance_restaurant > $radius_distance)
+				{
+					$valid = 0;
+				}
+				else
+				{
+					$array['distance_value'] = $distance_value;
+					$array['distance_string'] = Website_CalculateDistance::formating($distance_restaurant, $unit_distance);
+				}
+			}
+			 
+			if($valid)
+				array_push($arrays, $array);
+				
+		}
+					
+		$json_resto = $this->_helper->json($arrays);
+		$this->sendResponse($json_resto);
+	}
+	
+	public function restaurantsLimitAction()
+	{	    
+		$params = $this->_getParam('id');
+		$limit = $this->_getParam('limit');
+		$latitude = $this->_getParam('latitude');
+		$longitude = $this->_getParam('longitude');
+		$unit_distance = $this->_getParam('unit_distance');
+		$radius_distance = $this->_getParam('radius_distance');
+		
+		$resto = new Object\Restaurants\Listing();
+		
+		$arrays = array();
+		$i = 0;
+					
+		if($params != '')
+		{
+			if($this->_request->isPost())
+			{
+				if($params!='') {
+					    $resto->setCondition('o_id = ?', $params);
+				    }
+			}
+			else if($this->_request->isGet())
+			{
+				if($params!='') {
+					$resto->setCondition('o_id = ?', $params);
+				}
+			}
+		}
+		
+		foreach($resto as $entry)
+		{
+			if(isset($latitude) && isset($longitude))
+			{
+				$distance_restaurant = Website_CalculateDistance::calculation($latitude, $longitude, $entry->getLocation()->getLatitude(), $entry->getLocation()->getLongitude(), $unit_distance);
+				if($distance_restaurant <= $radius_distance){
+					$myObject = Object_Restaurants::getById($entry->o_id);
+					$myObject->setDistance($distance_restaurant);
+					$myObject->save();
+				}
+			}
+		}
+		
+		$resto = new Object\Restaurants\Listing();
+		$resto->setOrderKey('distance');
+		$resto->setOrder('ASC');
+		$resto->setLimit($limit);
+		
+		foreach($resto as $entry)
+		{
+			$valid = 1;
+			$array = array();
+			
+			$array['o_key'] = $entry->o_key;
+			$array['id'] = $entry->getO_Id();
+			$array['name'] = $entry->getName();
+					    
+			if($entry->profileImage != null)
+			{
+				$array['profile_image'] = $_SERVER['REQUEST_SCHEME'] . '://' .  $_SERVER['HTTP_HOST'] . $entry->profileImage->path . $entry->profileImage->filename;				
+			}
+			else
+			{
+				$array['profile_image'] = null;
+			}
+		    
+			$array['description'] = ($entry->getDescription() != null) ? $entry->getDescription() : 'No information';
+			$array['phone_number'] = ($entry->getPhoneNumber() != null) ? $entry->getPhoneNumber() : 'No information';
+			$array['website_url'] = ($entry->getWebsiteUrl() != null) ? $entry->getWebsiteUrl() : 'No information';
+			$array['email'] = ($entry->getEmail() != null) ? $entry->getEmail() : 'No information';
+			$array['zip_code'] = $entry->getZipCode();
+			$array['address'] = ($entry->getAddress() != null) ?  $entry->getAddress() : '';
+
+			$array['city'] = ($entry->getCity()->getName() != null) ? $entry->getCity()->getName() : '';
+			$array['state'] = ($entry->getCity()->getState()->getName() != null) ? $entry->getCity()->getState()->getName() : '';
+
+			$array['rating'] = round($rating_restaurant, 1);
+			
+			if($entry->getLocation()->getLongitude() != null && $entry->getLocation()->getLatitude() != null)
+			{
+				$array['location']['longitude'] = $entry->getLocation()->getLongitude();
+				$array['location']['latitude'] = $entry->getLocation()->getLatitude();				
+			}
+			else
+			{
+				$valid = 0;
+			}
+			
+			if(isset($latitude) && isset($longitude))
+			{
 				if($distance_restaurant > $radius_distance)
 				{
 					$valid = 0;
@@ -581,7 +676,7 @@ class ApiController extends Zend_Rest_Controller {
 				else
 				{
 					$array['distance_value'] = $entry->getDistance();
-					$array['distance_string'] = Website_CalculateDistance::formating($distance_restaurant, $unit_distance);
+					$array['distance_string'] = Website_CalculateDistance::formating($entry->getDistance(), $unit_distance);
 				}
 			}
 			 

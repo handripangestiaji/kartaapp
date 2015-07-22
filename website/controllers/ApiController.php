@@ -451,10 +451,15 @@ class ApiController extends Zend_Rest_Controller {
 				$valid = 0;
 			}
 			
+			$array['all_menu'] = array();
 			if($valid)
 			{
 				array_push($array['all_menu'], array("Top Rated Menu", $recomended_menu));
 				array_push($array['all_menu'], array("Full Menu", $full_menu));				
+			}
+			else
+			{
+				$valid = 1;
 			}
 			
 			// query menu from sub categories

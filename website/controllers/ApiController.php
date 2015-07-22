@@ -310,6 +310,7 @@ class ApiController extends Zend_Rest_Controller {
 	public function restaurantsAction()
 	{	    
 		$params = $this->_getParam('id');
+		$limit = $this->_getParam('limit');
 		$latitude = $this->_getParam('latitude');
 		$longitude = $this->_getParam('longitude');
 		$unit_distance = $this->_getParam('unit_distance');
@@ -335,6 +336,22 @@ class ApiController extends Zend_Rest_Controller {
 				}
 			}
 		}
+		
+		foreach($resto as $entry)
+		{
+			if(isset($latitude) && isset($longitude))
+			{
+				$distance_restaurant = Website_CalculateDistance::calculation($latitude, $longitude, $entry->getLocation()->getLatitude(), $entry->getLocation()->getLongitude(), $unit_distance);
+
+				$myObject = Object_Restaurants::getById($entry->o_id);
+				$myObject->setDistance($distance_restaurant);
+				$myObject->save();							
+			}
+		}
+		
+		$resto->setOrderKey('distance');
+		$resto->setOrder('DESC');
+		$resto->setLimit($limit);
 		
 		foreach($resto as $entry)
 		{

@@ -574,14 +574,13 @@ class ApiController extends Zend_Rest_Controller {
 			
 			if(isset($latitude) && isset($longitude))
 			{
-				$distance_restaurant = Website_CalculateDistance::calculation($latitude, $longitude, $array['location']['latitude'], $array['location']['longitude'], $unit_distance);
 				if($distance_restaurant > $radius_distance)
 				{
 					$valid = 0;
 				}
 				else
 				{
-					$array['distance_value'] = $distance_restaurant;
+					$array['distance_value'] = $entry->getDistance();
 					$array['distance_string'] = Website_CalculateDistance::formating($distance_restaurant, $unit_distance);
 				}
 			}

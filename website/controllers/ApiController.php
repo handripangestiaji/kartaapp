@@ -183,124 +183,127 @@ class ApiController extends Zend_Rest_Controller {
 		
 		foreach($menu as $entry)
 		{
-			$valid = 1;
-			$arr = array();
-			
-			$arr['o_key'] = $entry->o_key;
-			$arr['id'] = $entry->getO_Id();
-			$arr['name'] = $entry->getName();
-			$arr['price'] = sprintf('%0.2f', $entry->getPrice());
-			$arr['currency'] = $entry->getCurrency()->symbol;
-			$arr['rating'] = $entry->getRating();
-			$arr['halal'] = ($entry->getHalal() != null) ? $entry->getHalal() : false;
-			$arr['description'] = ($entry->getDescription() != null) ? $entry->getDescription() : 'No Description';
-
-			// get categories
-			$arr['list_category'] = '';
-			$arr['category'] = null;
-			$x = 0;
-			if(count($entry->getCategories()) > 0)
+			try
 			{
-				foreach($entry->getCategories() as $category)
+				$valid = 1;
+				$arr = array();
+				
+				$arr['o_key'] = $entry->o_key;
+				$arr['id'] = $entry->getO_Id();
+				$arr['name'] = $entry->getName();
+				$arr['price'] = sprintf('%0.2f', $entry->getPrice());
+				$arr['currency'] = $entry->getCurrency()->symbol;
+				$arr['rating'] = $entry->getRating();
+				$arr['halal'] = ($entry->getHalal() != null) ? $entry->getHalal() : false;
+				$arr['description'] = ($entry->getDescription() != null) ? $entry->getDescription() : 'No Description';
+	
+				// get categories
+				$arr['list_category'] = '';
+				$arr['category'] = null;
+				$x = 0;
+				if(count($entry->getCategories()) > 0)
 				{
-					$arr['list_category'] .= $arr['list_category'] == '' ? $category->getO_Id() : '@'. $category->getO_Id(); 
-					
-					$arr['category'][$x]['id'] = $category->getO_Id();
-					$arr['category'][$x]['name'] = $category->getName();
-					$arr['category'][$x]['image'] = $_SERVER['REQUEST_SCHEME'] . '://' .  $_SERVER['HTTP_HOST'] . $category->image->path . $category->image->filename;;
-					$x++;
-				}			
-			}
-			else
-			{
-				$valid = 0;
-			}
-			
-			// get sub categories
-			$arr['sub_category'] = null;
-			$x = 0;
-			if(count($entry->subCategories) > 0)
-			{
-				foreach($entry->subCategories as $sub_category)
-				{
-					$arr['sub_category'][$x]['id'] = $sub_category->getO_Id();
-					$arr['sub_category'][$x]['name'] = $sub_category->getName();
-					$x++;
-				}			
-			}
-											    
-			// get restaurant relation data
-			if($entry->getRestaurants()->getO_Id() != null)
-			{
-				$arr['restaurants']['id'] = $entry->getRestaurants()->getO_Id();
-				$arr['restaurants']['name'] = $entry->getRestaurants()->getName();
-				$arr['restaurants']['address'] = $entry->getRestaurants()->getAddress();
-				$arr['restaurants']['location']['latitude'] = $entry->getRestaurants()->getLocation()->getLatitude();
-				$arr['restaurants']['location']['longitude'] = $entry->getRestaurants()->getLocation()->getLongitude();
-				//$arr['restaurants']['city'] = $entry->getRestaurants()->getCity()->getName();
-				//$arr['restaurants']['state'] = $entry->getRestaurants()->getCity()->getState()->getName();
-			}
-			else
-			{
-				$valid = 0;
-			}
-
-			// get image thumbnail
-			if($entry->thumb_image != null)
-			{
-				$arr['thumb_image'] = $_SERVER['REQUEST_SCHEME'] . '://' .  $_SERVER['HTTP_HOST'] . $entry->thumb_image->path . $entry->thumb_image->filename;					
-			}
-			else
-			{
-				$arr['thumb_image'] = null;
-			}
-		    
-			// get ingredients menu
-			$x = 0;
-			if(count($entry->ingredients->items) > 0)
-			{
-				foreach($entry->ingredients->items as $ingredient)
-				{
-					$arr['ingredients'][$x] = $ingredient->ingredient;
-					$x++;
-				}
-			}
-			else
-			{
-				$arr['ingredients'][$x] = "-";					
-			}
-		    
-			// get image collection menu
-			$x = 0;
-			if(count($entry->images->items) > 0)
-			{
-			    foreach($entry->images->items as $image)
-			    {
-				    $arr['images'][$x] = $_SERVER['REQUEST_SCHEME'] . '://' .  $_SERVER['HTTP_HOST'] . $image->image->path . $image->image->filename;
-				    $x++;
-			    }
-			}
-
-			$arr['timestamp_creation'] = $entry->getCreationDate();
-			$arr['creation_date'] = date('Y-m-d', $entry->getCreationDate());
-			
-			if(isset($latitude) && isset($longitude))
-			{
-				$distance_restaurant = Website_CalculateDistance::calculation($latitude, $longitude, $arr['restaurants']['location']['latitude'], $arr['restaurants']['location']['longitude'], $unit_distance);
-				if($distance_restaurant > $radius_distance)
-				{
-					$valid = 0;
+					foreach($entry->getCategories() as $category)
+					{
+						$arr['list_category'] .= $arr['list_category'] == '' ? $category->getO_Id() : '@'. $category->getO_Id(); 
+						
+						$arr['category'][$x]['id'] = $category->getO_Id();
+						$arr['category'][$x]['name'] = $category->getName();
+						$arr['category'][$x]['image'] = $_SERVER['REQUEST_SCHEME'] . '://' .  $_SERVER['HTTP_HOST'] . $category->image->path . $category->image->filename;;
+						$x++;
+					}			
 				}
 				else
 				{
-					$arr['restaurants']['distance_value'] = $distance_restaurant;
-					$arr['restaurants']['distance_string'] = Website_CalculateDistance::formating($distance_restaurant, $unit_distance);
+					$valid = 0;
 				}
-			}
-			
-			if($valid)
-				array_push($array, $arr);
 				
+				// get sub categories
+				$arr['sub_category'] = null;
+				$x = 0;
+				if(count($entry->subCategories) > 0)
+				{
+					foreach($entry->subCategories as $sub_category)
+					{
+						$arr['sub_category'][$x]['id'] = $sub_category->getO_Id();
+						$arr['sub_category'][$x]['name'] = $sub_category->getName();
+						$x++;
+					}			
+				}
+												    
+				// get restaurant relation data
+				if($entry->getRestaurants() != null)
+				{
+					$arr['restaurants']['id'] = $entry->getRestaurants()->getO_Id();
+					$arr['restaurants']['name'] = $entry->getRestaurants()->getName();
+					$arr['restaurants']['address'] = $entry->getRestaurants()->getAddress();
+					$arr['restaurants']['location']['latitude'] = $entry->getRestaurants()->getLocation()->getLatitude();
+					$arr['restaurants']['location']['longitude'] = $entry->getRestaurants()->getLocation()->getLongitude();
+					//$arr['restaurants']['city'] = $entry->getRestaurants()->getCity()->getName();
+					//$arr['restaurants']['state'] = $entry->getRestaurants()->getCity()->getState()->getName();
+				}
+				else
+				{
+					$valid = 0;
+				}
+	
+				// get image thumbnail
+				if($entry->thumb_image != null)
+				{
+					$arr['thumb_image'] = $_SERVER['REQUEST_SCHEME'] . '://' .  $_SERVER['HTTP_HOST'] . $entry->thumb_image->path . $entry->thumb_image->filename;					
+				}
+				else
+				{
+					$arr['thumb_image'] = null;
+				}
+			    
+				// get ingredients menu
+				$x = 0;
+				if(count($entry->ingredients->items) > 0)
+				{
+					foreach($entry->ingredients->items as $ingredient)
+					{
+						$arr['ingredients'][$x] = $ingredient->ingredient;
+						$x++;
+					}
+				}
+				else
+				{
+					$arr['ingredients'][$x] = "-";					
+				}
+			    
+				// get image collection menu
+				$x = 0;
+				if(count($entry->images->items) > 0)
+				{
+				    foreach($entry->images->items as $image)
+				    {
+					    $arr['images'][$x] = $_SERVER['REQUEST_SCHEME'] . '://' .  $_SERVER['HTTP_HOST'] . $image->image->path . $image->image->filename;
+					    $x++;
+				    }
+				}
+	
+				$arr['timestamp_creation'] = $entry->getCreationDate();
+				$arr['creation_date'] = date('Y-m-d', $entry->getCreationDate());
+				
+				if(isset($latitude) && isset($longitude))
+				{
+					$distance_restaurant = Website_CalculateDistance::calculation($latitude, $longitude, $arr['restaurants']['location']['latitude'], $arr['restaurants']['location']['longitude'], $unit_distance);
+					if($distance_restaurant > $radius_distance)
+					{
+						$valid = 0;
+					}
+					else
+					{
+						$arr['restaurants']['distance_value'] = $distance_restaurant;
+						$arr['restaurants']['distance_string'] = Website_CalculateDistance::formating($distance_restaurant, $unit_distance);
+					}
+				}
+				
+				if($valid)
+					array_push($array, $arr);				
+			}
+			catch(Exception $e){}				
 		}
 				
 		$json_menu = $this->_helper->json($array);

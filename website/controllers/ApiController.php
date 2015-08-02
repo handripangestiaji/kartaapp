@@ -465,45 +465,45 @@ class ApiController extends Zend_Rest_Controller {
 				$valid = 1;
 			}
 			
-			// query menu from categories
-			if(isset($array['list_category']))
-			{
-				foreach($array['list_category'] as $category)
-				{					
-					$menu = new Object\Menu\Listing();	
-					$menu->setCondition("restaurants__id = ". $entry->getO_Id() . " AND categories like '%object|". $category[1] ."%'");
-					$menu->setOrderKey('name');
-					$menu->setOrder('ASC');
-					
-					$categories_menu =  array();
-					if($menu->count() > 0)
-					{
-						$j = 0;			
-						foreach($menu as $m)
-						{
-							$categories_menu[$j]['id'] = $m->getO_Id();
-							$categories_menu[$j]['name'] = $m->getName();
-							$categories_menu[$j]['price'] = sprintf('%0.2f', $m->getPrice());
-							$categories_menu[$j]['currency'] = $m->getCurrency()->symbol;
-							$categories_menu[$j]['rating'] = $m->getRating();
-							$categories_menu[$j]['halal'] = ($m->getHalal() != null) ? $m->getHalal() : false;
-							$categories_menu[$j]['description'] = ($m->getDescription() != null) ? $m->getDescription() : "No description";
-				    
-							if($m->thumb_image != null)
-							{
-								$categories_menu[$j]['thumb_image'] = $_SERVER['REQUEST_SCHEME'] . '://' .  $_SERVER['HTTP_HOST'] . $m->thumb_image->path . $m->thumb_image->filename;						
-							}
-							else
-							{
-								$categories_menu[$j]['thumb_image'] = null;						
-							}
-							$j++;				
-						}
-						
-						array_push($array['all_menu'], array($category[0], $categories_menu));
-					}		
-				}
-			}
+			//// query menu from categories
+			//if(isset($array['list_category']))
+			//{
+			//	foreach($array['list_category'] as $category)
+			//	{					
+			//		$menu = new Object\Menu\Listing();	
+			//		$menu->setCondition("restaurants__id = ". $entry->getO_Id() . " AND categories like '%object|". $category[1] ."%'");
+			//		$menu->setOrderKey('name');
+			//		$menu->setOrder('ASC');
+			//		
+			//		$categories_menu =  array();
+			//		if($menu->count() > 0)
+			//		{
+			//			$j = 0;			
+			//			foreach($menu as $m)
+			//			{
+			//				$categories_menu[$j]['id'] = $m->getO_Id();
+			//				$categories_menu[$j]['name'] = $m->getName();
+			//				$categories_menu[$j]['price'] = sprintf('%0.2f', $m->getPrice());
+			//				$categories_menu[$j]['currency'] = $m->getCurrency()->symbol;
+			//				$categories_menu[$j]['rating'] = $m->getRating();
+			//				$categories_menu[$j]['halal'] = ($m->getHalal() != null) ? $m->getHalal() : false;
+			//				$categories_menu[$j]['description'] = ($m->getDescription() != null) ? $m->getDescription() : "No description";
+			//	    
+			//				if($m->thumb_image != null)
+			//				{
+			//					$categories_menu[$j]['thumb_image'] = $_SERVER['REQUEST_SCHEME'] . '://' .  $_SERVER['HTTP_HOST'] . $m->thumb_image->path . $m->thumb_image->filename;						
+			//				}
+			//				else
+			//				{
+			//					$categories_menu[$j]['thumb_image'] = null;						
+			//				}
+			//				$j++;				
+			//			}
+			//			
+			//			array_push($array['all_menu'], array($category[0], $categories_menu));
+			//		}		
+			//	}
+			//}
 			
 			// query menu from sub categories
 			if(isset($array['list_sub_category']))

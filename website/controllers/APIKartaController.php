@@ -372,7 +372,7 @@ class ApiKartaController extends Zend_Rest_Controller {
 	    
 	    $id = $this->_getParam('id');
 	    
-	    $category = new Object\Categories\Listing();
+	    $category = new Object\DietCategories\Listing();
 	    $category->setOrderKey('name');
 	    $category->setOrder('ASC');	    
 

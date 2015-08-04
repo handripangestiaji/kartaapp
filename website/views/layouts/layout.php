@@ -84,7 +84,7 @@
             <div class="container">
                 <div class="row row-eq-height">
                     <div class="col-xs-12 col-md-2">
-                        <a href="#" class="brand">
+                        <a href="/" class="brand">
                             <img src="/website/static/img/logo-white.png" alt="Karta" class="img-responsive">
                         </a><!--/ .brand -->
                     </div><!--/ .col-xs-9 -->

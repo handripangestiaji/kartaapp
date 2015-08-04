@@ -5,7 +5,7 @@
         </div><!--/ .col-xs-12 -->
         <div class="col-xs-12 col-md-8">
             <div class="content-box">
-                <h1>The ultimate food discovery app.<br />Coming to Washington, DC.</h1>
+                <h1>Find dishes specific to your <br /> dietary restriction with Karta.</h1>
                 <p>
                     Discover and search restaurants and dishes around you.<br />
                     Filter by your dietary restriction.<br />

@@ -10,7 +10,13 @@ $( document ).ready(function(){
 		   type: 'POST',
 		   url: '/submit',
 		   data: { email: email }
-	   })
+	   }).done(function(response){
+		  
+		  if(response == 'success') {
+			  window.location.href('/thankyou');
+		  }
+		   
+	   });
 	    
     });
 

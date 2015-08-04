@@ -53,7 +53,7 @@ class DefaultController extends Action {
 		$mail->addCc($documents[0]->cc);
 		$mail->send();
 		
-		$this->_redirect('/thankyou');
+		die('success')
 		
 	}
 	

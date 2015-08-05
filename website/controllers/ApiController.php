@@ -145,8 +145,7 @@ class ApiController extends Zend_Rest_Controller {
 			$myObject->save();			
 		}									
 	}
-	
-	
+		
 	public function menuAction()
 	{
 		$params = $this->_getParam('id');
@@ -735,7 +734,62 @@ class ApiController extends Zend_Rest_Controller {
 					
 		$json_resto = $this->_helper->json($arrays);
 		$this->sendResponse($json_resto);
-	}	
+	}
+	
+	public function searchResultAction()
+	{
+		$params = $this->_getParam('id');
+		$category = $this->_getParam('category');
+		$latitude = $this->_getParam('latitude');
+		$longitude = $this->_getParam('longitude');
+		$unit_distance = $this->_getParam('unit_distance');
+		$radius_distance = $this->_getParam('radius_distance');
+				
+		$menu = new Object\Menu\Listing();
+		
+		$array = array();
+		$i = 0;
+		
+		$where = '';
+		
+		if($category != "")
+			$where = "categories like '%" . $category . "%' ";
+
+		if($params != '')
+		{
+			if($this->_request->isPost())
+			{
+				$where .= (($where != "") ? " AND " : "") .  "o_id = " . $params;
+			}
+			else if($this->_request->isGet())
+			{
+				$where .= (($where != "") ? " AND " : "") .  "o_id = " . $params;
+			}
+		}
+		
+		if($where != '')
+			$menu->setCondition($where);
+		
+		foreach($menu as $entry)
+		{
+			try
+			{
+				$valid = 1;
+				$arr = array();
+				
+				$arr['id'] = $entry->getO_Id();
+				$arr['name'] = $entry->getName();
+				$arr['description'] = ($entry->getDescription() != null) ? $entry->getDescription() : 'No Description';	
+				
+				if($valid)
+					array_push($array, $arr);				
+			}
+			catch(Exception $e){}				
+		}
+				
+		$json_menu = $this->_helper->json($array);
+		$this->sendResponse($json_menu);
+	}
 
 	private function sendResponse($content) {
 		$this->getResponse()

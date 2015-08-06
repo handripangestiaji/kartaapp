@@ -744,8 +744,8 @@ class ApiController extends Zend_Rest_Controller {
 	
 	public function searchResultAction()
 	{
-		print_r($this->_getParam);
-		die();
+		print_r($_GET);
+		die("OK");
 		
 		$keyword = $this->_getParam('keyword');		
 		$search_by = $this->_getParam('search_by');		

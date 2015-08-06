@@ -464,45 +464,45 @@ class ApiController extends Zend_Rest_Controller {
 				$valid = 1;
 			}
 			
-			//// query menu from categories
-			//if(isset($array['list_category']))
-			//{
-			//	foreach($array['list_category'] as $category)
-			//	{					
-			//		$menu = new Object\Menu\Listing();	
-			//		$menu->setCondition("restaurants__id = ". $entry->getO_Id() . " AND categories like '%object|". $category[1] ."%'");
-			//		$menu->setOrderKey('name');
-			//		$menu->setOrder('ASC');
-			//		
-			//		$categories_menu =  array();
-			//		if($menu->count() > 0)
-			//		{
-			//			$j = 0;			
-			//			foreach($menu as $m)
-			//			{
-			//				$categories_menu[$j]['id'] = $m->getO_Id();
-			//				$categories_menu[$j]['name'] = $m->getName();
-			//				$categories_menu[$j]['price'] = sprintf('%0.2f', $m->getPrice());
-			//				$categories_menu[$j]['currency'] = $m->getCurrency()->symbol;
-			//				$categories_menu[$j]['rating'] = $m->getRating();
-			//				$categories_menu[$j]['halal'] = ($m->getHalal() != null) ? $m->getHalal() : false;
-			//				$categories_menu[$j]['description'] = ($m->getDescription() != null) ? $m->getDescription() : "No description";
-			//	    
-			//				if($m->thumb_image != null)
-			//				{
-			//					$categories_menu[$j]['thumb_image'] = $_SERVER['REQUEST_SCHEME'] . '://' .  $_SERVER['HTTP_HOST'] . $m->thumb_image->path . $m->thumb_image->filename;						
-			//				}
-			//				else
-			//				{
-			//					$categories_menu[$j]['thumb_image'] = null;						
-			//				}
-			//				$j++;				
-			//			}
-			//			
-			//			array_push($array['all_menu'], array($category[0], $categories_menu));
-			//		}		
-			//	}
-			//}
+			// query menu from categories
+			if(isset($array['list_category']))
+			{
+				foreach($array['list_category'] as $category)
+				{					
+					$menu = new Object\Menu\Listing();	
+					$menu->setCondition("restaurants__id = ". $entry->getO_Id() . " AND categories like '%object|". $category[1] ."%'");
+					$menu->setOrderKey('name');
+					$menu->setOrder('ASC');
+					
+					$categories_menu =  array();
+					if($menu->count() > 0)
+					{
+						$j = 0;			
+						foreach($menu as $m)
+						{
+							$categories_menu[$j]['id'] = $m->getO_Id();
+							$categories_menu[$j]['name'] = $m->getName();
+							$categories_menu[$j]['price'] = sprintf('%0.2f', $m->getPrice());
+							$categories_menu[$j]['currency'] = $m->getCurrency()->symbol;
+							$categories_menu[$j]['rating'] = $m->getRating();
+							$categories_menu[$j]['halal'] = ($m->getHalal() != null) ? $m->getHalal() : false;
+							$categories_menu[$j]['description'] = ($m->getDescription() != null) ? $m->getDescription() : "No description";
+				    
+							if($m->thumb_image != null)
+							{
+								$categories_menu[$j]['thumb_image'] = $_SERVER['REQUEST_SCHEME'] . '://' .  $_SERVER['HTTP_HOST'] . $m->thumb_image->path . $m->thumb_image->filename;						
+							}
+							else
+							{
+								$categories_menu[$j]['thumb_image'] = null;						
+							}
+							$j++;				
+						}
+						
+						array_push($array['all_menu'], array($category[0], $categories_menu));
+					}		
+				}
+			}
 			
 			// query menu from sub categories
 			if(isset($array['list_sub_category']))
@@ -591,7 +591,13 @@ class ApiController extends Zend_Rest_Controller {
 			$array['state'] = ($entry->getCity()->getState()->getName() != null) ? $entry->getCity()->getState()->getName() : '';
 
 			$array['rating'] = round($rating_restaurant, 1);
-			$array['list_id_category'] = implode("@", $array['list_category']);
+
+			$temp_list_category = array();
+			foreach($array['list_category'] as $lst_ctgr)
+			{
+				array_push($temp_list_category, $lst_ctgr[1]);
+			}
+			$array['list_id_category'] = implode("@", $temp_list_category);				
 			
 			if($entry->getLocation()->getLongitude() != null && $entry->getLocation()->getLatitude() != null)
 			{
@@ -738,53 +744,126 @@ class ApiController extends Zend_Rest_Controller {
 	
 	public function searchResultAction()
 	{
-		$params = $this->_getParam('id');
+		print_r($_GET);
+		die();
+		
+		$keyword = $this->_getParam('keyword');		
+		$search_by = $this->_getParam('search_by');		
+		$type = $this->_getParam('type');
 		$category = $this->_getParam('category');
+		$sort_by = $this->_getParam('sort_by');
+		$sort_type = $this->_getParam('sort_type');
 		$latitude = $this->_getParam('latitude');
 		$longitude = $this->_getParam('longitude');
 		$unit_distance = $this->_getParam('unit_distance');
 		$radius_distance = $this->_getParam('radius_distance');
-				
-		$menu = new Object\Menu\Listing();
+		
+		$keyword = explode(' ', $keyword);
 		
 		$array = array();
 		$i = 0;
 		
-		$where = '';
-		
-		if($category != "")
-			$where = "categories like '%" . $category . "%' ";
-
-		if($params != '')
-		{
-			if($this->_request->isPost())
-			{
-				$where .= (($where != "") ? " AND " : "") .  "o_id = " . $params;
-			}
-			else if($this->_request->isGet())
-			{
-				$where .= (($where != "") ? " AND " : "") .  "o_id = " . $params;
-			}
-		}
-		
-		if($where != '')
-			$menu->setCondition($where);
-		
-		foreach($menu as $entry)
-		{
-			try
-			{
-				$valid = 1;
-				$arr = array();
+		$where = '';			
 				
-				$arr['id'] = $entry->getO_Id();
-				$arr['name'] = $entry->getName();
-				$arr['description'] = ($entry->getDescription() != null) ? $entry->getDescription() : 'No Description';	
-				
-				if($valid)
-					array_push($array, $arr);				
+		if($type == "menus")
+		{
+			$menu = new Object\Menu\Listing();
+						
+			if($category != "all categories")
+			{
+				$where = "categories like '%" . $category . "%' ";
+				$menu->setCondition($where);
 			}
-			catch(Exception $e){}				
+			
+			foreach($menu as $entry)
+			{
+				try
+				{
+					$valid = 1;
+					$arr = array();
+					
+					$arr['id'] = $entry->getO_Id();
+					$arr['name'] = $entry->getName();
+					$arr['price'] = sprintf('%0.2f', $entry->getPrice());
+					$arr['currency'] = $entry->getCurrency()->symbol;
+					$arr['rating'] = $entry->getRating();
+					$arr['halal'] = ($entry->getHalal() != null) ? $entry->getHalal() : false;
+					$arr['description'] = ($entry->getDescription() != null) ? $entry->getDescription() : 'No Description';
+															    
+					// get restaurant relation data
+					if($entry->getRestaurants() != null)
+					{
+						$arr['restaurants']['id'] = $entry->getRestaurants()->getO_Id();
+						$arr['restaurants']['name'] = $entry->getRestaurants()->getName();
+						$arr['restaurants']['address'] = $entry->getRestaurants()->getAddress();
+						$arr['restaurants']['location']['latitude'] = $entry->getRestaurants()->getLocation()->getLatitude();
+						$arr['restaurants']['location']['longitude'] = $entry->getRestaurants()->getLocation()->getLongitude();
+					}
+					else
+					{
+						$valid = 0;
+					}
+		
+					// get image thumbnail
+					if($entry->thumb_image != null)
+					{
+						$arr['thumb_image'] = $_SERVER['REQUEST_SCHEME'] . '://' .  $_SERVER['HTTP_HOST'] . $entry->thumb_image->path . $entry->thumb_image->filename;					
+					}
+					else
+					{
+						$arr['thumb_image'] = null;
+					}
+				    
+					// check ingredients menu
+					if($search_by == 'name or ingredients' || $search_by == 'ingredients')
+					{						
+						if(count($entry->ingredients->items) > 0)
+						{
+							foreach($entry->ingredients->items as $ingredient)
+							{
+								foreach($keyword as $key)
+								{
+									if($key != $ingredient->ingredient)
+									{
+										$valid == 0;
+									}								
+								}
+							}
+						}
+					}
+					
+					// check name menu
+					if($search_by == 'name or ingredients' || $search_by == 'name')
+					{
+						$scar_name = explode(" ", $entry->name);
+						foreach($keyword as $key)
+						{
+							if(!in_array($key, $scar_name))
+							{
+								$valid == 0;
+							}								
+						}
+					}
+					
+					if(isset($latitude) && isset($longitude))
+					{
+						$distance_restaurant = Website_CalculateDistance::calculation($latitude, $longitude, $arr['restaurants']['location']['latitude'], $arr['restaurants']['location']['longitude'], $unit_distance);
+						if($distance_restaurant > $radius_distance)
+						{
+							$valid = 0;
+						}
+						else
+						{
+							$arr['restaurants']['distance_value'] = $distance_restaurant;
+							$arr['restaurants']['distance_string'] = Website_CalculateDistance::formating($distance_restaurant, $unit_distance);
+						}
+					}
+					
+					if($valid)
+						array_push($array, $arr);				
+				}
+				catch(Exception $ex) {}
+			}
 		}
 				
 		$json_menu = $this->_helper->json($array);

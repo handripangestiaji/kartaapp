@@ -21,6 +21,14 @@
                         <input type="submit" name="submit" class="btn btn-primary" value="Join" id="join">
                     </div><!--/ .form-group -->
                 </form>
+                <div class="loading" style="display: none;">
+	                <img src="/website/static/img/ajax-loader.gif" class="img-responsive"/>
+                </div>
+                <div class="thankyou-box" style="display: none;">
+	                <div class="thankyou-box--content mt24">
+	                    <p>Thank you for registering your e-mail, check your inbox to get the app.</p>
+	                </div><!--/ .thankyou-box--content -->
+	            </div><!--/ .thankyou-box -->
                 <a href="#" target="_blank" class="btn-google-play">
                     <img src="/website/static/img/google-play-badge.png" alt="Get in on Google Play" class="img-responsive">
                 </a><!--/ .btn-google-play -->

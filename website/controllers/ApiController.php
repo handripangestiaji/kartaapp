@@ -744,9 +744,6 @@ class ApiController extends Zend_Rest_Controller {
 	
 	public function searchResultAction()
 	{
-		print_r($_GET);
-		die("OK");
-		
 		$keyword = $this->_getParam('keyword');		
 		$search_by = $this->_getParam('search_by');		
 		$type = $this->_getParam('type');
@@ -758,7 +755,7 @@ class ApiController extends Zend_Rest_Controller {
 		$unit_distance = $this->_getParam('unit_distance');
 		$radius_distance = $this->_getParam('radius_distance');
 		
-		$keyword = explode(' ', $keyword);
+		$keyword = explode(' ', strtolower ($keyword));
 		
 		$array = array();
 		$i = 0;
@@ -815,6 +812,7 @@ class ApiController extends Zend_Rest_Controller {
 					}
 				    
 					// check ingredients menu
+					$x = 0;
 					if($search_by == 'name or ingredients' || $search_by == 'ingredients')
 					{						
 						if(count($entry->ingredients->items) > 0)
@@ -823,26 +821,31 @@ class ApiController extends Zend_Rest_Controller {
 							{
 								foreach($keyword as $key)
 								{
-									if($key != $ingredient->ingredient)
+									if(strtolower ($key) != strtolower ($ingredient->ingredient))
 									{
-										$valid == 0;
+										$x++;
 									}								
 								}
 							}
 						}
+						if($x < 1)
+							$valid = 0;
 					}
 					
 					// check name menu
+					$x = 0;
 					if($search_by == 'name or ingredients' || $search_by == 'name')
 					{
-						$scar_name = explode(" ", $entry->name);
+						$scar_name = explode(" ", strtolower ($entry->name));		
 						foreach($keyword as $key)
 						{
-							if(!in_array($key, $scar_name))
+							if(in_array($key, $scar_name))
 							{
-								$valid == 0;
-							}								
+								$x++;
+							}
 						}
+						if($x < 1)
+							$valid = 0;
 					}
 					
 					if(isset($latitude) && isset($longitude))

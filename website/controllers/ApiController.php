@@ -754,6 +754,7 @@ class ApiController extends Zend_Rest_Controller {
 		$longitude = $this->_getParam('longitude');
 		$unit_distance = $this->_getParam('unit_distance');
 		$radius_distance = $this->_getParam('radius_distance');
+		$limit = $this->_getParam('limit');
 		
 		$keyword = explode(' ', strtolower ($keyword));
 		
@@ -868,7 +869,15 @@ class ApiController extends Zend_Rest_Controller {
 				catch(Exception $ex) {}
 			}
 		}
-				
+		
+		if(!isempty($limit))
+		{
+			if(count($array) > 50)
+			{
+				$array = array_slice($array, 0, 50);				
+			}
+		}
+
 		$json_menu = $this->_helper->json($array);
 		$this->sendResponse($json_menu);
 	}

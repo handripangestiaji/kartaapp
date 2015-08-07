@@ -792,6 +792,8 @@ class ApiController extends Zend_Rest_Controller {
 					{
 						$arr['restaurants']['id'] = $entry->getRestaurants()->getO_Id();
 						$arr['restaurants']['name'] = $entry->getRestaurants()->getName();
+						$arr['restaurants']['location']['latitude'] = $entry->getRestaurants()->getLocation()->getLatitude();
+						$arr['restaurants']['location']['longitude'] = $entry->getRestaurants()->getLocation()->getLongitude();
 					}
 					else
 					{
@@ -843,6 +845,7 @@ class ApiController extends Zend_Rest_Controller {
 						}
 						if($x < 1)
 							$valid = 0;
+							
 					}
 					
 					if(isset($latitude) && isset($longitude))

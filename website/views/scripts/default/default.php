@@ -29,6 +29,11 @@
 	                    <p>Thank you for registering your e-mail, check your inbox to get the app.</p>
 	                </div><!--/ .thankyou-box--content -->
 	            </div><!--/ .thankyou-box -->
+	            <div class="registered-box" style="display: none;">
+	                <div class="thankyou-box--content mt24">
+	                    <p>Great news! You've already signed up!</p>
+	                </div><!--/ .thankyou-box--content -->
+	            </div><!--/ .thankyou-box -->
                 <a href="#" target="_blank" class="btn-google-play">
                     <img src="/website/static/img/google-play-badge.png" alt="Get in on Google Play" class="img-responsive">
                 </a><!--/ .btn-google-play -->

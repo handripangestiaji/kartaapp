@@ -31,29 +31,38 @@ class DefaultController extends Action {
 			$o_pid = $parent->getO_id();
 		}
 		
-		$leads = new Object_Leads();
-		$leads->setemail($email);
-		$leads->setKey($key);
-		$leads->setO_parentId($o_pid);
-		$leads->setIndex(0);
-		$leads->setPublished(1);
-		$leads->save();
+		$checkEmail = Object\Leads::getByEmail($email);
 		
-		$list = new Document\Listing();
+		$countEmail = $checkEmail->count();
 		
-		$list->setCondition('type = "email" AND id = 3');
-		
-		$documents = $list->load();
-		
-		$mail = new Pimcore_Mail();
-		$mail->setSubject($documents[0]->subject);
-		$mail->setFrom($documents[0]->from);
-		$mail->setDocument("/email/beta-confirmation");
-		$mail->addTo($email);
-		$mail->addCc($documents[0]->cc);
-		$mail->send();
-		
-		die('success');
+		if($countEmail >= 1) {
+			die('registered');
+		}
+		else {
+			$leads = new Object_Leads();
+			$leads->setemail($email);
+			$leads->setKey($key);
+			$leads->setO_parentId($o_pid);
+			$leads->setIndex(0);
+			$leads->setPublished(1);
+			$leads->save();
+			
+			$list = new Document\Listing();
+			
+			$list->setCondition('type = "email" AND id = 3');
+			
+			$documents = $list->load();
+			
+			$mail = new Pimcore_Mail();
+			$mail->setSubject($documents[0]->subject);
+			$mail->setFrom($documents[0]->from);
+			$mail->setDocument("/email/beta-confirmation");
+			$mail->addTo($email);
+			$mail->addCc($documents[0]->cc);
+			$mail->send();
+			
+			die('success');
+		}
 		
 	}
 	

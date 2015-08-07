@@ -792,9 +792,6 @@ class ApiController extends Zend_Rest_Controller {
 					{
 						$arr['restaurants']['id'] = $entry->getRestaurants()->getO_Id();
 						$arr['restaurants']['name'] = $entry->getRestaurants()->getName();
-						$arr['restaurants']['address'] = $entry->getRestaurants()->getAddress();
-						$arr['restaurants']['location']['latitude'] = $entry->getRestaurants()->getLocation()->getLatitude();
-						$arr['restaurants']['location']['longitude'] = $entry->getRestaurants()->getLocation()->getLongitude();
 					}
 					else
 					{

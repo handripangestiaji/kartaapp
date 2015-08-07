@@ -22,6 +22,12 @@ $( document ).ready(function(){
 			  $(".loading").hide();
 			  $(".thankyou-box").show();
 		  }
+		  else if (response == 'registered') {
+			  
+			  $(".loading").hide();
+			  $('.registered-box').show();
+			  
+		  }
 		   
 	   });
 	   

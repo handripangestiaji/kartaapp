@@ -384,7 +384,7 @@ class ApiController extends Zend_Rest_Controller {
 					{
 						foreach($m->getCategories() as $category)
 						{
-							if(!in_array($category->o_id, $array['list_category']))
+							if(!in_array(array($category->name, $category->o_id), $array['list_category']))
 							{
 								array_push($array['list_category'], array($category->name, $category->o_id));
 							}

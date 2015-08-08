@@ -870,7 +870,7 @@ class ApiController extends Zend_Rest_Controller {
 			}
 		}
 		
-		if(!isempty($limit))
+		if(isset($limit))
 		{
 			if(count($array) > 50)
 			{

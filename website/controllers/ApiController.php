@@ -1049,8 +1049,8 @@ class ApiController extends Zend_Rest_Controller {
 			$result['price'] = $temp['menu_price'];
 			$result['rating'] = $temp['menu_rating'];
 			$result['description'] = $temp['menu_description'];
-			$result['halal'] = $temp['menu_halal'];
-			$result['thumb_image'] = $_SERVER['REQUEST_SCHEME'] . '://' .  $_SERVER['HTTP_HOST'] . $temp['image_path'] . $temp['image_filename'];
+			$result['halal'] = ($temp['menu_halal'] != null) ? $temp['menu_halal'] : false;
+			$result['thumb_image'] = ($temp['image_filename'] != '') ? ($_SERVER['REQUEST_SCHEME'] . '://' .  $_SERVER['HTTP_HOST'] . $temp['image_path'] . $temp['image_filename']) : null;
 			
 			array_push($results, $result);
 		}

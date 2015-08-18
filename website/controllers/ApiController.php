@@ -881,6 +881,199 @@ class ApiController extends Zend_Rest_Controller {
 		$json_menu = $this->_helper->json($array);
 		$this->sendResponse($json_menu);
 	}
+	
+	public function testAction()
+	{		
+		$keyword = $this->_getParam('keyword');		
+		$search_by = $this->_getParam('search_by');		
+		$type = $this->_getParam('type');
+		$category = $this->_getParam('category');
+		$sort_by = $this->_getParam('sort_by');
+		$sort_type = $this->_getParam('sort_type');
+		$latitude = $this->_getParam('latitude');
+		$longitude = $this->_getParam('longitude');
+		$unit_distance = $this->_getParam('unit_distance');
+		$radius_distance = $this->_getParam('radius_distance');
+		$limit = $this->_getParam('limit');
+
+		//$restaurant = new Object\Restaurants\Listing();
+		//$restaurant->setLimit(1);
+		//foreach ($restaurant as $table_restaurant)
+		//{
+		//	$id_class_restaurant = "object_".$table_restaurant->getClassId();
+		//}
+		//
+		//$menu = new Object\Menu\Listing();
+		//$menu->setLimit(1);
+		//foreach ($menu as $table_menu)
+		//{
+		//	$id_class_menu = "object_".$table_menu->getClassId();
+		//}
+		
+		$keyword = explode(' ', strtolower ($keyword));
+		
+		$array = array();
+		$i = 0;
+		
+		$select = '';
+		$where = '';
+		$groupby = '';
+		$orderby = '';
+		$join_asset = '';
+		
+		if($category != "all categories" &&  $category != "")
+		{
+			$where .= " (categories like '%object|" . $category . ",%') AND ";
+		}
+		
+		if(count($keyword) > 0)
+		{
+			if($type == "menus")
+			{
+				if($search_by == 'name or ingredients')
+				{
+					$i = 0;
+					foreach($keyword as $key)
+					{
+						$where .= "tblMenu.name like '%" . $key . "%' OR tblIngredients.ingredient like '%" . $key . "%' " . ((++$i >= count($keyword)) ? "" : " OR ");							
+					}
+				}
+				else if($search_by == 'name')
+				{
+					$i = 0;
+					foreach($keyword as $key)
+					{
+						$where .= "tblMenu.name like '%" . $key . "%' " . ((++$i >= count($keyword)) ? "" : " OR ");							
+					}
+				}
+				else
+				{
+					$i = 0;
+					foreach($keyword as $key)
+					{
+						$where .= "tblIngredients.ingredient like '%" . $key . "%' " . ((++$i >= count($keyword)) ? "" : " OR ");							
+					}										
+				}
+				
+				$select = "tblRestaurant.oo_id as restaurant_id,
+						tblRestaurant.name as restaurant_name,
+						tblMenu.oo_id as menu_id,
+						tblMenu.name as menu_name,
+						tblCurrency.symbol as menu_currency,
+						tblMenu.price as menu_price,
+						tblMenu.rating as menu_rating,
+						tblMenu.description as menu_description,
+						tblMenu.halal as menu_halal,
+						tblAssets.path as image_path,
+						tblAssets.filename as image_filename
+					";
+					
+				$groupby = "GROUP BY tblMenu.name";
+				$join_asset = 'left join assets as tblAssets on tblMenu.thumb_image = tblAssets.id';
+			}			
+			else
+			{
+				if($search_by == 'name or ingredients')
+				{
+					$i = 0;
+					foreach($keyword as $key)
+					{
+						$where .= "tblRestaurant.name like '%" . $key . "%' OR tblIngredients.ingredient like '%" . $key . "%' " . ((++$i >= count($keyword)) ? "" : " OR ");							
+					}						
+				}
+				else if($search_by == 'name')
+				{
+					$i = 0;
+					foreach($keyword as $key)
+					{
+						$where .= "tblRestaurant.name like '%" . $key . "%' " . ((++$i >= count($keyword)) ? "" : " OR ");							
+					}											
+				}
+				else
+				{
+					$i = 0;
+					foreach($keyword as $key)
+					{
+						$where .= "tblIngredients.ingredient like '%" . $key . "%' " . ((++$i >= count($keyword)) ? "" : " OR ");							
+					}											
+				}
+				
+				$select = "tblRestaurant.oo_id as restaurant_id,
+						tblRestaurant.name as restaurant_name,
+						tblRestaurant.address as restaurant_address,
+						tblAssets.path as image_path,
+						tblAssets.filename as image_filename
+					";
+					
+				$groupby = "GROUP BY tblRestaurant.name";
+				$join_asset = 'left join assets as tblAssets on tblRestaurant.profileImage = tblAssets.id';
+			}			
+		}
+		
+		$sql = "SELECT ". $select ."	 
+			FROM object_6 as tblRestaurant
+			left join object_7 as tblMenu on tblMenu.restaurants__id = tblRestaurant.oo_id
+			left join object_14 as tblCurrency on tblCurrency.oo_id = tblMenu.currency__id
+			left join object_collection_ingredients_7 as tblIngredients on tblMenu.oo_id = tblIngredients.o_id
+			". $join_asset ."
+			" .(($where != '') ? ("WHERE " . $where) : ""). "
+			". $groupby ." 
+			ORDER BY tblRestaurant.name
+		"; 
+
+		//$sql = "SELECT *
+		//	FROM ".$id_class_restaurant ." as tblRestaurant
+		//	left join ".$id_class_menu." as tblMenu on tblMenu.restaurants__id = tblRestaurant.oo_id
+		//	left join object_collection_ingredients_7 as tblIngredients on tblMenu.oo_id = tblIngredients.o_id
+		//	GROUP BY tblMenu.name
+		//	ORDER BY tblRestaurant.name DESC
+		//"; 
+
+		//		print_r($db->fetchAll($sql));
+		//print_r($sql);
+		//die();
+
+		//ALL
+		$db = Pimcore_Resource_Mysql::get();
+		$array = $db->fetchAll($sql);
+		
+		//if($type == "menus")
+		//{
+		
+		// check name menu
+		//$x = 0;
+		//if($search_by == 'name or ingredients' || $search_by == 'name')
+		//{
+		//	$scar_name = explode(" ", strtolower ($entry->name));		
+		//	foreach($keyword as $key)
+		//	{
+		//		if(in_array($key, $scar_name))
+		//		{
+		//			$x++;
+		//		}
+		//	}
+		//	if($x < 1)
+		//		$valid = 0;
+		//		
+		//}
+		//
+		//if(isset($latitude) && isset($longitude))
+		//{
+		//	$distance_restaurant = Website_CalculateDistance::calculation($latitude, $longitude, $arr['restaurants']['location']['latitude'], $arr['restaurants']['location']['longitude'], $unit_distance);
+		//	if($distance_restaurant > $radius_distance)
+		//	{
+		//		$valid = 0;
+		//	}
+		//	else
+		//	{
+		//		$arr['restaurants']['distance_value'] = $distance_restaurant;
+		//		$arr['restaurants']['distance_string'] = Website_CalculateDistance::formating($distance_restaurant, $unit_distance);
+		//	}
+		//}
+		
+		$json_cat = $this->_helper->json($array);
+		$this->sendResponse($arr);
+	}
 
 	private function sendResponse($content) {
 		$this->getResponse()

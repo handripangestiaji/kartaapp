@@ -918,12 +918,14 @@ class ApiController extends Zend_Rest_Controller {
 		
 		$select = '';
 		$where = '';
+		$where1 = '';
 		$groupby = '';
 		$join_asset = '';
 		
 		if($category != "all categories" &&  $category != "")
 		{
 			$where .= " (categories like '%object|" . $category . ",%') AND ";
+			$where1 .= " (categories like '%object|" . $category . ",%') AND ";
 		}
 		
 		if(count($keyword) > 0)
@@ -932,22 +934,31 @@ class ApiController extends Zend_Rest_Controller {
 			{
 				if($search_by == 'name or ingredients')
 				{
+					if(count($keyword) > 1)
+						$where1 .= "tblMenu.name like '%" . $full_keyword . "%' OR tblIngredients.ingredient like '%" . $full_keyword . "%' ";							
+										
 					$i = 0;
 					foreach($keyword as $key)
 					{
-						$where .= "tblMenu.name like '%" . $key . "%' OR tblIngredients.ingredient like '%" . $key . "%' " . ((++$i >= count($keyword)) ? "" : " OR ");							
+						$where .= " tblMenu.name like '%" . $key . "%' OR tblIngredients.ingredient like '%" . $key . "%' " . ((++$i >= count($keyword)) ? "" : " OR ");							
 					}
 				}
 				else if($search_by == 'name')
 				{
+					if(count($keyword) > 1)
+						$where1 .= " tblMenu.name like '%" . $full_keyword . "%' ";							
+
 					$i = 0;
 					foreach($keyword as $key)
 					{
-						$where .= "tblMenu.name like '%" . $key . "%' " . ((++$i >= count($keyword)) ? "" : " OR ");							
+						$where .= " tblMenu.name like '%" . $key . "%' " . ((++$i >= count($keyword)) ? "" : " OR ");							
 					}
 				}
 				else
 				{
+					if(count($keyword) > 1)
+						$where1 .= " tblIngredients.ingredient like '%" . $full_keyword . "%' ";							
+
 					$i = 0;
 					foreach($keyword as $key)
 					{
@@ -956,6 +967,7 @@ class ApiController extends Zend_Rest_Controller {
 				}
 				
 				$where .= 'AND (tblMenu.o_published = 1)';
+				$where1 .= ((count($keyword) > 1) ? " AND " : " ") . "(tblMenu.o_published = 1)";
 				$select = "tblRestaurant.oo_id as restaurant_id,
 						tblRestaurant.name as restaurant_name,
 						tblMenu.oo_id as menu_id,
@@ -976,6 +988,9 @@ class ApiController extends Zend_Rest_Controller {
 			{
 				if($search_by == 'name or ingredients')
 				{
+					if(count($keyword) > 1)
+						$where1 .= " tblRestaurant.name like '%" . $full_keyword . "%' OR tblIngredients.ingredient like '%" . $full_keyword . "%' " . ((++$i >= count($keyword)) ? "" : " OR ");							
+
 					$i = 0;
 					foreach($keyword as $key)
 					{
@@ -984,6 +999,9 @@ class ApiController extends Zend_Rest_Controller {
 				}
 				else if($search_by == 'name')
 				{
+					if(count($keyword) > 1)
+						$where1 .= " tblRestaurant.name like '%" . $full_keyword . "%' " . ((++$i >= count($keyword)) ? "" : " OR ");							
+
 					$i = 0;
 					foreach($keyword as $key)
 					{
@@ -992,6 +1010,9 @@ class ApiController extends Zend_Rest_Controller {
 				}
 				else
 				{
+					if(count($keyword) > 1)
+						$where1 .= " tblIngredients.ingredient like '%" . $full_keyword . "%' " . ((++$i >= count($keyword)) ? "" : " OR ");							
+
 					$i = 0;
 					foreach($keyword as $key)
 					{
@@ -1000,6 +1021,7 @@ class ApiController extends Zend_Rest_Controller {
 				}
 				
 				$where .= 'AND (tblRestaurant.o_published = 1)';
+				$where1 .= 'AND (tblRestaurant.o_published = 1)';
 				$select = "tblRestaurant.oo_id as restaurant_id,
 						tblRestaurant.name as restaurant_name,
 						tblRestaurant.address as restaurant_address,
@@ -1021,11 +1043,11 @@ class ApiController extends Zend_Rest_Controller {
 			
 		$orderby = 'distance';
 		if($sort_by == 'name')
-			$orderby .= ($type == "menus") ? 'menu_name' : 'restaurant_name';
+			$orderby = ($type == "menus") ? 'menu_name' : 'restaurant_name';
 		else if($sort_by == 'price')
-			$orderby .= 'cast(menu_price as unsigned)';
+			$orderby = 'cast(menu_price as unsigned)';
 		else if($sort_by == 'rating' && $type != 'restaurant')
-			$orderby .= 'cast(menu_rating as unsigned)';
+			$orderby = 'cast(menu_rating as unsigned)';
 			
 		if($sort_type == "descending")
 			$order_by .= ' DESC';
@@ -1044,21 +1066,35 @@ class ApiController extends Zend_Rest_Controller {
 			". $orderby ."
 		"; 
 
-		//$sql = "SELECT *
-		//	FROM ".$id_class_restaurant ." as tblRestaurant
-		//	left join ".$id_class_menu." as tblMenu on tblMenu.restaurants__id = tblRestaurant.oo_id
-		//	left join object_collection_ingredients_7 as tblIngredients on tblMenu.oo_id = tblIngredients.o_id
-		//	GROUP BY tblMenu.name
-		//	ORDER BY tblRestaurant.name DESC
-		//"; 
+		$sql1 = "SELECT ". $select ."	 
+			FROM object_6 as tblRestaurant
+			left join object_7 as tblMenu on tblMenu.restaurants__id = tblRestaurant.oo_id
+			left join object_14 as tblCurrency on tblCurrency.oo_id = tblMenu.currency__id
+			left join object_collection_ingredients_7 as tblIngredients on tblMenu.oo_id = tblIngredients.o_id
+			". $join_asset ."
+			" .(($where1 != '') ? ("WHERE " . $where1) : ""). "
+			". $groupby ."
+			". $having ."
+			". $orderby ."
+		"; 
 
 		//print_r($db->fetchAll($sql));
-		//print_r($sql);
+		//print_r($sql1);
 		//die();
 
 		//ALL
 		$db = Pimcore_Resource_Mysql::get();
-		$array = $db->fetchAll($sql);
+		
+		if(count($keyword) > 1)
+		{
+			$array2 = $db->fetchAll($sql);
+			$array1 = $db->fetchAll($sql1);		
+			$array = array_merge($array1, $array2);			
+		}
+		else
+		{
+			$array = $db->fetchAll($sql);			
+		}
 		
 		$results = array();
 		foreach($array as $temp)
@@ -1084,49 +1120,15 @@ class ApiController extends Zend_Rest_Controller {
 				$result['address'] = $temp['restaurant_address'];
 				$result['rating'] = 0.0;
 				$result['distance_string'] = $temp['distance'] . (($unit_distance == 'mi') ? " miles " : " km ") . "away";
-				$result['profile_image'] = ($temp['image_filename'] != '') ? ($_SERVER['REQUEST_SCHEME'] . '://' .  $_SERVER['HTTP_HOST'] . $temp['image_path'] . $temp['image_filename']) : '';				
-				
+				$result['profile_image'] = ($temp['image_filename'] != '') ? ($_SERVER['REQUEST_SCHEME'] . '://' .  $_SERVER['HTTP_HOST'] . $temp['image_path'] . $temp['image_filename']) : '';								
 			}
 			
-			array_push($results, $result);
+			if(!in_array($result, $results))
+				array_push($results, $result);
 		}
 		
-		//print_r($results);
-		//die();
-		
-		//if($type == "menus")
-		//{
-		
-		// check name menu
-		//$x = 0;
-		//if($search_by == 'name or ingredients' || $search_by == 'name')
-		//{
-		//	$scar_name = explode(" ", strtolower ($entry->name));		
-		//	foreach($keyword as $key)
-		//	{
-		//		if(in_array($key, $scar_name))
-		//		{
-		//			$x++;
-		//		}
-		//	}
-		//	if($x < 1)
-		//		$valid = 0;
-		//		
-		//}
-		//
-		//if(isset($latitude) && isset($longitude))
-		//{
-		//	$distance_restaurant = Website_CalculateDistance::calculation($latitude, $longitude, $arr['restaurants']['location']['latitude'], $arr['restaurants']['location']['longitude'], $unit_distance);
-		//	if($distance_restaurant > $radius_distance)
-		//	{
-		//		$valid = 0;
-		//	}
-		//	else
-		//	{
-		//		$arr['restaurants']['distance_value'] = $distance_restaurant;
-		//		$arr['restaurants']['distance_string'] = Website_CalculateDistance::formating($distance_restaurant, $unit_distance);
-		//	}
-		//}
+		print_r($results);
+		die();		
 		
 		$json_cat = $this->_helper->json($results);
 		$this->sendResponse($json_cat);

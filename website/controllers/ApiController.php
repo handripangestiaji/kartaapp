@@ -919,7 +919,6 @@ class ApiController extends Zend_Rest_Controller {
 		$select = '';
 		$where = '';
 		$groupby = '';
-		$orderby = '';
 		$join_asset = '';
 		
 		if($category != "all categories" &&  $category != "")
@@ -1022,14 +1021,16 @@ class ApiController extends Zend_Rest_Controller {
 			
 		$orderby = 'distance';
 		if($sort_by == 'name')
-			$orderby = ($type == "menus") ? 'menu_name' : 'restaurant_name';
+			$orderby .= ($type == "menus") ? 'menu_name' : 'restaurant_name';
 		else if($sort_by == 'price')
-			$orderby = 'cast(menu_price as unsigned)';
-		else if($sort_by == 'rating')
-			$orderby = 'cast(menu_rating as unsigned)';
+			$orderby .= 'cast(menu_price as unsigned)';
+		else if($sort_by == 'rating' && $type != 'restaurant')
+			$orderby .= 'cast(menu_rating as unsigned)';
 			
 		if($sort_type == "descending")
 			$order_by .= ' DESC';
+			
+		$orderby = "ORDER BY " . $orderby;
 			 		
 		$sql = "SELECT ". $select ."	 
 			FROM object_6 as tblRestaurant
@@ -1040,7 +1041,7 @@ class ApiController extends Zend_Rest_Controller {
 			" .(($where != '') ? ("WHERE " . $where) : ""). "
 			". $groupby ."
 			". $having ."
-			ORDER BY ". $orderby ."
+			". $orderby ."
 		"; 
 
 		//$sql = "SELECT *
@@ -1062,17 +1063,30 @@ class ApiController extends Zend_Rest_Controller {
 		$results = array();
 		foreach($array as $temp)
 		{
-			$result['restaurants']['id'] = $temp['restaurant_id'];
-			$result['restaurants']['name'] = $temp['restaurant_name'];
-			
-			$result['id'] = $temp['menu_id'];
-			$result['name'] = $temp['menu_name'];
-			$result['currency'] = $temp['menu_currency'];
-			$result['price'] = sprintf('%0.2f', $temp['menu_price']);
-			$result['rating'] = $temp['menu_rating'];
-			$result['description'] = ($temp['menu_description'] != null) ? $temp['menu_description'] : "No description";
-			$result['halal'] = ($temp['menu_halal'] != null) ? $temp['menu_halal'] : false;
-			$result['thumb_image'] = ($temp['image_filename'] != '') ? ($_SERVER['REQUEST_SCHEME'] . '://' .  $_SERVER['HTTP_HOST'] . $temp['image_path'] . $temp['image_filename']) : '';
+			if($type == 'menus')
+			{
+				$result['restaurants']['id'] = $temp['restaurant_id'];
+				$result['restaurants']['name'] = $temp['restaurant_name'];
+				
+				$result['id'] = $temp['menu_id'];
+				$result['name'] = $temp['menu_name'];
+				$result['currency'] = $temp['menu_currency'];
+				$result['price'] = sprintf('%0.2f', $temp['menu_price']);
+				$result['rating'] = $temp['menu_rating'];
+				$result['description'] = ($temp['menu_description'] != null) ? $temp['menu_description'] : "No description";
+				$result['halal'] = ($temp['menu_halal'] != null) ? $temp['menu_halal'] : false;
+				$result['thumb_image'] = ($temp['image_filename'] != '') ? ($_SERVER['REQUEST_SCHEME'] . '://' .  $_SERVER['HTTP_HOST'] . $temp['image_path'] . $temp['image_filename']) : '';				
+			}
+			else
+			{
+				$result['id'] = $temp['restaurant_id'];
+				$result['name'] = $temp['restaurant_name'];
+				$result['address'] = $temp['restaurant_address'];
+				$result['rating'] = 0.0;
+				$result['distance_string'] = $temp['distance'] . (($unit_distance == 'mi') ? " miles " : " km ") . "away";
+				$result['profile_image'] = ($temp['image_filename'] != '') ? ($_SERVER['REQUEST_SCHEME'] . '://' .  $_SERVER['HTTP_HOST'] . $temp['image_path'] . $temp['image_filename']) : '';				
+				
+			}
 			
 			array_push($results, $result);
 		}

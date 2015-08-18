@@ -1119,7 +1119,7 @@ class ApiController extends Zend_Rest_Controller {
 				$result['name'] = $temp['restaurant_name'];
 				$result['address'] = $temp['restaurant_address'];
 				$result['rating'] = 0.0;
-				$result['distance_string'] = $temp['distance'] . (($unit_distance == 'mi') ? " miles " : " km ") . "away";
+				$result['distance_string'] = round($temp['distance'], 1) . (($unit_distance == 'mi') ? " miles " : " km ") . "away";
 				$result['profile_image'] = ($temp['image_filename'] != '') ? ($_SERVER['REQUEST_SCHEME'] . '://' .  $_SERVER['HTTP_HOST'] . $temp['image_path'] . $temp['image_filename']) : '';								
 			}
 			

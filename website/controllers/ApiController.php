@@ -1127,8 +1127,8 @@ class ApiController extends Zend_Rest_Controller {
 				array_push($results, $result);
 		}
 		
-		print_r($results);
-		die();		
+		//print_r($results);
+		//die();		
 		
 		$json_cat = $this->_helper->json($results);
 		$this->sendResponse($json_cat);

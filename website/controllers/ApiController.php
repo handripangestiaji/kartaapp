@@ -742,7 +742,7 @@ class ApiController extends Zend_Rest_Controller {
 		$this->sendResponse($json_resto);
 	}
 	
-	public function searchResultAction()
+	public function searchResult1Action()
 	{
 		$keyword = $this->_getParam('keyword');		
 		$search_by = $this->_getParam('search_by');		
@@ -882,7 +882,7 @@ class ApiController extends Zend_Rest_Controller {
 		$this->sendResponse($json_menu);
 	}
 	
-	public function testAction()
+	public function searchResultAction()
 	{		
 		$keyword = $this->_getParam('keyword');		
 		$search_by = $this->_getParam('search_by');		
@@ -1037,6 +1037,27 @@ class ApiController extends Zend_Rest_Controller {
 		$db = Pimcore_Resource_Mysql::get();
 		$array = $db->fetchAll($sql);
 		
+		$results = array();
+		foreach($array as $temp)
+		{
+			$result['restaurants']['id'] = $temp['restaurant_id'];
+			$result['restaurants']['name'] = $temp['restaurant_name'];
+			
+			$result['id'] = $temp['menu_id'];
+			$result['name'] = $temp['menu_name'];
+			$result['currency'] = $temp['menu_currency'];
+			$result['price'] = $temp['menu_price'];
+			$result['rating'] = $temp['menu_rating'];
+			$result['description'] = $temp['menu_description'];
+			$result['halal'] = $temp['menu_halal'];
+			$result['thumb_image'] = $_SERVER['REQUEST_SCHEME'] . '://' .  $_SERVER['HTTP_HOST'] . $temp['image_path'] . $temp['image_filename'];
+			
+			array_push($results, $result);
+		}
+		
+		//print_r($results);
+		//die();
+		
 		//if($type == "menus")
 		//{
 		
@@ -1071,8 +1092,8 @@ class ApiController extends Zend_Rest_Controller {
 		//	}
 		//}
 		
-		$json_cat = $this->_helper->json($array);
-		$this->sendResponse($arr);
+		$json_cat = $this->_helper->json($results);
+		$this->sendResponse($json_cat);
 	}
 
 	private function sendResponse($content) {

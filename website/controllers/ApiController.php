@@ -910,6 +910,7 @@ class ApiController extends Zend_Rest_Controller {
 		//	$id_class_menu = "object_".$table_menu->getClassId();
 		//}
 		
+		$full_keyword = $keyword;
 		$keyword = explode(' ', strtolower ($keyword));
 		
 		$array = array();
@@ -955,6 +956,7 @@ class ApiController extends Zend_Rest_Controller {
 					}										
 				}
 				
+				$where .= 'AND (tblMenu.o_published = 1)';
 				$select = "tblRestaurant.oo_id as restaurant_id,
 						tblRestaurant.name as restaurant_name,
 						tblMenu.oo_id as menu_id,
@@ -998,6 +1000,7 @@ class ApiController extends Zend_Rest_Controller {
 					}											
 				}
 				
+				$where .= 'AND (tblRestaurant.o_published = 1)';
 				$select = "tblRestaurant.oo_id as restaurant_id,
 						tblRestaurant.name as restaurant_name,
 						tblRestaurant.address as restaurant_address,
@@ -1010,6 +1013,24 @@ class ApiController extends Zend_Rest_Controller {
 			}			
 		}
 		
+		$cons = 6371;
+		if($unit_distance == "mi"){ $cons = 3956; }
+		$select .= ", (". $cons ." * 2 * ASIN(SQRT( POWER(SIN(((tblRestaurant.location__latitude) - (". $latitude .")) *  pi()/180 / 2), 2) +COS((tblRestaurant.location__latitude) * pi()/180) * COS((". $latitude .") * pi()/180) * POWER(SIN(((tblRestaurant.location__longitude) - (". $longitude .")) * pi()/180 / 2), 2) ))) as distance";
+		
+		if($radius_distance != '')
+			$having = "HAVING distance < " . $radius_distance;
+			
+		$orderby = 'distance';
+		if($sort_by == 'name')
+			$orderby = ($type == "menus") ? 'menu_name' : 'restaurant_name';
+		else if($sort_by == 'price')
+			$orderby = 'cast(menu_price as unsigned)';
+		else if($sort_by == 'rating')
+			$orderby = 'cast(menu_rating as unsigned)';
+			
+		if($sort_type == "descending")
+			$order_by .= ' DESC';
+			 		
 		$sql = "SELECT ". $select ."	 
 			FROM object_6 as tblRestaurant
 			left join object_7 as tblMenu on tblMenu.restaurants__id = tblRestaurant.oo_id
@@ -1017,8 +1038,9 @@ class ApiController extends Zend_Rest_Controller {
 			left join object_collection_ingredients_7 as tblIngredients on tblMenu.oo_id = tblIngredients.o_id
 			". $join_asset ."
 			" .(($where != '') ? ("WHERE " . $where) : ""). "
-			". $groupby ." 
-			ORDER BY tblRestaurant.name
+			". $groupby ."
+			". $having ."
+			ORDER BY ". $orderby ."
 		"; 
 
 		//$sql = "SELECT *
@@ -1029,7 +1051,7 @@ class ApiController extends Zend_Rest_Controller {
 		//	ORDER BY tblRestaurant.name DESC
 		//"; 
 
-		//		print_r($db->fetchAll($sql));
+		//print_r($db->fetchAll($sql));
 		//print_r($sql);
 		//die();
 
@@ -1046,11 +1068,11 @@ class ApiController extends Zend_Rest_Controller {
 			$result['id'] = $temp['menu_id'];
 			$result['name'] = $temp['menu_name'];
 			$result['currency'] = $temp['menu_currency'];
-			$result['price'] = $temp['menu_price'];
+			$result['price'] = sprintf('%0.2f', $temp['menu_price']);
 			$result['rating'] = $temp['menu_rating'];
-			$result['description'] = $temp['menu_description'];
+			$result['description'] = ($temp['menu_description'] != null) ? $temp['menu_description'] : "No description";
 			$result['halal'] = ($temp['menu_halal'] != null) ? $temp['menu_halal'] : false;
-			$result['thumb_image'] = ($temp['image_filename'] != '') ? ($_SERVER['REQUEST_SCHEME'] . '://' .  $_SERVER['HTTP_HOST'] . $temp['image_path'] . $temp['image_filename']) : null;
+			$result['thumb_image'] = ($temp['image_filename'] != '') ? ($_SERVER['REQUEST_SCHEME'] . '://' .  $_SERVER['HTTP_HOST'] . $temp['image_path'] . $temp['image_filename']) : '';
 			
 			array_push($results, $result);
 		}

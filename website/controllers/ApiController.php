@@ -1133,6 +1133,84 @@ class ApiController extends Zend_Rest_Controller {
 		$json_cat = $this->_helper->json($results);
 		$this->sendResponse($json_cat);
 	}
+	
+	public function restaurantsMapsAction()
+	{		
+		$latitude = $this->_getParam('latitude');
+		$longitude = $this->_getParam('longitude');
+		$unit_distance = $this->_getParam('unit_distance');
+		$radius_distance = $this->_getParam('radius_distance');
+		$limit = $this->_getParam('limit');
+
+		$array = array();
+		$i = 0;
+				
+		$where .= '(tblRestaurant.o_published = 1)';
+		$select = "tblRestaurant.oo_id as restaurant_id,
+				tblRestaurant.name as restaurant_name,
+				tblRestaurant.address as restaurant_address,
+				tblAssets.path as image_path,
+				tblAssets.filename as image_filename
+			";
+			
+		$groupby = "GROUP BY tblRestaurant.name";
+		$join_asset = 'left join assets as tblAssets on tblRestaurant.profileImage = tblAssets.id';
+		
+		$cons = 6371;
+		if($unit_distance == "mi"){ $cons = 3956; }
+		$select .= ", (". $cons ." * 2 * ASIN(SQRT( POWER(SIN(((tblRestaurant.location__latitude) - (". $latitude .")) *  pi()/180 / 2), 2) +COS((tblRestaurant.location__latitude) * pi()/180) * COS((". $latitude .") * pi()/180) * POWER(SIN(((tblRestaurant.location__longitude) - (". $longitude .")) * pi()/180 / 2), 2) ))) as distance";
+		
+		if($radius_distance != '')
+			$having = "HAVING distance < " . $radius_distance;
+						
+		if($limit != '')
+			$limit = "LIMIT " . $limit;
+
+		$orderby = "ORDER BY distance";
+			 		
+		$sql = "SELECT ". $select ."	 
+			FROM object_6 as tblRestaurant
+			left join object_7 as tblMenu on tblMenu.restaurants__id = tblRestaurant.oo_id
+			left join object_14 as tblCurrency on tblCurrency.oo_id = tblMenu.currency__id
+			left join object_collection_ingredients_7 as tblIngredients on tblMenu.oo_id = tblIngredients.o_id
+			". $join_asset ."
+			" .(($where != '') ? ("WHERE " . $where) : ""). "
+			". $groupby ."
+			". $having ."
+			". $orderby ."
+			". $limit ."
+		"; 
+
+		//print_r($db->fetchAll($sql));
+		//print_r($sql);
+		//die();
+
+		//ALL
+		$db = Pimcore_Resource_Mysql::get();
+		
+		$array = $db->fetchAll($sql);			
+		
+		$results = array();
+		foreach($array as $temp)
+		{
+			$result['id'] = $temp['restaurant_id'];
+			$result['name'] = $temp['restaurant_name'];
+			$result['address'] = $temp['restaurant_address'];
+			$result['rating'] = 0.0;
+			$result['distance_value'] = round($temp['distance'], 1);
+			$result['distance_string'] = round($temp['distance'], 1) . (($unit_distance == 'mi') ? " miles " : " km ") . "away";
+			$result['profile_image'] = ($temp['image_filename'] != '') ? ($_SERVER['REQUEST_SCHEME'] . '://' .  $_SERVER['HTTP_HOST'] . $temp['image_path'] . $temp['image_filename']) : '';								
+			
+			if(!in_array($result, $results))
+				array_push($results, $result);
+		}	
+		
+		//print_r($results);
+		//die();		
+		
+		$json_cat = $this->_helper->json($results);
+		$this->sendResponse($json_cat);
+	}	
 
 	private function sendResponse($content) {
 		$this->getResponse()

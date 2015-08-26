@@ -1150,7 +1150,9 @@ class ApiController extends Zend_Rest_Controller {
 				tblRestaurant.name as restaurant_name,
 				tblRestaurant.address as restaurant_address,
 				tblAssets.path as image_path,
-				tblAssets.filename as image_filename
+				tblAssets.filename as image_filename,
+				tblRestaurant.location__latitude as latitude, 
+				tblRestaurant.location__longitude as longitude
 			";
 			
 		$groupby = "GROUP BY tblRestaurant.name";
@@ -1200,6 +1202,8 @@ class ApiController extends Zend_Rest_Controller {
 			$result['distance_value'] = round($temp['distance'], 1);
 			$result['distance_string'] = round($temp['distance'], 1) . (($unit_distance == 'mi') ? " miles " : " km ") . "away";
 			$result['profile_image'] = ($temp['image_filename'] != '') ? ($_SERVER['REQUEST_SCHEME'] . '://' .  $_SERVER['HTTP_HOST'] . $temp['image_path'] . $temp['image_filename']) : '';								
+			$result['location']['latitude'] = $temp['latitude'];
+			$result['location']['longitude'] = $temp['longitude'];
 			
 			if(!in_array($result, $results))
 				array_push($results, $result);

@@ -81,16 +81,10 @@ class ApiController extends Zend_Rest_Controller {
 		{
 			foreach($logins as $login)
 			{
-				$arr = array();
-	
-				$arr['id'] = $login->o_id;
-				$arr['email'] = $login->email;
-				$arr['firstname'] = $login->firstname;
-				
 				$array = array(
 					'status' => 'success',
 					'message' => 'success',
-					'data' => $arr);				
+					'data' => $login);				
 			}			
 		}
 		else

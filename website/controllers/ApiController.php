@@ -17,6 +17,94 @@ class ApiController extends Zend_Rest_Controller {
                 ->initContext('json');
 	}
 		
+	public function registerAction()
+	{		
+		$email = $this->_getParam('email');
+		$password = $this->_getParam('password');
+		
+		if($email == '')
+		{
+			$array = array(
+			       'status' => 'failed',
+			       'message' => 'Email is required',
+			       'data' => '');			
+
+			$json_cat = $this->_helper->json($array);
+			$this->sendResponse($json_cat);
+		}
+		if($password == '')
+		{
+			$array = array(
+			       'status' => 'failed',
+			       'message' => 'Password is required',
+			       'data' => '');			
+
+			$json_cat = $this->_helper->json($array);
+			$this->sendResponse($json_cat);
+		}
+		
+		// Get and set ID PARENT FOLDER
+		$id_folder = new Object_List();
+		$id_folder->setCondition("o_key='customer-list'");		    
+		$parent_id = 0;
+		foreach ($id_folder as $parent){
+			$parent_id = $parent->getO_id();
+		}
+
+		$register = Object\Customers::create();
+		$register->setKey(\Pimcore\File::getValidFilename($email));
+		$register->setParentId($parent_id);
+		$register->setemail($email);
+		$register->setpassword(md5($password));
+		$register->setPublished(1);	    
+		$register->save();
+    		
+		$array = array(
+			       'status' => 'success',
+			       'message' => 'success',
+			       'data' => $register);			
+		
+		$json_cat = $this->_helper->json($array);
+		$this->sendResponse($json_cat);
+	}
+
+	public function loginAction()
+	{		
+		$email = $this->_getParam('email');
+		$password = md5($this->_getParam('password'));
+		
+		$logins = new Object\Customers\Listing();
+		$logins->setCondition("email = '". $email ."' AND password = '". $password ."'");
+    		
+		$array = array();
+		if(count($logins) > 0)
+		{
+			foreach($logins as $login)
+			{
+				$arr = array();
+	
+				$arr['id'] = $login->o_id;
+				$arr['email'] = $login->email;
+				$arr['firstname'] = $login->firstname;
+				
+				$array = array(
+					'status' => 'success',
+					'message' => 'success',
+					'data' => $arr);				
+			}			
+		}
+		else
+		{
+			$array = array(
+				'status' => 'failed',
+				'message' => 'Email and password is not match',
+				'data' => '');			
+		}
+		
+		$json_cat = $this->_helper->json($array);
+		$this->sendResponse($json_cat);
+	}
+	
 	public function categoriesAction()
 	{		
 		$id = $this->_getParam('id');
@@ -53,82 +141,6 @@ class ApiController extends Zend_Rest_Controller {
 			array_push($array, $arr);
 		}
 		
-		$json_cat = $this->_helper->json($array);
-		$this->sendResponse($arr);
-	}
-	
-	public function categoriesForHomeAction()
-	{
-		$latitude = $this->_getParam('latitude');
-		$longitude = $this->_getParam('longitude');
-		$unit_distance = $this->_getParam('unit_distance');
-		$radius_distance = $this->_getParam('radius_distance');
-		$limit = $this->_getParam('limit');
-		
-		$resto = new Object\Restaurants\Listing();
-		
-		$categories = array();
-		$categories_name = array();
-							
-		foreach($resto as $entry)
-		{
-			$array = array();
-						
-			if($entry->getLocation()->getLongitude() != null && $entry->getLocation()->getLatitude() != null)
-			{
-				$longitude_resto = $entry->getLocation()->getLongitude();
-				$latitude_resto = $entry->getLocation()->getLatitude();				
-			}
-						
-			if(isset($latitude) && isset($longitude))
-			{
-				$distance_restaurant = Website_CalculateDistance::calculation($latitude, $longitude, $latitude_resto, $longitude_resto, $unit_distance);
-				if($distance_restaurant <= $radius_distance)
-				{
-					// query full menu
-					$menu = new Object\Menu\Listing();	
-					$menu->setCondition("restaurants__id = ". $entry->getO_Id());
-					$menu->setOrderKey('name');
-					$menu->setOrder('ASC');
-
-					if($menu->count() > 0)
-					{
-						foreach($menu as $m)
-						{
-							// get categories
-							if(count($m->getCategories()) > 0)
-							{
-								foreach($m->getCategories() as $category)
-								{
-									if(!in_array($category->name, $categories_name) && $category->categoriesType == "Restaurant"){
-										array_push($categories, $category);										
-										array_push($categories_name, $category->name);										
-									}
-								}			
-							}
-						}						
-					}
-				}
-			}					    						 				
-		}
-		
-		$trending_categories = new Object\Categories\Listing();
-		$where = '';
-		foreach($categories as $category)
-		{
-			$where .= (($where == "") ? " " : " OR ") . "o_id = " . $category->o_id; 
-		}
-		$trending_categories->setCondition($where);
-		$trending_categories->setOrderKey('viewCounter');
-		$trending_categories->setOrder('DESC');
-		$trending_categories->setLimit($limit);
-		
-		$array = array();
-		foreach($trending_categories as $category)
-		{			
-			array_push($array, array('id' => $category->o_id, 'name' => $category->name, 'image_url' => $category->image));
-		}
-
 		$json_cat = $this->_helper->json($array);
 		$this->sendResponse($arr);
 	}
@@ -742,146 +754,6 @@ class ApiController extends Zend_Rest_Controller {
 		$this->sendResponse($json_resto);
 	}
 	
-	public function searchResult1Action()
-	{
-		$keyword = $this->_getParam('keyword');		
-		$search_by = $this->_getParam('search_by');		
-		$type = $this->_getParam('type');
-		$category = $this->_getParam('category');
-		$sort_by = $this->_getParam('sort_by');
-		$sort_type = $this->_getParam('sort_type');
-		$latitude = $this->_getParam('latitude');
-		$longitude = $this->_getParam('longitude');
-		$unit_distance = $this->_getParam('unit_distance');
-		$radius_distance = $this->_getParam('radius_distance');
-		$limit = $this->_getParam('limit');
-		
-		$keyword = explode(' ', strtolower ($keyword));
-		
-		$array = array();
-		$i = 0;
-		
-		$where = '';			
-				
-		if($type == "menus")
-		{
-			$menu = new Object\Menu\Listing();
-						
-			if($category != "all categories")
-			{
-				$where = "categories like '%" . $category . "%' ";
-				$menu->setCondition($where);
-			}
-			
-			foreach($menu as $entry)
-			{
-				try
-				{
-					$valid = 1;
-					$arr = array();
-					
-					$arr['id'] = $entry->getO_Id();
-					$arr['name'] = $entry->getName();
-					$arr['price'] = sprintf('%0.2f', $entry->getPrice());
-					$arr['currency'] = $entry->getCurrency()->symbol;
-					$arr['rating'] = $entry->getRating();
-					$arr['halal'] = ($entry->getHalal() != null) ? $entry->getHalal() : false;
-					$arr['description'] = ($entry->getDescription() != null) ? $entry->getDescription() : 'No Description';
-															    
-					// get restaurant relation data
-					if($entry->getRestaurants() != null)
-					{
-						$arr['restaurants']['id'] = $entry->getRestaurants()->getO_Id();
-						$arr['restaurants']['name'] = $entry->getRestaurants()->getName();
-						$arr['restaurants']['location']['latitude'] = $entry->getRestaurants()->getLocation()->getLatitude();
-						$arr['restaurants']['location']['longitude'] = $entry->getRestaurants()->getLocation()->getLongitude();
-					}
-					else
-					{
-						$valid = 0;
-					}
-		
-					// get image thumbnail
-					if($entry->thumb_image != null)
-					{
-						$arr['thumb_image'] = $_SERVER['REQUEST_SCHEME'] . '://' .  $_SERVER['HTTP_HOST'] . $entry->thumb_image->path . $entry->thumb_image->filename;					
-					}
-					else
-					{
-						$arr['thumb_image'] = null;
-					}
-				    
-					// check ingredients menu
-					$x = 0;
-					if($search_by == 'name or ingredients' || $search_by == 'ingredients')
-					{						
-						if(count($entry->ingredients->items) > 0)
-						{
-							foreach($entry->ingredients->items as $ingredient)
-							{
-								foreach($keyword as $key)
-								{
-									if(strtolower ($key) != strtolower ($ingredient->ingredient))
-									{
-										$x++;
-									}								
-								}
-							}
-						}
-						if($x < 1)
-							$valid = 0;
-					}
-					
-					// check name menu
-					$x = 0;
-					if($search_by == 'name or ingredients' || $search_by == 'name')
-					{
-						$scar_name = explode(" ", strtolower ($entry->name));		
-						foreach($keyword as $key)
-						{
-							if(in_array($key, $scar_name))
-							{
-								$x++;
-							}
-						}
-						if($x < 1)
-							$valid = 0;
-							
-					}
-					
-					if(isset($latitude) && isset($longitude))
-					{
-						$distance_restaurant = Website_CalculateDistance::calculation($latitude, $longitude, $arr['restaurants']['location']['latitude'], $arr['restaurants']['location']['longitude'], $unit_distance);
-						if($distance_restaurant > $radius_distance)
-						{
-							$valid = 0;
-						}
-						else
-						{
-							$arr['restaurants']['distance_value'] = $distance_restaurant;
-							$arr['restaurants']['distance_string'] = Website_CalculateDistance::formating($distance_restaurant, $unit_distance);
-						}
-					}
-					
-					if($valid)
-						array_push($array, $arr);				
-				}
-				catch(Exception $ex) {}
-			}
-		}
-		
-		if(isset($limit))
-		{
-			if(count($array) > 50)
-			{
-				$array = array_slice($array, 0, 50);				
-			}
-		}
-
-		$json_menu = $this->_helper->json($array);
-		$this->sendResponse($json_menu);
-	}
-	
 	public function searchResultAction()
 	{		
 		$keyword = $this->_getParam('keyword');		
@@ -895,20 +767,6 @@ class ApiController extends Zend_Rest_Controller {
 		$unit_distance = $this->_getParam('unit_distance');
 		$radius_distance = $this->_getParam('radius_distance');
 		$limit = $this->_getParam('limit');
-
-		//$restaurant = new Object\Restaurants\Listing();
-		//$restaurant->setLimit(1);
-		//foreach ($restaurant as $table_restaurant)
-		//{
-		//	$id_class_restaurant = "object_".$table_restaurant->getClassId();
-		//}
-		//
-		//$menu = new Object\Menu\Listing();
-		//$menu->setLimit(1);
-		//foreach ($menu as $table_menu)
-		//{
-		//	$id_class_menu = "object_".$table_menu->getClassId();
-		//}
 		
 		$full_keyword = $keyword;
 		$keyword = explode(' ', strtolower ($keyword));

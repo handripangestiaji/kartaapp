@@ -56,7 +56,7 @@ class ApiController extends Zend_Rest_Controller {
 		$cek_user = new Object\Customers\Listing();
 		$cek_user->setCondition("email = '". $email ."'");
 
-		if($cek_user < 1)
+		if(count($cek_user) < 1)
 		{
 			$register = Object\Customers::create();
 			$register->setKey(key);

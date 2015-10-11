@@ -18,9 +18,9 @@ class ApiController extends Zend_Rest_Controller {
 	}
 		
 	public function registerAction()
-	{		
-		$email = $this->_getParam('email');
-		$password = $this->_getParam('password');
+	{
+		$email = $_POST['email'];
+		$password = $_POST['password'];
 		
 		if($email == '')
 		{
@@ -31,6 +31,7 @@ class ApiController extends Zend_Rest_Controller {
 
 			$json_cat = $this->_helper->json($array);
 			$this->sendResponse($json_cat);
+			die();
 		}
 		if($password == '')
 		{
@@ -41,6 +42,7 @@ class ApiController extends Zend_Rest_Controller {
 
 			$json_cat = $this->_helper->json($array);
 			$this->sendResponse($json_cat);
+			die();
 		}
 		
 		// Get and set ID PARENT FOLDER
@@ -50,19 +52,32 @@ class ApiController extends Zend_Rest_Controller {
 		foreach ($id_folder as $parent){
 			$parent_id = $parent->getO_id();
 		}
+		
+		$cek_user = new Object\Customers\Listing();
+		$cek_user->setCondition("email = '". $email ."'");
 
-		$register = Object\Customers::create();
-		$register->setKey(\Pimcore\File::getValidFilename($email));
-		$register->setParentId($parent_id);
-		$register->setemail($email);
-		$register->setpassword(md5($password));
-		$register->setPublished(1);	    
-		$register->save();
-    		
-		$array = array(
-			       'status' => 'success',
-			       'message' => 'success',
-			       'data' => $register);			
+		if($cek_user < 1)
+		{
+			$register = Object\Customers::create();
+			$register->setKey(key);
+			$register->setParentId($parent_id);
+			$register->setemail($email);
+			$register->setpassword(md5($password));
+			$register->setPublished(1);	    
+			$register->save();			
+
+			$array = array(
+				       'status' => 'success',
+				       'message' => 'success',
+				       'data' => $register);			
+		}
+		else
+		{
+			$array = array(
+			       'status' => 'failed',
+			       'message' => 'Email has been registered by  system',
+			       'data' => '');						
+		}    		
 		
 		$json_cat = $this->_helper->json($array);
 		$this->sendResponse($json_cat);

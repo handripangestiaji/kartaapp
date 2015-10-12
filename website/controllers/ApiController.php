@@ -85,30 +85,67 @@ class ApiController extends Zend_Rest_Controller {
 
 	public function loginAction()
 	{		
-		$email = $this->_getParam('email');
-		$password = md5($this->_getParam('password'));
+		$email = $_POST['email'];
+		$password = $_POST['password'];
 		
-		$logins = new Object\Customers\Listing();
-		$logins->setCondition("email = '". $email ."' AND password = '". $password ."'");
-    		
-		$array = array();
-		if(count($logins) > 0)
+		if($email == '')
 		{
-			foreach($logins as $login)
+			$array = array(
+			       'status' => 'failed',
+			       'message' => 'Email is required',
+			       'data' => '');			
+
+			$json_cat = $this->_helper->json($array);
+			$this->sendResponse($json_cat);
+			die();
+		}
+		if($password == '')
+		{
+			$array = array(
+			       'status' => 'failed',
+			       'message' => 'Password is required',
+			       'data' => '');			
+
+			$json_cat = $this->_helper->json($array);
+			$this->sendResponse($json_cat);
+			die();
+		}
+
+		$cek_user = new Object\Customers\Listing();
+		$cek_user->setCondition("email = '". $email ."'");
+
+		if(count($cek_user) > 1)
+		{
+			$logins = new Object\Customers\Listing();
+			$logins->setCondition("email = '". $email ."' AND password = '". $password ."'");
+			
+			$array = array();
+			if(count($logins) > 0)
+			{
+				foreach($logins as $login)
+				{
+					$array = array(
+						'status' => 'success',
+						'message' => 'success',
+						'data' => $login);				
+				}			
+			}
+			else
 			{
 				$array = array(
-					'status' => 'success',
-					'message' => 'success',
-					'data' => $login);				
+					'status' => 'failed',
+					'message' => 'Wrong password',
+					'data' => '');			
 			}			
 		}
 		else
 		{
 			$array = array(
-				'status' => 'failed',
-				'message' => 'Email and password is not match',
-				'data' => '');			
-		}
+			       'status' => 'failed',
+			       'message' => 'Email not registered',
+			       'data' => '');						
+		}    		
+
 		
 		$json_cat = $this->_helper->json($array);
 		$this->sendResponse($json_cat);

@@ -59,7 +59,7 @@ class ApiController extends Zend_Rest_Controller {
 		if(count($cek_user) < 1)
 		{
 			$register = Object\Customers::create();
-			$register->setKey(key);
+			$register->setKey(\Pimcore\File::getValidFilename($email));
 			$register->setParentId($parent_id);
 			$register->setemail($email);
 			$register->setpassword(md5($password));

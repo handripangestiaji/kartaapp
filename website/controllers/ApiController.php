@@ -117,7 +117,7 @@ class ApiController extends Zend_Rest_Controller {
 		if(count($cek_user) > 0)
 		{
 			$logins = new Object\Customers\Listing();
-			$logins->setCondition("email = '". $email ."' AND password = '". $password ."'");
+			$logins->setCondition("email = '". $email ."' AND password = '". md5($password) ."'");
 			
 			$array = array();
 			if(count($logins) > 0)

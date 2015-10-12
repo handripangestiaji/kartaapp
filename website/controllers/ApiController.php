@@ -19,6 +19,8 @@ class ApiController extends Zend_Rest_Controller {
 		
 	public function registerAction()
 	{
+		$firstname = $_POST['firstname'];
+		$lastname = $_POST['lastname'];
 		$email = $_POST['email'];
 		$password = $_POST['password'];
 		
@@ -61,6 +63,8 @@ class ApiController extends Zend_Rest_Controller {
 			$register = Object\Customers::create();
 			$register->setKey(\Pimcore\File::getValidFilename($email));
 			$register->setParentId($parent_id);
+			$register->setfirstname($firstname);
+			$register->setlastname($lastname);
 			$register->setemail($email);
 			$register->setpassword(md5($password));
 			$register->setPublished(1);	    
@@ -123,11 +127,18 @@ class ApiController extends Zend_Rest_Controller {
 			if(count($logins) > 0)
 			{
 				foreach($logins as $login)
-				{
+				{					
+					// Get datetime now and customize the pimcore format
+					$now = date("Y-m-d,H-i");
+					$get_time_now = new Pimcore_Date($now);
+
+					$login->setlastlogin($get_time_now);
+					$login->save();
+				
 					$array = array(
 						'status' => 'success',
 						'message' => 'success',
-						'data' => $login);				
+						'data' => $login);
 				}			
 			}
 			else

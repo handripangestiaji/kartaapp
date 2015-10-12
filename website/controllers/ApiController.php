@@ -19,8 +19,6 @@ class ApiController extends Zend_Rest_Controller {
 		
 	public function registerAction()
 	{
-		$firstname = $_POST['firstname'];
-		$lastname = $_POST['lastname'];
 		$email = $_POST['email'];
 		$password = $_POST['password'];
 		
@@ -63,8 +61,8 @@ class ApiController extends Zend_Rest_Controller {
 			$register = Object\Customers::create();
 			$register->setKey(\Pimcore\File::getValidFilename($email));
 			$register->setParentId($parent_id);
-			$register->setfirstname($firstname);
-			$register->setlastname($lastname);
+			$register->setfirstname(" ");
+			$register->setlastname(" ");
 			$register->setemail($email);
 			$register->setpassword(md5($password));
 			$register->setPublished(1);	    

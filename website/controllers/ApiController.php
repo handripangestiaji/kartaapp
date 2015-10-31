@@ -78,7 +78,7 @@ class ApiController extends Zend_Rest_Controller {
 			
 			$params = array(
 				'fullname' => $register->fullname,
-				'link' => 'http://'. $_SERVER[HTTP_HOST] .'/v1/api/verification-account?email='.$email,
+				'link' => 'http://'. $_SERVER[HTTP_HOST] .'/v1/api/verification-account?email='.$email
 			);
 
 			$mail = new Pimcore_Mail();
@@ -138,7 +138,6 @@ class ApiController extends Zend_Rest_Controller {
 			$logins = new Object\Customers\Listing();
 			$logins->setCondition("email = '". $email ."' AND password = '". md5($password) ."'");
 			
-			$array = array();
 			if(count($logins) > 0)
 			{
 				$logins = new Object\Customers\Listing();

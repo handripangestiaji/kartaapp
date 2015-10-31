@@ -76,10 +76,16 @@ class ApiController extends Zend_Rest_Controller {
 			$register->setPublished(1);	    
 			$register->save();
 			
+			$params = array(
+				'fullname' => $register->fullname,
+				'link' => 'http://'. $_SERVER[HTTP_HOST] .'/v1/api/verification-account?email='.$email,
+			);
+
 			$mail = new Pimcore_Mail();
 			$mail->setSubject("Confirmation Email for KartaApp");
 			$mail->setFrom("hello@kartaapp.com");
 			$mail->setDocument("/email/kartaapp-confirmation");
+			$mail->setParams($params);
 			$mail->addTo($email);
 			$mail->send();
 

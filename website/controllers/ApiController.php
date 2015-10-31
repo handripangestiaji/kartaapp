@@ -19,15 +19,26 @@ class ApiController extends Zend_Rest_Controller {
 		
 	public function registerAction()
 	{
+		$fullname = $_POST['fullname'];
 		$email = $_POST['email'];
 		$password = $_POST['password'];
 		
+		$array = array(
+		       'status' => 'failed',
+		       'message' => '',
+		       'data' => '');			
+
 		if($email == '')
 		{
-			$array = array(
-			       'status' => 'failed',
-			       'message' => 'Email is required',
-			       'data' => '');			
+			$array['message'] = 'Email is required';
+			       
+			$json_cat = $this->_helper->json($array);
+			$this->sendResponse($json_cat);
+			die();
+		}
+		if($fullname == '')
+		{
+			$array['message'] = 'Fullname is required';
 
 			$json_cat = $this->_helper->json($array);
 			$this->sendResponse($json_cat);
@@ -35,10 +46,7 @@ class ApiController extends Zend_Rest_Controller {
 		}
 		if($password == '')
 		{
-			$array = array(
-			       'status' => 'failed',
-			       'message' => 'Password is required',
-			       'data' => '');			
+			$array['message'] = 'Password is required';
 
 			$json_cat = $this->_helper->json($array);
 			$this->sendResponse($json_cat);
@@ -61,12 +69,19 @@ class ApiController extends Zend_Rest_Controller {
 			$register = Object\Customers::create();
 			$register->setKey(\Pimcore\File::getValidFilename($email));
 			$register->setParentId($parent_id);
-			$register->setfirstname(" ");
-			$register->setlastname(" ");
+			$register->setfullname($fullname);
 			$register->setemail($email);
 			$register->setpassword(md5($password));
+			$register->setverification(0);
 			$register->setPublished(1);	    
-			$register->save();			
+			$register->save();
+			
+			$mail = new Pimcore_Mail();
+			$mail->setSubject("Confirmation Email for KartaApp");
+			$mail->setFrom("hello@kartaapp.com");
+			$mail->setDocument("/email/kartaapp-confirmation");
+			$mail->addTo($email);
+			$mail->send();
 
 			$array = array(
 				       'status' => 'success',
@@ -75,10 +90,7 @@ class ApiController extends Zend_Rest_Controller {
 		}
 		else
 		{
-			$array = array(
-			       'status' => 'failed',
-			       'message' => 'Email has been registered by  system',
-			       'data' => '');						
+			$array['message'] = 'Email has been registered by system';
 		}    		
 		
 		$json_cat = $this->_helper->json($array);
@@ -89,13 +101,15 @@ class ApiController extends Zend_Rest_Controller {
 	{		
 		$email = $_POST['email'];
 		$password = $_POST['password'];
+
+		$array = array(
+			'status' => 'failed',
+			'message' => '',
+			'data' => '');			
 		
 		if($email == '')
 		{
-			$array = array(
-			       'status' => 'failed',
-			       'message' => 'Email is required',
-			       'data' => '');			
+			$array['message'] = "Email is required";
 
 			$json_cat = $this->_helper->json($array);
 			$this->sendResponse($json_cat);
@@ -103,10 +117,7 @@ class ApiController extends Zend_Rest_Controller {
 		}
 		if($password == '')
 		{
-			$array = array(
-			       'status' => 'failed',
-			       'message' => 'Password is required',
-			       'data' => '');			
+			$array['message'] = "Password is required";
 
 			$json_cat = $this->_helper->json($array);
 			$this->sendResponse($json_cat);
@@ -124,41 +135,60 @@ class ApiController extends Zend_Rest_Controller {
 			$array = array();
 			if(count($logins) > 0)
 			{
-				foreach($logins as $login)
-				{					
-					// Get datetime now and customize the pimcore format
-					$now = date("Y-m-d,H-i");
-					$get_time_now = new Pimcore_Date($now);
+				$logins = new Object\Customers\Listing();
+				$logins->setCondition("email = '". $email ."' AND password = '". md5($password) ."' AND verification = 1");
 
-					$login->setlastlogin($get_time_now);
-					$login->save();
-				
-					$array = array(
-						'status' => 'success',
-						'message' => 'success',
-						'data' => $login);
+				if(count($logins) > 0)
+				{
+					foreach($logins as $login)
+					{					
+						// Get datetime now and customize the pimcore format
+						$now = date("Y-m-d,H-i");
+						$get_time_now = new Pimcore_Date($now);
+	
+						$login->setlastlogin($get_time_now);
+						$login->save();
+					
+						$array = array(
+							'status' => 'success',
+							'message' => 'success',
+							'data' => $login);
+					}
+				}
+				else
+				{
+					$array['message'] = "Your account has not been verified, please verification first";
 				}			
 			}
 			else
 			{
-				$array = array(
-					'status' => 'failed',
-					'message' => 'Wrong password',
-					'data' => '');			
+				$array['message'] = "Wrong password";
 			}			
 		}
 		else
 		{
-			$array = array(
-			       'status' => 'failed',
-			       'message' => 'Email not registered',
-			       'data' => '');						
+			$array['message'] = "Email not registered";
 		}    		
 
 		
 		$json_cat = $this->_helper->json($array);
 		$this->sendResponse($json_cat);
 	}
+	
+	public function verificationAccountAction()
+	{		
+		$email = $_GET['email'];
+		
+		$account = new Object\Customers\Listing();
+		$account->setCondition("email = '". $email ."'");
+		
+		foreach($account as $acc)
+		{
+			$acc->verification = 1;
+			$acc->save();
+		}
+	}
+
 	
 	public function categoriesAction()
 	{		

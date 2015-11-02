@@ -319,6 +319,91 @@ class ApiController extends Zend_Rest_Controller {
 		$this->sendResponse($json_cat);
 	}
 	
+	public function reviewMenuAction()
+	{
+		$customer = $_POST['customer'];
+		$menu = $_POST['menu'];
+		$rating = $_POST['rating'];
+		$text = $_POST['text'];
+		
+		$array = array(
+		       'status' => 'failed',
+		       'message' => '',
+		       'data' => '');			
+
+		if($customer == '')
+		{
+			$array['message'] = 'Customer is required';
+			       
+			$json_cat = $this->_helper->json($array);
+			$this->sendResponse($json_cat);
+			die();
+		}
+		if($menu == '')
+		{
+			$array['message'] = 'Menu is required';
+
+			$json_cat = $this->_helper->json($array);
+			$this->sendResponse($json_cat);
+			die();
+		}
+		if($rating == '')
+		{
+			$array['message'] = 'Rating is required';
+
+			$json_cat = $this->_helper->json($array);
+			$this->sendResponse($json_cat);
+			die();
+		}
+		
+		$now = date("Y-m-d,H-i");
+		
+		$customer = Object\Customers::getById($customer);
+		if($customer == null)
+		{
+			$array['message'] = 'Can\'t find customer on system';
+
+			$json_cat = $this->_helper->json($array);
+			$this->sendResponse($json_cat);
+			die();
+		}
+		
+		$menu = Object\Menu::getById($menu);
+		if($menu == null)
+		{
+			$array['message'] = 'The menu invalid';
+
+			$json_cat = $this->_helper->json($array);
+			$this->sendResponse($json_cat);
+			die();
+		}
+				
+		try
+		{
+			$review = Object\Review::create();
+			$review->setParentId($menu->o_id);
+			$review->setcustomer($customer);
+			$review->setmenu($menu);
+			$review->settext($text);
+			$review->setrating($rating);
+			$review->setKey(\Pimcore\File::getValidFilename("review-" . $customer->o_id . "-" . $now));
+			$review->setPublished(1);	    
+			$review->save();			
+
+			$array = array(
+				       'status' => 'success',
+				       'message' => 'success',
+				       'data' => $review->o_id);			
+		}
+		catch(Exception $ex)
+		{
+			$array['message'] = 'internal server error';			
+		}
+					
+		$json_cat = $this->_helper->json($array);
+		$this->sendResponse($json_cat);
+	}	
+	
 	public function categoriesAction()
 	{		
 		$id = $this->_getParam('id');

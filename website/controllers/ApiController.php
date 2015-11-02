@@ -180,6 +180,41 @@ class ApiController extends Zend_Rest_Controller {
 		$this->sendResponse($json_cat);
 	}
 	
+	public function checkLoginAction()
+	{		
+		$email = $_POST['email'];
+		$password = $_POST['password'];
+
+		$array = array(
+			'status' => 'failed',
+			'message' => 'status false',
+			'data' => '');			
+		
+		$logins = new Object\Customers\Listing();
+		$logins->setCondition("email = '". $email ."' AND password = '". md5($password) ."'");
+		
+		if(count($logins) > 0)
+		{
+
+			$logins = new Object\Customers\Listing();
+			$logins->setCondition("email = '". $email ."' AND password = '". md5($password) ."' AND verification = 1");
+
+			if(count($logins) > 0)
+			{
+				foreach($logins as $login)
+				{									
+					$array = array(
+						'status' => 'success',
+						'message' => 'success',
+						'data' => $login);
+				}
+			}
+		}
+		
+		$json_cat = $this->_helper->json($array);
+		$this->sendResponse($json_cat);
+	}	
+	
 	public function verificationAccountAction()
 	{		
 		$email = $_GET['email'];
@@ -193,7 +228,96 @@ class ApiController extends Zend_Rest_Controller {
 			$acc->save();
 		}
 	}
+	
+	public function changePasswordAction()
+	{		
+		$email = $_POST['email'];
+		$old_password = $_POST['old_password'];
+		$new_password = $_POST['new_password'];
 
+		$array = array(
+			'status' => 'failed',
+			'message' => '',
+			'data' => '');			
+		
+		if($old_password == '')
+		{
+			$array['message'] = "Old password is required";
+
+			$json_cat = $this->_helper->json($array);
+			$this->sendResponse($json_cat);
+			die();
+		}
+		if($new_password == '')
+		{
+			$array['message'] = "New password is required";
+
+			$json_cat = $this->_helper->json($array);
+			$this->sendResponse($json_cat);
+			die();
+		}
+
+		$logins = new Object\Customers\Listing();
+		$logins->setCondition("email = '". $email ."' AND password = '". md5($old_password) ."'");
+		
+		if(count($logins) > 0)
+		{
+			foreach($logins as $login)
+			{					
+				$login->setpassword(md5($new_password));
+				$login->save();
+			
+				$array = array(
+					'status' => 'success',
+					'message' => 'success',
+					'data' => $login);
+			}
+		}
+		else
+		{
+			$array['message'] = "Your old password not valid";
+		}			
+		
+		$json_cat = $this->_helper->json($array);
+		$this->sendResponse($json_cat);
+	}
+	
+	public function updateCustomerAction()
+	{		
+		$email = $_POST['email'];
+		$fullname = $_POST['fullname'];
+		$phone = $_POST['phone'];
+
+		$array = array(
+			'status' => 'failed',
+			'message' => '',
+			'data' => '');			
+		
+		$logins = new Object\Customers\Listing();
+		$logins->setCondition("email = '". $email ."'");
+		
+		if(count($logins) > 0)
+		{
+			foreach($logins as $login)
+			{					
+				$login->setfullname($fullname);
+				$login->setphoneNumber($phone);
+				$login->save();
+			
+				$array = array(
+					'status' => 'success',
+					'message' => 'success',
+					'data' => $login);
+			}
+		}
+		else
+		{
+			$array['message'] = "Can't find user with email " . $email;
+		}			
+		
+		$json_cat = $this->_helper->json($array);
+		$this->sendResponse($json_cat);
+	}
 	
 	public function categoriesAction()
 	{		

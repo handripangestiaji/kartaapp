@@ -380,20 +380,30 @@ class ApiController extends Zend_Rest_Controller {
 				
 		try
 		{
-			$review = Object\Review::create();
-			$review->setParentId($menu->o_id);
-			$review->setcustomer($customer);
-			$review->setmenu($menu);
-			$review->settext($text);
-			$review->setrating($rating);
-			$review->setKey(\Pimcore\File::getValidFilename("review-" . $customer->o_id . "-" . $now));
-			$review->setPublished(1);	    
-			$review->save();			
+			$reviews = new Object\Review\Listing();		
+			$reviews->setCondition("o_parentId = " . $menu->o_id . " AND customer__id = " . $customer->o_id);
 
-			$array = array(
-				       'status' => 'success',
-				       'message' => 'success',
-				       'data' => $review->o_id);			
+			if(count($reviews) < 1)
+			{
+				$review = Object\Review::create();
+				$review->setParentId($menu->o_id);
+				$review->setcustomer($customer);
+				$review->setmenu($menu);
+				$review->settext($text);
+				$review->setrating($rating);
+				$review->setKey(\Pimcore\File::getValidFilename("review-" . $customer->o_id . "-" . $now));
+				$review->setPublished(1);	    
+				$review->save();			
+	
+				$array = array(
+					       'status' => 'success',
+					       'message' => 'success',
+					       'data' => $review->o_id);							
+			}
+			else
+			{
+				$array['message'] = 'You have review this menu';
+			}
 		}
 		catch(Exception $ex)
 		{

@@ -356,7 +356,7 @@ class ApiController extends Zend_Rest_Controller {
 			die();
 		}
 		
-		$now = date("Y-m-d,H-i");
+		$now = date("Y-m-d,H-i-s");
 		
 		$customer = Object\Customers::getById($customer);
 		if($customer == null)
@@ -404,6 +404,78 @@ class ApiController extends Zend_Rest_Controller {
 		$this->sendResponse($json_cat);
 	}	
 	
+	public function listReviewMenuAction()
+	{		
+		$id_menu = $this->_getParam('id_menu');
+		
+		$reviews = new Object\Review\Listing();		
+		$reviews->setCondition("o_parentId = " . $id_menu);
+    		
+		$array = array();
+		$i = 0;
+			
+		foreach($reviews as $review)
+		{
+			$arr = array();
+			
+			$arr['id'] = $review->getO_Id();
+			$arr['text'] = $review->getText();
+			$arr['rating'] = $review->getRating();
+			
+			$arr['customer']['o_id'] = $review->getCustomer()->o_id;
+			$arr['customer']['fullname'] = $review->getCustomer()->fullname;
+			$arr['customer']['email'] = $review->getCustomer()->email;
+
+			$arr['menu'][o_id] = $review->getMenu()->o_id;
+			$arr['menu'][name] = $review->getMenu()->name;
+
+			$arr['restaurant'][o_id] = $review->getMenu()->getRestaurants()->o_id;
+			$arr['restaurant'][name] = $review->getMenu()->getRestaurants()->name;
+			$arr['restaurant'][location] = $review->getMenu()->getRestaurants()->location;
+			
+			array_push($array, $arr);
+		}
+		
+		$json_cat = $this->_helper->json($array);
+		$this->sendResponse($arr);
+	}
+	
+	public function listReviewCustomerAction()
+	{		
+		$id_customer = $this->_getParam('id_customer');
+		
+		$reviews = new Object\Review\Listing();		
+		$reviews->setCondition("customer__id = " . $id_customer);
+    		
+		$array = array();
+		$i = 0;
+			
+		foreach($reviews as $review)
+		{
+			$arr = array();
+			
+			$arr['id'] = $review->getO_Id();
+			$arr['text'] = $review->getText();
+			$arr['rating'] = $review->getRating();
+			
+			$arr['customer']['o_id'] = $review->getCustomer()->o_id;
+			$arr['customer']['fullname'] = $review->getCustomer()->fullname;
+			$arr['customer']['email'] = $review->getCustomer()->email;
+
+			$arr['menu'][o_id] = $review->getMenu()->o_id;
+			$arr['menu'][name] = $review->getMenu()->name;
+
+			$arr['restaurant'][o_id] = $review->getMenu()->getRestaurants()->o_id;
+			$arr['restaurant'][name] = $review->getMenu()->getRestaurants()->name;
+			$arr['restaurant'][location] = $review->getMenu()->getRestaurants()->location;
+			
+			array_push($array, $arr);
+		}
+		
+		$json_cat = $this->_helper->json($array);
+		$this->sendResponse($arr);
+	}	
+
 	public function categoriesAction()
 	{		
 		$id = $this->_getParam('id');

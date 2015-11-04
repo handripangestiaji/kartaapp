@@ -284,7 +284,7 @@ class ApiController extends Zend_Rest_Controller {
 
 	public function getCustomerAction()
 	{		
-		$id_customer = $this->_getParam['id_customer'];
+		$id_customer = $_GET['id_customer'];
 
 		$customer = Object\Customers::getById($id_customer);
 		

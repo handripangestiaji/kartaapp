@@ -281,7 +281,17 @@ class ApiController extends Zend_Rest_Controller {
 		$json_cat = $this->_helper->json($array);
 		$this->sendResponse($json_cat);
 	}
-	
+
+	public function getCustomerAction()
+	{		
+		$id_customer = $_POST['id_customer'];
+
+		$customer = Object\Customers::getById($id_customer);
+		
+		$json_cat = $this->_helper->json($customer);
+		$this->sendResponse($json_cat);
+	}	
+
 	public function updateCustomerAction()
 	{		
 		$email = $_POST['email'];

@@ -464,22 +464,19 @@ class ApiController extends Zend_Rest_Controller {
 		{
 			$arr = array();
 			
-			$arr['id'] = $review->getO_Id();
-			$arr['text'] = $review->getText();
-			$arr['rating'] = $review->getRating();
-			
-			$arr['customer']['o_id'] = $review->getCustomer()->o_id;
-			$arr['customer']['fullname'] = $review->getCustomer()->fullname;
-			$arr['customer']['email'] = $review->getCustomer()->email;
-
-			$arr['menu'][o_id] = $review->getMenu()->o_id;
-			$arr['menu'][name] = $review->getMenu()->name;
-
-			$arr['restaurant'][o_id] = $review->getMenu()->getRestaurants()->o_id;
-			$arr['restaurant'][name] = $review->getMenu()->getRestaurants()->name;
-			$arr['restaurant'][location] = $review->getMenu()->getRestaurants()->location;
-			
-			array_push($array, $arr);
+			if (array_key_exists($review->getMenu()->getRestaurants()->o_id, $array)) {
+				$arr = array($review->getMenu()->o_id, $review->getMenu()->name);
+				
+				array_push($array[$review->getMenu()->getRestaurants()->o_id][menu], $arr);
+			}
+			else{				
+				$arr['menu'][0] = array($review->getMenu()->o_id, $review->getMenu()->name);
+				$arr['restaurant'][id] = $review->getMenu()->getRestaurants()->o_id;
+				$arr['restaurant'][name] = $review->getMenu()->getRestaurants()->name;
+				$arr['location'] = $review->getMenu()->getRestaurants()->location;
+				
+				$array[$review->getMenu()->getRestaurants()->o_id] = $arr;				
+			}
 		}
 		
 		$json_cat = $this->_helper->json($array);

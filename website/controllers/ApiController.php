@@ -465,12 +465,12 @@ class ApiController extends Zend_Rest_Controller {
 			$arr = array();
 			
 			if (array_key_exists($review->getMenu()->getRestaurants()->o_id, $array)) {
-				$arr = array($review->getMenu()->o_id, $review->getMenu()->name);
+				$arr = array("id" => $review->getMenu()->o_id, "name" => $review->getMenu()->name);
 				
 				array_push($array[$review->getMenu()->getRestaurants()->o_id][menu], $arr);
 			}
 			else{				
-				$arr['menu'][0] = array($review->getMenu()->o_id, $review->getMenu()->name);
+				$arr['menu'][0] = array("id" => $review->getMenu()->o_id, "name" => $review->getMenu()->name);
 				$arr['restaurant'][id] = $review->getMenu()->getRestaurants()->o_id;
 				$arr['restaurant'][name] = $review->getMenu()->getRestaurants()->name;
 				$arr['location'] = $review->getMenu()->getRestaurants()->location;

@@ -447,7 +447,7 @@ class ApiController extends Zend_Rest_Controller {
 		}
 		
 		$json_cat = $this->_helper->json($array);
-		$this->sendResponse($arr);
+		$this->sendResponse($json_cat);
 	}
 	
 	public function listReviewCustomerAction()
@@ -480,8 +480,53 @@ class ApiController extends Zend_Rest_Controller {
 		}
 		
 		$json_cat = $this->_helper->json($array);
-		$this->sendResponse($arr);
+		$this->sendResponse($json_cat);
 	}	
+
+	public function listGalleryCustomerAction()
+	{		
+		$id_customer = $this->_getParam('id_customer');
+
+		$reviews = new Object\Review\Listing();		
+		$reviews->setCondition("customer__id = " . $id_customer);
+
+		$array = array();			
+		foreach($reviews as $review)
+		{
+			if($review->images->items != null)
+			{
+				foreach ($review->images->items as $image) {
+					$temp = array();
+
+					$temp['image'] = 'http://' . $_SERVER['HTTP_HOST'] . $image->image->path . $image->image->filename;
+
+					$temp['menu']['id'] =  $review->menu->o_id; 
+					$temp['menu']['name'] =  $review->menu->name; 
+
+					$temp['restaurant']['id'] =  $review->menu->restaurants->o_id; 
+					$temp['restaurant']['name'] =  $review->menu->restaurants->name; 
+
+					array_push($array, $temp);
+				}
+			}
+		}
+
+		$json_cat = $this->_helper->json($array);
+		$this->sendResponse($json_cat);
+	}
+
+	public function countReviewCustomerAction()
+	{		
+		$id_customer = $this->_getParam('id_customer');
+
+		$reviews = new Object\Review\Listing();		
+		$reviews->setCondition("customer__id = " . $id_customer);
+
+		$count = count($reviews);
+
+		$json_cat = $this->_helper->json($count);
+		$this->sendResponse($json_cat);
+	}
 
 	public function categoriesAction()
 	{		
@@ -520,7 +565,7 @@ class ApiController extends Zend_Rest_Controller {
 		}
 		
 		$json_cat = $this->_helper->json($array);
-		$this->sendResponse($arr);
+		$this->sendResponse($json_cat);
 	}
 	
 	public function setCounterCategoriesAction()

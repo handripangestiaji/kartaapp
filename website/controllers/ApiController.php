@@ -226,6 +226,8 @@ class ApiController extends Zend_Rest_Controller {
 		{
 			$acc->verification = 1;
 			$acc->save();
+
+			echo "Congratulation, verification email successfully";
 		}
 	}
 	
@@ -392,6 +394,7 @@ class ApiController extends Zend_Rest_Controller {
 		{
 			$reviews = new Object\Review\Listing();		
 			$reviews->setCondition("o_parentId = " . $menu->o_id . " AND customer__id = " . $customer->o_id);
+			$reviews->setOrder("DESC");
 
 			if(count($reviews) < 1)
 			{
